@@ -1,0 +1,118 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  .tb { font-family: 'Share Tech Mono', monospace; background: #0d0d0d; width: 260px; padding: 0; border-radius: 4px; overflow: hidden; }
+  .tb-rooms { padding: 8px 0; }
+  .tb-room { display: flex; align-items: center; justify-content: space-between; padding: 7px 16px; cursor: pointer; font-size: 12px; color: #666; transition: background 0.1s; }
+  .tb-room:hover { background: #1a1a1a; color: #999; }
+  .tb-room.active { background: #1a1a1a; color: #c084fc; }
+  .tb-room-name { display: flex; align-items: center; gap: 6px; }
+  .tb-room-count { font-size: 11px; color: #444; }
+  .tb-room.active .tb-room-count { color: #7c3aed; }
+  .tb-divider { height: 0.5px; background: #222; margin: 4px 0; }
+  .tb-create-block { padding: 10px 12px; border-top: 0.5px solid #222; }
+  .tb-create-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 0; background: transparent; border: 0.5px solid #3b1d6e; color: #a855f7; font-family: 'Share Tech Mono', monospace; font-size: 12px; border-radius: 3px; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; letter-spacing: 0.04em; }
+  .tb-create-btn:hover { background: #1a0d2e; border-color: #7c3aed; color: #c084fc; }
+  .tb-create-btn:active { transform: scale(0.98); }
+  .tb-plus { font-size: 16px; line-height: 1; font-weight: 400; color: #7c3aed; }
+
+  .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .modal { background: #111; border: 0.5px solid #333; border-radius: 4px; padding: 20px; width: 280px; font-family: 'Share Tech Mono', monospace; }
+  .modal-title { font-size: 12px; color: #a855f7; letter-spacing: 0.08em; margin: 0 0 16px; text-transform: uppercase; }
+  .modal label { font-size: 11px; color: #555; display: block; margin-bottom: 5px; letter-spacing: 0.04em; }
+  .modal input, .modal select { width: 100%; background: #0d0d0d; border: 0.5px solid #333; color: #ccc; font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 7px 10px; border-radius: 3px; box-sizing: border-box; margin-bottom: 12px; outline: none; }
+  .modal input:focus, .modal select:focus { border-color: #7c3aed; }
+  .modal input::placeholder { color: #333; }
+  .modal-row { display: flex; gap: 8px; margin-top: 4px; }
+  .modal-btn { flex: 1; padding: 8px 0; font-family: 'Share Tech Mono', monospace; font-size: 12px; border-radius: 3px; cursor: pointer; border: 0.5px solid; letter-spacing: 0.04em; }
+  .modal-btn.cancel { background: transparent; border-color: #333; color: #555; }
+  .modal-btn.cancel:hover { border-color: #555; color: #888; }
+  .modal-btn.confirm { background: #1a0d2e; border-color: #7c3aed; color: #a855f7; }
+  .modal-btn.confirm:hover { background: #2d1050; color: #c084fc; }
+  .modal-hint { font-size: 10px; color: #333; margin-top: -8px; margin-bottom: 12px; }
+  .hidden { display: none !important; }
+</style>
+
+<div style="display:flex; gap:20px; align-items:flex-start; padding: 1rem 0;">
+
+  <div class="tb">
+    <div class="tb-rooms">
+      <div class="tb-room"><span class="tb-room-name">#MY_MIX</span><span class="tb-room-count"></span></div>
+      <div class="tb-divider"></div>
+      <div class="tb-room"><span class="tb-room-name">#BTC</span><span class="tb-room-count">267</span></div>
+      <div class="tb-room"><span class="tb-room-name">#ETH</span><span class="tb-room-count">295</span></div>
+      <div class="tb-room"><span class="tb-room-name">#SOL</span><span class="tb-room-count">211</span></div>
+      <div class="tb-divider"></div>
+      <div class="tb-room active"><span class="tb-room-name">#GAMING</span><span class="tb-room-count">1841</span></div>
+      <div class="tb-room"><span class="tb-room-name">#SPORTS</span><span class="tb-room-count">4217</span></div>
+      <div class="tb-room"><span class="tb-room-name">#POLITICS</span><span class="tb-room-count">932</span></div>
+      <div class="tb-room"><span class="tb-room-name">#AI [TECH]</span><span class="tb-room-count">578</span></div>
+      <div class="tb-room"><span class="tb-room-name">#DOGE</span><span class="tb-room-count">4</span></div>
+      <div class="tb-room"><span class="tb-room-name">#GENERAL</span><span class="tb-room-count">3102</span></div>
+    </div>
+
+    <div class="tb-create-block">
+      <button class="tb-create-btn" id="openModal">
+        <span class="tb-plus">+</span>
+        <span>CREATE ROOM</span>
+      </button>
+    </div>
+  </div>
+
+  <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #444; line-height: 2; padding-top: 4px;">
+    <div style="color: #555; margin-bottom: 6px;">варианты кнопки:</div>
+    <div style="color: #a855f7;">→ с текстом CREATE ROOM</div>
+    <div>→ только + иконка</div>
+    <div>→ с счётчиком комнат</div>
+  </div>
+</div>
+
+<div class="modal-wrap hidden" id="modal">
+  <div class="modal">
+    <p class="modal-title"># create room</p>
+
+    <label>room name</label>
+    <input type="text" placeholder="#MY_ROOM" maxlength="20" id="roomName" />
+
+    <label>category</label>
+    <select>
+      <option>CRYPTO</option>
+      <option>GAMING</option>
+      <option>SPORTS</option>
+      <option>GENERAL</option>
+      <option>OTHER</option>
+    </select>
+
+    <label>access</label>
+    <select>
+      <option>PUBLIC</option>
+      <option>PRIVATE (invite only)</option>
+    </select>
+
+    <div class="modal-hint">room will be visible in #MY_MIX</div>
+
+    <div class="modal-row">
+      <button class="modal-btn cancel" id="closeModal">CANCEL</button>
+      <button class="modal-btn confirm">CREATE →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('openModal');
+  const modal = document.getElementById('modal');
+  const close = document.getElementById('closeModal');
+  const nameInput = document.getElementById('roomName');
+
+  btn.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    setTimeout(() => nameInput.focus(), 50);
+  });
+  close.addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', e => { if(e.target === modal) modal.classList.add('hidden'); });
+
+  nameInput.addEventListener('input', () => {
+    let v = nameInput.value.replace(/[^a-zA-Z0-9_]/g, '').toUpperCase();
+    nameInput.value = v;
+  });
+</script>
