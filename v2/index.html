@@ -156,7 +156,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .trend-row:last-child { border-bottom: none; }
 .trend-name { color: #ccc; font-family: 'Roboto', sans-serif; font-size: 13px; }
 .trend-val { color: var(--ac); font-family: 'Space Mono', monospace; font-size: 12px; }
-.create-box-wrap { padding: 10px 12px; border-top: 1px solid #333; flex-shrink: 0; }
+.create-box-wrap { padding: 10px 12px; border-top: none; flex-shrink: 0; margin-top: 8px; }
 .create-box-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
 .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 .create-widget-wrap { padding: 10px 12px; }
@@ -465,7 +465,7 @@ html, body {
 
 /* --- SECTION HEADS --- */
 .section-head {
-  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  border-bottom: none !important;
   padding: 14px 16px !important;
 }
 
@@ -488,9 +488,10 @@ html, body {
 }
 .room-item.active {
   background: linear-gradient(165deg, var(--bg-card-from), var(--bg-card-to)) !important;
-  border-left: none !important;
-  padding-left: 12px !important;
-  box-shadow: var(--shadow-card), 0 0 40px -10px var(--ac);
+  border: 1px solid var(--ac) !important;
+  padding-left: 11px !important;
+  border-radius: 4px !important;
+  box-shadow: none;
 }
 
 /* --- SEARCH --- */
@@ -527,7 +528,7 @@ html, body {
 
 /* --- LEFT PROFILE --- */
 .left-profile {
-  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  border-top: none !important;
   margin: 0 8px 8px;
   border-radius: var(--radius-sm);
   padding: 14px !important;
@@ -554,7 +555,7 @@ html, body {
 
 /* --- AUTH BLOCK --- */
 .auth-block {
-  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  border-top: none !important;
   margin: 0 8px 8px;
   border-radius: var(--radius-sm);
   padding: 16px !important;
@@ -960,6 +961,10 @@ html, body {
   .room-item { margin: 3px 0 !important; }
   .r-block { margin: 6px 4px !important; }
   .modal { max-width: 100% !important; }
+  .create-box-wrap { padding-bottom: 8px !important; margin-bottom: 19px !important; }
+  .search-box { margin-top: 12px !important; margin-bottom: 4px !important; }
+  .left { padding-bottom: 0 !important; }
+  .left-rooms { padding-top: 10px !important; }
 }
 
 /* === REDUCED MOTION === */
