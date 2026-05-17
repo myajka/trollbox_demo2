@@ -635,6 +635,17 @@ html, body {
 .date-sep { color: #4a4d58 !important; }
 .date-sep::before, .date-sep::after { background: rgba(255,255,255,0.06) !important; }
 
+/* --- SYSTEM MESSAGES --- */
+.sys-msg {
+  text-align: center;
+  padding: 4px 14px;
+  font-size: 12px;
+  color: #4a4d58;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
+}
+.sys-msg .msg-time { margin-left: 6px; }
+
 /* --- CHAT INPUT --- */
 .chat-input-row {
   border-top: 1px solid rgba(255,255,255,0.06) !important;
@@ -1202,8 +1213,10 @@ let active = 'btc';
 
 const CHATS = {
   btc: [
+    {sys:true, text:'whalewatch joined the box', time:'11:00am'},
     {tag:'$BTC', author:'whalewatch', bot:false, text:'someone just moved 12k BTC off coinbase lmao whale alert 🐋', time:'11:02am'},
     {tag:'$BTC', author:'news_bot', bot:true, text:'BlackRock ETF inflows hit $420M today — largest single-day since launch', time:'11:05am'},
+    {sys:true, text:'kmbjz joined the box', time:'11:12am'},
     {tag:'$BTC', author:'kmbjz', bot:false, text:'BTC holding 64k strong. Next stop 70k? Who knows lol', time:'11:14am'},
     {tag:'$BTC', author:'satoshi_ghost', bot:false, text:'imagine selling below 100k 😂 ngmi', time:'11:18am'},
     {tag:'$BTC', author:'bearish_bob', bot:false, text:'yall gonna cry when this dumps back to 50k mark my wrods', time:'11:22am'},
@@ -1212,6 +1225,7 @@ const CHATS = {
     {tag:'$BTC', author:'hodl_queen', bot:false, text:'been holding since 2019 and im not fkn selling 💎🙌', time:'11:52am'},
     {tag:'$BTC', author:'ta_wizard', bot:false, text:'daily RSI looking overheated tbh, wouldnt be surprised by a pullback to 62k support', time:'12:01pm'},
     {tag:'$BTC', author:'jokes_bot', bot:true, text:'A crypto investor walks into a bar. He asks for a beer. The bartender says "that\'ll be 0.000043 BTC"', time:'12:18pm'},
+    {sys:true, text:'myajka joined the box', time:'12:29pm'},
     {tag:'$BTC', author:'myajka', bot:false, text:'just bought the dip. again. send help 🫠', time:'12:31pm'},
     {tag:'$BTC', author:'defi_chad', bot:false, text:'wrapped btc on solana yielding 8% rn, free money basically', time:'12:40pm'},
     {tag:'$ETH', author:'boss_nikitos', bot:false, text:'ETH staking rewards looking juicy this month', time:'12:52pm'},
@@ -1235,6 +1249,7 @@ const CHATS = {
     {tag:'$BTC', author:'whale_sniper', bot:false, text:'that sell wall at 65k just got eaten in like 2 minutes flat wtfff', time:'3:05pm'},
     {tag:'$BTC', author:'ta_wizard', bot:false, text:'breakout confirmed on 4h chart, next resistance at 68.5k 📈', time:'3:10pm'},
     {tag:'$BTC', author:'boss_nikitos', bot:false, text:'told yall to buy the dip but nobody listens 😤', time:'3:18pm'},
+    {sys:true, text:'bearish_bob left the box', time:'3:20pm'},
     {tag:'$BTC', author:'nocoiner_99', bot:false, text:'ok fine how do i even buy this thing, asking for a freind', time:'3:22pm'},
     {tag:'$BTC', author:'kmbjz', bot:false, text:'lmaoo the nocoiner is converting, one of us one of us 🫡', time:'3:24pm'},
   ],
@@ -1365,6 +1380,7 @@ const CHATS = {
     {tag:'#GEN', author:'night_owl', bot:false, text:'one more youtube video and ill sleep i promise', time:'8:28am'},
     {tag:'#GEN', author:'jokes_bot', bot:true, text:'I told my wallet I\'d stop spending. We\'re not on speaking terms anymore 💸', time:'9:00am'},
     {tag:'#GEN', author:'food_lover', bot:false, text:'just made the most perfect scrambled eggs of my life and nobody is awake to witness it 😤', time:'9:12am'},
+    {sys:true, text:'chaosmonger joined the box', time:'9:58am'},
     {tag:'#GEN', author:'chaosmonger', bot:false, text:'anyone else feel like the internet peaked in 2012', time:'10:00am'},
     {tag:'#GEN', author:'copemaxi', bot:false, text:'every year someone says that and yet here we are', time:'10:05am'},
     {tag:'#GEN', author:'nostalgia_', bot:false, text:'2012 internet was different tho, no algortihms just vibes and flash games', time:'10:08am'},
@@ -1385,6 +1401,7 @@ const CHATS = {
     {tag:'#GEN', author:'night_owl', bot:false, text:'update: i did not sleep. its now noon. send help 🫠', time:'12:00pm'},
     {tag:'#GEN', author:'wellness_guru', bot:false, text:'RIP your serotonin levels tomorrow lmao', time:'12:02pm'},
     {tag:'#GEN', author:'jokes_bot', bot:true, text:'My sleep schedule is like my code — full of bugs and nobody knows how it still runs', time:'12:15pm'},
+    {sys:true, text:'night_owl left the box', time:'12:10pm'},
     {tag:'#GEN', author:'zoomer_z', bot:false, text:'this box is lowkey my favorite place on the internet rn, yall are unhinged in the best way 💜', time:'12:20pm'},
     {tag:'#GEN', author:'gmguy', bot:false, text:'troll.box supremacy, we out here 😤🔥', time:'12:22pm'},
   ],
@@ -1574,6 +1591,10 @@ function renderChat(){
     if(i%10===0){
       const dl=DATE_LABELS[Math.floor(i/10)]||DATE_LABELS[DATE_LABELS.length-1];
       html+=`<div class="date-sep">${dl}</div>`;
+    }
+    if(m.sys){
+      html+=`<div class="sys-msg"><span class="sys-msg-text">${m.text}</span><span class="msg-time">${m.time}</span></div>`;
+      return;
     }
     const showTag = active==='mymix'||active==='general';
     html+=`<div class="msg" style="${showTag?'':'grid-template-columns:1fr'}">

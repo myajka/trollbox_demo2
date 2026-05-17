@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>troll.box</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 @font-face {
   font-family: 'CHNOPixelCodePro';
@@ -17,12 +17,17 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; }
 body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%); }
-.app { display: grid; grid-template-columns: 360px 1fr 360px; height: 100vh; width: 100vw; background: #0a0a0a; overflow: hidden; font-family: 'Space Mono', monospace; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding-bottom: 10px; }
+.app { display: grid; grid-template-columns: 360px 1fr 360px; height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Space Mono', monospace; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 8px; gap: 8px; }
 .app::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px); }
-.app::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%); }
+.app::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%); animation: flicker 3s steps(4) infinite; }
+@keyframes flicker { 0%,100% { opacity: 1; } 10% { opacity: 0.95; } 30% { opacity: 1; } 45% { opacity: 0.97; } 60% { opacity: 1; } 80% { opacity: 0.94; } 90% { opacity: 1; } }
+.crt-beam { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9997; background: linear-gradient(to bottom, transparent 0%, transparent 10%, rgba(255,255,255,0.006) 25%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.006) 75%, transparent 90%, transparent 100%); animation: beam 10s linear infinite; }
+@keyframes beam { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+.crt-noise { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; pointer-events: none; z-index: 9996; opacity: 0.012; animation: noise 0.2s steps(2) infinite; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+@keyframes noise { 0% { transform: translate(0,0); } 100% { transform: translate(-10%,-10%); } }
 html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
-.left { background: #0a0a0a; border-right: 1px solid #333; display: flex; flex-direction: column; min-height: 0; }
+.left { background: #0a0a0a; border: 1px solid #333; display: flex; flex-direction: column; min-height: 0; }
 .left-rooms { flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .left-rooms:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .left-rooms::-webkit-scrollbar { width: 6px; background: transparent; }
@@ -32,7 +37,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .left-rooms:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .room-item { padding: 12px 12px; border-bottom: 1px solid #2a2a2a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #fff; }
 .room-item:hover { background: #121212; color: #fff; }
-.room-item.active { background: #121212; color: #fff; border-left: 2px solid var(--ac, #8CE45A); padding-left: 10px; }
+.room-item.active { background: linear-gradient(to right, #161616, transparent); color: #fff; border-left: 2px solid var(--ac, #8CE45A); padding-left: 10px; }
 .room-name { font-size: 13px; letter-spacing: 0.03em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
 .room-item.active .room-count { color: #777; }
@@ -52,7 +57,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .search-box input::placeholder { color: #555; }
 
 /* CENTER */
-.center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; }
+.center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; }
 .center-head { padding: 10px 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
 .center-title { color: #e0e0e0; font-size: 15px; letter-spacing: 0.06em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .toggle-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #777; font-family: 'Roboto', sans-serif; }
@@ -65,18 +70,27 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .chat-feed::-webkit-scrollbar-thumb { background: transparent; border-radius: 0; }
 .chat-feed:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
 .chat-feed:hover::-webkit-scrollbar-track { background: #0a0a0a; }
-.msg { display: grid; grid-template-columns: 58px 1fr; padding: 3px 14px; gap: 0; }
+.msg { display: grid; grid-template-columns: 44px 1fr; padding: 3px 14px; gap: 0; }
+.msg.has-tag { grid-template-columns: auto 1fr; }
 .msg:hover { background: #111; }
-.msg-tag { font-size: 12px; color: #666; text-align: right; padding-right: 8px; padding-top: 1px; font-style: italic; font-family: 'Space Mono', monospace; }
+.msg-tag { font-size: 12px; color: #666; text-align: left; padding-right: 8px; padding-top: 1px; font-family: 'CHNOPixelCodePro', monospace; white-space: nowrap; }
 .msg-tag.active-tag { color: var(--ac, #8CE45A); }
-.msg-troll { width: 24px; height: 24px; vertical-align: middle; margin-right: 5px; display: inline-block; }
-.msg-author { display: inline; color: var(--ac, #8CE45A); font-size: 13px; cursor: pointer; font-family: 'Space Mono', monospace; font-weight: 700; }
+.msg-body { display: grid; grid-template-columns: 28px 1fr; }
+.msg-body-content { display: inline; }
+.msg-troll { width: 24px; height: 24px; margin-right: 4px; display: block; grid-row: 1; }
+.msg-author { display: inline; color: var(--ac, #8CE45A); font-size: 13px; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; font-weight: 400; text-transform: uppercase; }
 .msg-author:hover { text-decoration: underline; }
 .bot-author { color: #8CE45A; }
-.bot-text { color: #8CE45A; }
-.msg-text { color: #e0e0e0; font-size: 14px; line-height: 1.6; display: inline; font-family: 'Roboto', sans-serif; }
-.msg-time { font-size: 12px; color: #555; margin-left: 6px; font-family: 'Space Mono', monospace; }
-.date-sep { text-align: center; padding: 8px 0; font-size: 11px; color: #555; font-family: 'CHNOPixelCodePro', monospace; letter-spacing: 0.06em; position: relative; }
+.msg-text { color: #e0e0e0; font-size: 14px; line-height: 1.6; display: inline; font-family: 'Roboto', sans-serif; font-weight: 300; }
+.msg-text.bot-text { color: #8CE45A; }
+.msg-time { font-size: 12px; color: #555; margin-left: 6px; font-family: 'Roboto', sans-serif; font-weight: 300; }
+.date-sep { text-align: center; padding: 8px 0; font-size: 12px; color: #555; font-family: 'Roboto', sans-serif; font-weight: 300; letter-spacing: 0.06em; position: relative; }
+.sys-msg { text-align: center; padding: 4px 14px; font-size: 13px; color: #444; font-family: 'Roboto', sans-serif; font-weight: 300; }
+.sys-msg .msg-time { margin-left: 6px; }
+.msg-translate { display: inline; }
+.msg-translate .tr-icon { display: inline-block; vertical-align: middle; margin: 0 6px; opacity: 0.45; }
+.msg-translate .tr-text { color: #e0e0e0; display: inline; font-family: 'Roboto', sans-serif; font-size: 14px; }
+.msg.has-tr .msg-text { color: #666; }
 .date-sep::before, .date-sep::after { content: ''; position: absolute; top: 50%; height: 1px; background: #1e1e1e; width: 30%; }
 .date-sep::before { left: 5%; }
 .date-sep::after { right: 5%; }
@@ -90,7 +104,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .announce { background: #111; border-bottom: 1px solid #2a2a2a; padding: 6px 14px; font-size: 13px; color: #777; display: flex; gap: 6px; align-items: center; font-family: 'Roboto', sans-serif; }
 
 /* RIGHT */
-.right { border-left: 1px solid #333; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.right { border: 1px solid #333; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .right:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .right::-webkit-scrollbar { width: 6px; background: transparent; }
 .right::-webkit-scrollbar-track { background: transparent; }
@@ -215,6 +229,38 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-btn.danger { color: #666; border-color: #333; }
 .profile-modal-btn.danger:hover { color: #f44; border-color: #f44; }
 
+/* SETTINGS MODAL */
+.settings-modal { background: #111; border: 1px solid #444; width: 420px; max-height: 80vh; font-family: 'Space Mono', monospace; display: flex; flex-direction: column; }
+.settings-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #333; }
+.settings-modal-head span { font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; }
+.settings-modal-body { padding: 16px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #2a2a2a #111; }
+.settings-section { margin-bottom: 20px; }
+.settings-section:last-child { margin-bottom: 0; }
+.settings-section-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.settings-themes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.settings-theme { border: 1px solid #333; padding: 10px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 6px; }
+.settings-theme:hover { border-color: #666; }
+.settings-theme.active { border-color: var(--ac, #8CE45A); box-shadow: 0 0 12px -4px var(--ac, #8CE45A); }
+.settings-theme-preview { height: 48px; border: 1px solid #222; display: flex; gap: 2px; padding: 4px; }
+.settings-theme-preview div { flex: 1; border-radius: 0; }
+.settings-theme-name { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #888; text-transform: uppercase; text-align: center; letter-spacing: 0.04em; }
+.settings-theme.active .settings-theme-name { color: var(--ac, #8CE45A); }
+.settings-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
+.settings-row:last-child { border-bottom: none; }
+.settings-row-left { display: flex; flex-direction: column; gap: 2px; }
+.settings-row-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #e0e0e0; text-transform: uppercase; padding-left: 1px; }
+.settings-row-hint { font-size: 13px; color: #555; font-family: 'Roboto', sans-serif; font-weight: 300; }
+.settings-toggle { width: 36px; height: 18px; background: #333; border-radius: 0; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.settings-toggle.on { background: var(--ac, #8CE45A); }
+.settings-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #111; transition: transform 0.2s; }
+.settings-toggle.on::after { transform: translateX(18px); }
+.settings-btn { padding: 8px 14px; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; cursor: pointer; border: 1px solid #444; background: transparent; color: #ccc; text-transform: uppercase; letter-spacing: 0.04em; transition: all 0.15s; }
+.settings-btn:hover { border-color: #666; color: #fff; }
+.settings-btn.accent { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+.settings-btn.accent:hover { background: var(--ac, #8CE45A); color: #0a0a0a; }
+.settings-btn.danger { color: #666; border-color: #333; }
+.settings-btn.danger:hover { color: #f44; border-color: #f44; }
+
 /* ONLINE USERS LIST */
 .online-row { cursor: pointer; transition: background 0.15s; padding: 4px; margin: -4px; }
 .online-row:hover { background: #151515; }
@@ -246,7 +292,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .welcome-divider { display: flex; align-items: center; gap: 10px; position: relative; z-index: 2; width: 280px; color: #666; font-size: 10px; font-family: 'CHNOPixelCodePro', monospace; letter-spacing: 0.06em; }
 .welcome-divider::before, .welcome-divider::after { content: ''; flex: 1; height: 1px; background: #444; }
 .welcome-hint { font-size: 11px; color: #444; font-family: 'Roboto', sans-serif; position: relative; z-index: 2; }
-#welcomeCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; opacity: 0.4; }
+.troll-grid-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; display: grid; gap: 32px; padding: 24px; }
+.troll-grid-bg img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; opacity: 0; transition: opacity 1.2s ease; }
+.troll-grid-bg img.visible { opacity: 0.6; }
 
 /* AUTH BLOCK (replaces profile when anon) */
 .auth-block { border-top: 1px solid #333; padding: 12px; flex-shrink: 0; }
@@ -275,10 +323,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mobile-nav { display: none; }
 .mobile-back { display: none; }
 .mobile-profile-view { display: none; }
+.mobile-settings-view { display: none; }
 
 @media (max-width: 900px) {
   html, body { align-items: flex-start; }
-  .app { grid-template-columns: 1fr !important; grid-template-rows: 1fr; padding-bottom: 0; }
+  .app { grid-template-columns: 1fr !important; grid-template-rows: 1fr; padding: 8px 8px 0 8px; }
   .left, .center, .right { display: none !important; }
   .app .mobile-active { display: flex !important; flex-direction: column; }
 
@@ -290,8 +339,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
   .app { height: calc(100vh - 56px); }
   .left-profile { display: none !important; }
-  .left { padding-bottom: 16px; border-right: none; }
-  .right { border-left: none; padding-bottom: 16px; }
+  .left { padding-bottom: 16px; border: 1px solid #333; }
+  .center { border: 1px solid #333; }
+  .right { border: 1px solid #333; padding-bottom: 16px; }
   .center .chat-input-row, .center .anon-chat-block { margin-bottom: 32px; }
   .create-widget-wrap { margin-bottom: 16px; }
   .welcome-overlay { height: 100vh; padding: 0 22px; }
@@ -312,10 +362,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .center-head { justify-content: flex-start; gap: 8px; align-items: center; min-height: 48px; padding: 0 12px; }
   .center-head .toggle-row { margin-left: auto; }
   .msg-author { font-size: 15px; }
-  .msg-text { font-size: 16px; }
+  .msg-text { font-size: 16px; line-height: 1.4; }
+  .msg-translate .tr-text { font-size: 16px; line-height: 1.4; }
   .msg-time { font-size: 13px; }
   .msg-tag { font-size: 13px; }
   .msg-troll { width: 22px; height: 22px; }
+  .msg-body { grid-template-columns: 26px 1fr; }
   .date-sep { font-size: 13px; }
   .center-title { font-size: 17px; line-height: 1; }
 
@@ -375,7 +427,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .mobile-back { display: none; background: none; border: none; color: var(--ac, #8CE45A); font-family: 'CHNOPixelCodePro', monospace; font-size: 28px; line-height: 1; cursor: pointer; padding: 0 12px 0 0; }
 
   /* Mobile profile view */
-  .mobile-profile-view { display: none; flex-direction: column; background: #0a0a0a; height: 100%; }
+  .mobile-profile-view { display: none; flex-direction: column; background: #0a0a0a; height: 100%; border: 1px solid #333; }
   .mobile-profile-view .section-head { flex-shrink: 0; }
   .mobile-profile-content { flex: 1; padding: 16px; overflow-y: auto; }
   .mobile-profile-content .profile-row { margin-bottom: 16px; }
@@ -383,13 +435,17 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .mobile-profile-content .profile-btns { margin-top: 16px; }
   .mobile-profile-content .auth-block { border-top: none; padding: 0; }
   .mobile-profile-content .auth-label { margin-bottom: 12px; font-size: 14px; }
+  .mobile-settings-view { display: none; flex-direction: column; background: #0a0a0a; height: 100%; position: absolute; inset: 0; z-index: 100; border: 1px solid #333; }
+  .mobile-settings-view .section-head { flex-shrink: 0; display: flex; align-items: center; gap: 10px; }
+  .mobile-settings-content { flex: 1; padding: 16px; overflow-y: auto; }
+  .mobile-settings-view .settings-themes { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 <!-- WELCOME OVERLAY -->
 <div class="welcome-overlay" id="welcomeOverlay">
-  <canvas id="welcomeCanvas"></canvas>
+  <div class="troll-grid-bg" id="trollGridBg"></div>
   <img src="trollbox_logo_3_slim.svg" alt="troll.box" />
   <div class="welcome-tagline">real-time chat for everything</div>
   <div class="welcome-label">sign in with</div>
@@ -407,13 +463,15 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <button class="welcome-auth-btn anon" id="welcomeEnter" style="width:280px; position:relative; z-index:2;">JOIN ANONYMOUSLY</button>
 </div>
 
+<div class="crt-beam"></div>
+<div class="crt-noise"></div>
 <div class="app" id="root" style="--ac:#8CE45A">
 
 <!-- LEFT -->
 <div class="left">
-  <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:20px; filter:brightness(1.4);"/></div>
+  <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/></div>
   <div class="left-rooms" id="rooms-list"></div>
-  <div class="search-box"><span style="color:#333">&#128269;</span><input placeholder="Search" /></div>
+  <div class="search-box"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" /></div>
   <div class="create-box-wrap" id="createBoxWrap"><button class="create-box-btn">+ CREATE BOX</button></div>
 
   <!-- PROFILE: authorized -->
@@ -427,7 +485,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       </div>
     </div>
     <div class="profile-btns">
-      <div class="pbtn">Settings &#9881;</div>
+      <div class="pbtn" id="settingsBtn">Settings &#9881;</div>
       <div class="pbtn" id="logoutBtn">Logout &#8594;</div>
     </div>
   </div>
@@ -474,6 +532,156 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <div class="mobile-profile-view" id="mobileProfileView">
   <div class="section-head"><span>PROFILE</span></div>
   <div class="mobile-profile-content" id="mobileProfileContent"></div>
+</div>
+
+<!-- MOBILE SETTINGS VIEW -->
+<div class="mobile-settings-view" id="mobileSettingsView">
+  <div class="section-head"><button class="users-list-back" id="mobileSettingsBack">&larr;</button><span>SETTINGS</span></div>
+  <div class="mobile-settings-content">
+
+    <div class="settings-section">
+      <div class="settings-section-title">Appearance</div>
+      <div class="settings-themes">
+        <div class="settings-theme active" data-theme="retro">
+          <div class="settings-theme-preview" style="background:#0a0a0a">
+            <div style="background:#1a1a1a"></div><div style="background:#0f0f0f"></div><div style="background:#1a1a1a"></div>
+          </div>
+          <div class="settings-theme-name">Retro CRT</div>
+        </div>
+        <div class="settings-theme" data-theme="midnight">
+          <div class="settings-theme-preview" style="background:#0c1220">
+            <div style="background:#162035"></div><div style="background:#0f1a2e"></div><div style="background:#162035"></div>
+          </div>
+          <div class="settings-theme-name">Midnight</div>
+        </div>
+        <div class="settings-theme" data-theme="hacker">
+          <div class="settings-theme-preview" style="background:#001200">
+            <div style="background:#002800"></div><div style="background:#001e00"></div><div style="background:#002800"></div>
+          </div>
+          <div class="settings-theme-name">Hacker</div>
+        </div>
+        <div class="settings-theme" data-theme="amber">
+          <div class="settings-theme-preview" style="background:#120c00">
+            <div style="background:#1e1400"></div><div style="background:#181000"></div><div style="background:#1e1400"></div>
+          </div>
+          <div class="settings-theme-name">Amber</div>
+        </div>
+        <div class="settings-theme" data-theme="vapor">
+          <div class="settings-theme-preview" style="background:#1a0a20">
+            <div style="background:#2a1035"></div><div style="background:#200c2a"></div><div style="background:#2a1035"></div>
+          </div>
+          <div class="settings-theme-name">Vapor</div>
+        </div>
+        <div class="settings-theme" data-theme="snow">
+          <div class="settings-theme-preview" style="background:#e8e8e8">
+            <div style="background:#ddd"></div><div style="background:#f0f0f0"></div><div style="background:#ddd"></div>
+          </div>
+          <div class="settings-theme-name">Snow</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Chat</div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Show translations</span>
+          <span class="settings-row-hint">Auto-translate foreign messages</span>
+        </div>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">CRT effects</span>
+          <span class="settings-row-hint">Scanlines, beam &amp; noise</span>
+        </div>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Compact mode</span>
+          <span class="settings-row-hint">Smaller messages, more on screen</span>
+        </div>
+        <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Sound notifications</span>
+          <span class="settings-row-hint">Play sound on new messages</span>
+        </div>
+        <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Privacy</div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Online status</span>
+          <span class="settings-row-hint">Show when you're online</span>
+        </div>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Read receipts</span>
+          <span class="settings-row-hint">Let others see when you read messages</span>
+        </div>
+        <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Profile visibility</span>
+          <span class="settings-row-hint">Make your profile visible to everyone</span>
+        </div>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Web3</div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Connect wallet</span>
+          <span class="settings-row-hint">Link MetaMask, Phantom or WalletConnect</span>
+        </div>
+        <button class="settings-btn accent">Connect</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">ENS / SNS name</span>
+          <span class="settings-row-hint">Use your web3 name as display name</span>
+        </div>
+        <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">NFT avatar</span>
+          <span class="settings-row-hint">Use an NFT from your wallet as avatar</span>
+        </div>
+        <button class="settings-btn">Select</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Account</div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Export data</span>
+          <span class="settings-row-hint">Download all your messages and activity</span>
+        </div>
+        <button class="settings-btn">Export</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <span class="settings-row-label">Delete account</span>
+          <span class="settings-row-hint">Permanently remove your profile and data</span>
+        </div>
+        <button class="settings-btn danger">Delete</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 </div>
@@ -592,6 +800,161 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   </div>
 </div>
 
+<!-- SETTINGS MODAL -->
+<div class="modal-wrap hidden" id="settingsModal">
+  <div class="settings-modal">
+    <div class="settings-modal-head">
+      <span>Settings</span>
+      <button class="profile-modal-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">&times;</button>
+    </div>
+    <div class="settings-modal-body">
+
+      <div class="settings-section">
+        <div class="settings-section-title">Appearance</div>
+        <div class="settings-themes">
+          <div class="settings-theme active" data-theme="retro">
+            <div class="settings-theme-preview" style="background:#0a0a0a">
+              <div style="background:#1a1a1a"></div><div style="background:#0f0f0f"></div><div style="background:#1a1a1a"></div>
+            </div>
+            <div class="settings-theme-name">Retro CRT</div>
+          </div>
+          <div class="settings-theme" data-theme="midnight">
+            <div class="settings-theme-preview" style="background:#0c1220">
+              <div style="background:#162035"></div><div style="background:#0f1a2e"></div><div style="background:#162035"></div>
+            </div>
+            <div class="settings-theme-name">Midnight</div>
+          </div>
+          <div class="settings-theme" data-theme="hacker">
+            <div class="settings-theme-preview" style="background:#001200">
+              <div style="background:#002800"></div><div style="background:#001e00"></div><div style="background:#002800"></div>
+            </div>
+            <div class="settings-theme-name">Hacker</div>
+          </div>
+          <div class="settings-theme" data-theme="amber">
+            <div class="settings-theme-preview" style="background:#120c00">
+              <div style="background:#1e1400"></div><div style="background:#181000"></div><div style="background:#1e1400"></div>
+            </div>
+            <div class="settings-theme-name">Amber</div>
+          </div>
+          <div class="settings-theme" data-theme="vapor">
+            <div class="settings-theme-preview" style="background:#1a0a20">
+              <div style="background:#2a1035"></div><div style="background:#200c2a"></div><div style="background:#2a1035"></div>
+            </div>
+            <div class="settings-theme-name">Vapor</div>
+          </div>
+          <div class="settings-theme" data-theme="snow">
+            <div class="settings-theme-preview" style="background:#e8e8e8">
+              <div style="background:#ddd"></div><div style="background:#f0f0f0"></div><div style="background:#ddd"></div>
+            </div>
+            <div class="settings-theme-name">Snow</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Chat</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Show translations</span>
+            <span class="settings-row-hint">Auto-translate foreign messages</span>
+          </div>
+          <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">CRT effects</span>
+            <span class="settings-row-hint">Scanlines, beam &amp; noise</span>
+          </div>
+          <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Compact mode</span>
+            <span class="settings-row-hint">Smaller messages, more on screen</span>
+          </div>
+          <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Sound notifications</span>
+            <span class="settings-row-hint">Play sound on new messages</span>
+          </div>
+          <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Privacy</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Online status</span>
+            <span class="settings-row-hint">Show when you're online</span>
+          </div>
+          <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Read receipts</span>
+            <span class="settings-row-hint">Let others see when you read messages</span>
+          </div>
+          <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Profile visibility</span>
+            <span class="settings-row-hint">Make your profile visible to everyone</span>
+          </div>
+          <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Web3</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Connect wallet</span>
+            <span class="settings-row-hint">Link MetaMask, Phantom or WalletConnect</span>
+          </div>
+          <button class="settings-btn accent">Connect</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">ENS / SNS name</span>
+            <span class="settings-row-hint">Use your web3 name as display name</span>
+          </div>
+          <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">NFT avatar</span>
+            <span class="settings-row-hint">Use an NFT from your wallet as avatar</span>
+          </div>
+          <button class="settings-btn">Select</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Account</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Export data</span>
+            <span class="settings-row-hint">Download all your messages and activity</span>
+          </div>
+          <button class="settings-btn">Export</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span class="settings-row-label">Delete account</span>
+            <span class="settings-row-hint">Permanently remove your profile and data</span>
+          </div>
+          <button class="settings-btn danger">Delete</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 const ROOMS = [
   { id:'general', label:'#GENERAL', tag:'', count:3102, ac:'#8CE45A' },
@@ -609,17 +972,22 @@ let active = 'btc';
 
 const CHATS = {
   btc: [
+    {sys:true, text:'whalewatch joined the box', time:'11:00am'},
     {tag:'$BTC', author:'whalewatch', bot:false, text:'someone just moved 12k BTC off coinbase lmao whale alert 🐋', time:'11:02am'},
     {tag:'$BTC', author:'news_bot', bot:true, text:'BlackRock ETF inflows hit $420M today — largest single-day since launch', time:'11:05am'},
+    {sys:true, text:'kmbjz joined the box', time:'11:12am'},
     {tag:'$BTC', author:'kmbjz', bot:false, text:'BTC holding 64k strong. Next stop 70k? Who knows lol', time:'11:14am'},
     {tag:'$BTC', author:'satoshi_ghost', bot:false, text:'imagine selling below 100k 😂 ngmi', time:'11:18am'},
+    {tag:'$BTC', author:'anon_06', bot:false, text:'Wie ist die BTC Prognose heute?', tr:'What is the BTC forecast today?', time:'11:20am'},
     {tag:'$BTC', author:'bearish_bob', bot:false, text:'yall gonna cry when this dumps back to 50k mark my wrods', time:'11:22am'},
     {tag:'$BTC', author:'kyoshee', bot:false, text:'this cycle is different, I swear every cycle someone says that', time:'11:30am'},
     {tag:'$BTC', author:'news_bot', bot:true, text:'Fed holds rates steady — BTC up 1.2% on the news', time:'11:45am'},
     {tag:'$BTC', author:'hodl_queen', bot:false, text:'been holding since 2019 and im not fkn selling 💎🙌', time:'11:52am'},
     {tag:'$BTC', author:'ta_wizard', bot:false, text:'daily RSI looking overheated tbh, wouldnt be surprised by a pullback to 62k support', time:'12:01pm'},
     {tag:'$BTC', author:'jokes_bot', bot:true, text:'A crypto investor walks into a bar. He asks for a beer. The bartender says "that\'ll be 0.000043 BTC"', time:'12:18pm'},
+    {sys:true, text:'myajka joined the box', time:'12:29pm'},
     {tag:'$BTC', author:'myajka', bot:false, text:'just bought the dip. again. send help 🫠', time:'12:31pm'},
+    {tag:'$BTC', author:'crypto_tanuki', bot:false, text:'ビットコインは最強だ、売るなよ', tr:'Bitcoin is the strongest, don\'t sell', time:'12:35pm'},
     {tag:'$BTC', author:'defi_chad', bot:false, text:'wrapped btc on solana yielding 8% rn, free money basically', time:'12:40pm'},
     {tag:'$ETH', author:'boss_nikitos', bot:false, text:'ETH staking rewards looking juicy this month', time:'12:52pm'},
     {tag:'$BTC', author:'nocoiner_99', bot:false, text:'genuine question how is this not a ponzi', time:'1:03pm'},
@@ -634,6 +1002,7 @@ const CHATS = {
     {tag:'$BTC', author:'bearish_bob', bot:false, text:'one green candle and everyone forgets the 2022 crash huh', time:'2:10pm'},
     {tag:'$BTC', author:'myajka', bot:false, text:'bob you literally say this every single day bro go outside 🌳', time:'2:12pm'},
     {tag:'$BTC', author:'jokes_bot', bot:true, text:'My portfolio is like my sleep schedule — absolutely destroyed but somehow still functioning', time:'2:20pm'},
+    {tag:'$BTC', author:'volkov_trade', bot:false, text:'Кто-нибудь шортит на этих уровнях? Безумие какое-то', tr:'Anyone shorting at these levels? This is madness', time:'2:30pm'},
     {tag:'$BTC', author:'mining_maxi', bot:false, text:'hashrate just hit new ATH, network has never been more secure 🔒', time:'2:35pm'},
     {tag:'$BTC', author:'kyoshee', bot:false, text:'halving effect hasnt even kicked in yet, give it 6 months', time:'2:42pm'},
     {tag:'$BTC', author:'defi_chad', bot:false, text:'lightning network txns up 300% this quarter, adoption is real frens', time:'2:55pm'},
@@ -642,6 +1011,7 @@ const CHATS = {
     {tag:'$BTC', author:'whale_sniper', bot:false, text:'that sell wall at 65k just got eaten in like 2 minutes flat wtfff', time:'3:05pm'},
     {tag:'$BTC', author:'ta_wizard', bot:false, text:'breakout confirmed on 4h chart, next resistance at 68.5k 📈', time:'3:10pm'},
     {tag:'$BTC', author:'boss_nikitos', bot:false, text:'told yall to buy the dip but nobody listens 😤', time:'3:18pm'},
+    {sys:true, text:'bearish_bob left the box', time:'3:20pm'},
     {tag:'$BTC', author:'nocoiner_99', bot:false, text:'ok fine how do i even buy this thing, asking for a freind', time:'3:22pm'},
     {tag:'$BTC', author:'kmbjz', bot:false, text:'lmaoo the nocoiner is converting, one of us one of us 🫡', time:'3:24pm'},
   ],
@@ -764,36 +1134,49 @@ const CHATS = {
   general: [
     {tag:'#GEN', author:'gmguy', bot:false, text:'gm everyone, another beautiful day to be a degen ☀️', time:'8:00am'},
     {tag:'#GEN', author:'earlybird', bot:false, text:'gm gm, coffee #3 already and its not even 9am help', time:'8:05am'},
+    {tag:'#GEN', author:'news_bot', bot:true, text:'Good morning! BTC $67,420 (+1.2%) | ETH $3,812 (+0.8%) | SOL $178 (+3.1%)', time:'8:10am'},
     {tag:'#GEN', author:'randomwisdom', bot:false, text:'fun fact: honey never spoils. 3000yr old honey still edible 🍯', time:'8:15am'},
     {tag:'#GEN', author:'skeptic_sam', bot:false, text:'no way thats real, honey from 3000 years ago?? source?', time:'8:18am'},
-    {tag:'#GEN', author:'randomwisdom', bot:false, text:'its literally on wikipedia bro, egyptian tombs had edible honey', time:'8:20am'},
+    {tag:'#AI', author:'randomwisdom', bot:false, text:'its literally on wikipedia bro, egyptian tombs had edible honey', time:'8:20am'},
+    {tag:'#GEN', author:'le_parisien', bot:false, text:'Le miel c\'est sacré en France, on en met partout 🥐', time:'8:22am', tr:'Honey is sacred in France, we put it on everything'},
     {tag:'#GEN', author:'night_owl', bot:false, text:'why am i still awake its 8am and i havent slept yet 💀', time:'8:25am'},
     {tag:'#GEN', author:'wellness_guru', bot:false, text:'go to sleep omg, your circadian rythm is destroyed', time:'8:27am'},
-    {tag:'#GEN', author:'night_owl', bot:false, text:'one more youtube video and ill sleep i promise', time:'8:28am'},
+    {tag:'$BTC', author:'night_owl', bot:false, text:'one more youtube video and ill sleep i promise', time:'8:28am'},
     {tag:'#GEN', author:'jokes_bot', bot:true, text:'I told my wallet I\'d stop spending. We\'re not on speaking terms anymore 💸', time:'9:00am'},
     {tag:'#GEN', author:'food_lover', bot:false, text:'just made the most perfect scrambled eggs of my life and nobody is awake to witness it 😤', time:'9:12am'},
-    {tag:'#GEN', author:'chaosmonger', bot:false, text:'anyone else feel like the internet peaked in 2012', time:'10:00am'},
+    {tag:'#GEN', author:'trivia_bot', bot:true, text:'Did you know? The first computer bug was an actual moth found in a Harvard Mark II in 1947 🦟', time:'9:30am'},
+    {sys:true, text:'chaosmonger joined the box', time:'9:58am'},
+    {tag:'#GEN', author:'shanghai_vibes', bot:false, text:'早上好各位，今天有什么好玩的话题吗', time:'9:59am', tr:'Good morning everyone, any fun topics today?'},
+    {tag:'#POL', author:'chaosmonger', bot:false, text:'anyone else feel like the internet peaked in 2012', time:'10:00am'},
     {tag:'#GEN', author:'copemaxi', bot:false, text:'every year someone says that and yet here we are', time:'10:05am'},
     {tag:'#GEN', author:'nostalgia_', bot:false, text:'2012 internet was different tho, no algortihms just vibes and flash games', time:'10:08am'},
-    {tag:'#GEN', author:'zoomer_z', bot:false, text:'what are flash games 💀💀 (genuine question)', time:'10:10am'},
+    {tag:'#GAMING', author:'zoomer_z', bot:false, text:'what are flash games 💀💀 (genuine question)', time:'10:10am'},
     {tag:'#GEN', author:'chaosmonger', bot:false, text:'...i just aged 50 years reading that comment', time:'10:11am'},
     {tag:'#GEN', author:'news_bot', bot:true, text:'Trending worldwide: #MondayMotivation, #CryptoTwitter, #AINews, #GamingCommunity', time:'10:30am'},
+    {tag:'#GEN', author:'el_troll_mx', bot:false, text:'Motivación del lunes: sobrevivir hasta el viernes sin renunciar 😂', time:'10:31am', tr:'Monday motivation: survive until Friday without quitting'},
     {tag:'#GEN', author:'motivator', bot:false, text:'monday motivation is just a hashtag nobody actually feels motivated on mondays lol', time:'10:32am'},
-    {tag:'#GEN', author:'gmguy', bot:false, text:'i feel motivated!! ...to go back to bed 😴', time:'10:35am'},
+    {tag:'$ETH', author:'gmguy', bot:false, text:'i feel motivated!! ...to go back to bed 😴', time:'10:35am'},
     {tag:'#GEN', author:'pet_pics', bot:false, text:'my cat just knocked my coffee off the desk, 10/10 would still die for him 🐱', time:'10:45am'},
     {tag:'#GEN', author:'jokes_bot', bot:true, text:'My cat has 3 moods: hungry, sleeping, and knocking things off tables for sport', time:'10:50am'},
-    {tag:'#GEN', author:'randomwisdom', bot:false, text:'another fun fact: octopuses have 3 hearts. when they swim one stops beating. basically me doing cardio', time:'11:00am'},
-    {tag:'#GEN', author:'fitness_bro', bot:false, text:'speaking of cardio who else hit the gym today?? leg day gang 🦵', time:'11:10am'},
+    {tag:'#GEN', author:'tokyo_drift', bot:false, text:'猫が最強のペットだと思う、反論は受け付けない', time:'10:55am', tr:'I think cats are the best pets, I will not accept arguments'},
+    {tag:'#AI', author:'randomwisdom', bot:false, text:'another fun fact: octopuses have 3 hearts. when they swim one stops beating. basically me doing cardio', time:'11:00am'},
+    {tag:'#GEN', author:'music_bot', bot:true, text:'Now playing in #GENERAL: lo-fi beats to troll/relax to — 1,247 listeners 🎵', time:'11:05am'},
+    {tag:'#SPORTS', author:'fitness_bro', bot:false, text:'speaking of cardio who else hit the gym today?? leg day gang 🦵', time:'11:10am'},
     {tag:'#GEN', author:'copemaxi', bot:false, text:'my fingers hitting the keyboard counts as exercise right', time:'11:12am'},
+    {tag:'#GEN', author:'news_bot', bot:true, text:'Breaking: GitHub down for 20 min — developers worldwide touching grass for the first time', time:'11:20am'},
     {tag:'#GEN', author:'food_lover', bot:false, text:'lunch debate: pizza or sushi? wrong answers only', time:'11:30am'},
     {tag:'#GEN', author:'chaosmonger', bot:false, text:'pizza sushi fusion, its a thing in japan and its actually fire', time:'11:32am'},
     {tag:'#GEN', author:'skeptic_sam', bot:false, text:'that sounds absolutely disgusting ngl', time:'11:33am'},
     {tag:'#GEN', author:'earlybird', bot:false, text:'its called a sushi pizza and its amazing dont knock it till u try it', time:'11:35am'},
-    {tag:'#GEN', author:'night_owl', bot:false, text:'update: i did not sleep. its now noon. send help 🫠', time:'12:00pm'},
+    {tag:'#GEN', author:'brazuca_zz', bot:false, text:'Pizza com sushi? Aqui no Brasil a gente coloca tudo na pizza kkkk', time:'11:40am', tr:'Pizza with sushi? Here in Brazil we put everything on pizza lol'},
+    {tag:'$SOL', author:'night_owl', bot:false, text:'update: i did not sleep. its now noon. send help 🫠', time:'12:00pm'},
     {tag:'#GEN', author:'wellness_guru', bot:false, text:'RIP your serotonin levels tomorrow lmao', time:'12:02pm'},
     {tag:'#GEN', author:'jokes_bot', bot:true, text:'My sleep schedule is like my code — full of bugs and nobody knows how it still runs', time:'12:15pm'},
-    {tag:'#GEN', author:'zoomer_z', bot:false, text:'this box is lowkey my favorite place on the internet rn, yall are unhinged in the best way 💜', time:'12:20pm'},
+    {sys:true, text:'night_owl left the box', time:'12:10pm'},
+    {tag:'#GEN', author:'poll_bot', bot:true, text:'Poll: Best time to be online? 🌅 Morning 12% | ☀️ Afternoon 28% | 🌙 Night 60%', time:'12:18pm'},
+    {tag:'#GAMING', author:'zoomer_z', bot:false, text:'this box is lowkey my favorite place on the internet rn, yall are unhinged in the best way 💜', time:'12:20pm'},
     {tag:'#GEN', author:'gmguy', bot:false, text:'troll.box supremacy, we out here 😤🔥', time:'12:22pm'},
+    {tag:'#GEN', author:'trivia_bot', bot:true, text:'Fun fact: there are more possible chess games than atoms in the observable universe ♟️', time:'12:30pm'},
   ],
 };
 ['mymix','eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
@@ -908,13 +1291,17 @@ function renderChat(){
       const dl=DATE_LABELS[Math.floor(i/10)]||DATE_LABELS[DATE_LABELS.length-1];
       html+=`<div class="date-sep">${dl}</div>`;
     }
+    if(m.sys){
+      html+=`<div class="sys-msg"><span class="sys-msg-text">${m.text}</span><span class="msg-time">${m.time}</span></div>`;
+      return;
+    }
     const showTag = active==='mymix'||active==='general';
-    html+=`<div class="msg" style="${showTag?'':'grid-template-columns:1fr'}">
+    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" style="${showTag?'':'grid-template-columns:1fr'}">
       ${showTag?`<span class="msg-tag ${m.tag?'active-tag':''}">${m.tag||''}</span>`:''}
       <div class="msg-body">
-        <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
-        <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>
-        <span class="msg-time">${m.time}</span>
+        <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
+        <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g opacity="0.8"><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="#E0E0E0"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="#E0E0E0"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="#E0E0E0"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
+        <span class="msg-time">${m.time}</span></div>
       </div>
     </div>`;
   });
@@ -1223,139 +1610,91 @@ document.getElementById('profileLogoutBtn').addEventListener('click', () => {
   setAuthState('anon');
 });
 
-// === WELCOME PIXEL ANIMATION — CIRCUIT TRACES ===
+// Settings modal (desktop)
+const settingsModal = document.getElementById('settingsModal');
+document.getElementById('settingsBtn').addEventListener('click', () => settingsModal.classList.remove('hidden'));
+settingsModal.addEventListener('click', e => { if (e.target === settingsModal) settingsModal.classList.add('hidden'); });
+document.querySelectorAll('.settings-theme').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.settings-theme').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+
+// Settings page (mobile)
+function openMobileSettings() {
+  const sv = document.getElementById('mobileSettingsView');
+  sv.style.display = 'flex';
+}
+document.getElementById('mobileSettingsBack').addEventListener('click', () => {
+  document.getElementById('mobileSettingsView').style.display = 'none';
+});
+
+// === WELCOME TROLL GRID ANIMATION ===
 (function() {
-  const canvas = document.getElementById('welcomeCanvas');
-  const ctx = canvas.getContext('2d');
-  const PIXEL = 16;
-  const COLOR = '#8CE45A';
-  const MAX_TRACES = 12;
-  let cols, rows, grid, traces, animId;
+  const container = document.getElementById('trollGridBg');
+  const trollFiles = ['1.svg','2.svg','3.svg','4.svg','5.svg','6.svg','8.svg','9.svg','10.svg','7_bot.svg'];
+  const isMob = window.innerWidth <= 900;
+  const CELL = isMob ? 48 : 144;
+  const GAP = isMob ? 32 : 48;
+  let cells = [];
+  let intervalId;
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    cols = Math.floor(canvas.width / PIXEL);
-    rows = Math.floor(canvas.height / PIXEL);
-    grid = Array.from({ length: cols }, () => new Float32Array(rows));
-    traces = [];
+  function setup() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const cols = Math.floor(w / (CELL + GAP));
+    const rows = Math.floor(h / (CELL + GAP));
+    container.style.gridTemplateColumns = `repeat(${cols}, ${CELL}px)`;
+    container.style.gridTemplateRows = `repeat(${rows}, ${CELL}px)`;
+    container.style.justifyContent = 'center';
+    container.style.alignContent = 'center';
+    container.innerHTML = '';
+    cells = [];
+    const total = cols * rows;
+    for (let i = 0; i < total; i++) {
+      const img = document.createElement('img');
+      img.src = 'trolls/' + trollFiles[Math.floor(Math.random() * trollFiles.length)];
+      container.appendChild(img);
+      cells.push(img);
+    }
+    // Show a few random ones initially
+    const initial = Math.floor(total * 0.35);
+    const picked = new Set();
+    while (picked.size < initial && picked.size < total) {
+      picked.add(Math.floor(Math.random() * total));
+    }
+    picked.forEach(i => cells[i].classList.add('visible'));
   }
 
-  // Directions: right, down, left, up
-  const dirs = [[1,0],[0,1],[-1,0],[0,-1]];
-
-  function spawnTrace() {
-    // Start from random edge
-    let x, y, dir;
-    const edge = Math.floor(Math.random() * 4);
-    if (edge === 0) { x = 0; y = Math.floor(Math.random() * rows); dir = 0; }
-    else if (edge === 1) { x = cols - 1; y = Math.floor(Math.random() * rows); dir = 2; }
-    else if (edge === 2) { x = Math.floor(Math.random() * cols); y = 0; dir = 1; }
-    else { x = Math.floor(Math.random() * cols); y = rows - 1; dir = 3; }
-
-    traces.push({
-      x, y, dir,
-      steps: 0,
-      maxSteps: 40 + Math.floor(Math.random() * 80),
-      nextTurn: 5 + Math.floor(Math.random() * 12),
-      speed: 1
-    });
+  function tick() {
+    if (!cells.length) return;
+    // Fade out 1-2 random visible ones
+    const visible = cells.filter(c => c.classList.contains('visible'));
+    const hidden = cells.filter(c => !c.classList.contains('visible'));
+    const fadeOut = Math.min(2 + Math.floor(Math.random() * 3), visible.length);
+    for (let i = 0; i < fadeOut; i++) {
+      const idx = Math.floor(Math.random() * visible.length);
+      visible[idx].classList.remove('visible');
+      visible.splice(idx, 1);
+    }
+    // Fade in 2-4 random hidden ones with new troll
+    const fadeIn = Math.min(2 + Math.floor(Math.random() * 3), hidden.length);
+    for (let i = 0; i < fadeIn; i++) {
+      const idx = Math.floor(Math.random() * hidden.length);
+      hidden[idx].src = 'trolls/' + trollFiles[Math.floor(Math.random() * trollFiles.length)];
+      hidden[idx].classList.add('visible');
+      hidden.splice(idx, 1);
+    }
   }
 
-  function draw() {
-    // Fade grid
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        if (grid[i][j] > 0) grid[i][j] -= 0.004;
-        if (grid[i][j] < 0) grid[i][j] = 0;
-      }
-    }
-
-    // Spawn new traces
-    while (traces.length < MAX_TRACES) spawnTrace();
-
-    // Update traces
-    for (let t = traces.length - 1; t >= 0; t--) {
-      const tr = traces[t];
-
-      // Mark current pixel
-      if (tr.x >= 0 && tr.x < cols && tr.y >= 0 && tr.y < rows) {
-        grid[tr.x][tr.y] = 1;
-      }
-
-      // Move
-      tr.x += dirs[tr.dir][0];
-      tr.y += dirs[tr.dir][1];
-      tr.steps++;
-      tr.nextTurn--;
-
-      // Turn
-      if (tr.nextTurn <= 0) {
-        // 90 degree turn (left or right)
-        if (Math.random() > 0.5) {
-          tr.dir = (tr.dir + 1) % 4;
-        } else {
-          tr.dir = (tr.dir + 3) % 4;
-        }
-        tr.nextTurn = 4 + Math.floor(Math.random() * 14);
-
-        // Chance to branch
-        if (Math.random() > 0.7 && traces.length < MAX_TRACES + 4) {
-          const branchDir = (tr.dir + (Math.random() > 0.5 ? 1 : 3)) % 4;
-          traces.push({
-            x: tr.x, y: tr.y, dir: branchDir,
-            steps: 0,
-            maxSteps: 15 + Math.floor(Math.random() * 30),
-            nextTurn: 3 + Math.floor(Math.random() * 8),
-            speed: 1
-          });
-        }
-      }
-
-      // Remove if out of bounds or done
-      if (tr.x < -2 || tr.x > cols + 2 || tr.y < -2 || tr.y > rows + 2 || tr.steps > tr.maxSteps) {
-        traces.splice(t, 1);
-      }
-    }
-
-    // Render
-    ctx.fillStyle = '#050505';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        if (grid[i][j] > 0) {
-          ctx.fillStyle = COLOR;
-          ctx.globalAlpha = grid[i][j] * 0.8;
-          ctx.fillRect(i * PIXEL, j * PIXEL, PIXEL - 2, PIXEL - 2);
-        }
-      }
-    }
-
-    // Draw nodes (endpoints / junctions) as brighter dots
-    for (const tr of traces) {
-      if (tr.x >= 0 && tr.x < cols && tr.y >= 0 && tr.y < rows) {
-        ctx.fillStyle = COLOR;
-        ctx.globalAlpha = 1;
-        ctx.fillRect(tr.x * PIXEL, tr.y * PIXEL, PIXEL - 2, PIXEL - 2);
-        // Glow
-        ctx.globalAlpha = 0.3;
-        ctx.fillRect(tr.x * PIXEL - 2, tr.y * PIXEL - 2, PIXEL + 2, PIXEL + 2);
-      }
-    }
-
-    ctx.globalAlpha = 1;
-    animId = requestAnimationFrame(draw);
-  }
-
-  resize();
-  draw();
-  window.addEventListener('resize', resize);
+  setup();
+  intervalId = setInterval(tick, 800);
+  window.addEventListener('resize', () => { clearInterval(intervalId); setup(); intervalId = setInterval(tick, 800); });
 
   const observer = new MutationObserver(() => {
-    const overlay = document.getElementById('welcomeOverlay');
-    if (overlay.classList.contains('hidden')) {
-      cancelAnimationFrame(animId);
+    if (document.getElementById('welcomeOverlay').classList.contains('hidden')) {
+      clearInterval(intervalId);
     }
   });
   observer.observe(document.getElementById('welcomeOverlay'), { attributes: true, attributeFilter: ['class'] });
@@ -1426,10 +1765,13 @@ function setMobileView(view) {
   } else if (view === 'chat') {
     centerPanel.classList.add('mobile-active');
     mobileBack.style.display = 'block';
+    setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'terminal') {
     rightPanel.classList.add('mobile-active');
   } else if (view === 'profile') {
     mobileProfileView.classList.add('mobile-active');
+    const curRoom = ROOMS.find(r => r.id === active);
+    if (curRoom) mobileProfileView.style.setProperty('--ac', curRoom.ac);
     const mpc = document.getElementById('mobileProfileContent');
     const nick = document.getElementById('profileDisplayName').textContent;
     if (authState === 'auth' || authState === 'anon') {
@@ -1463,6 +1805,7 @@ function setMobileView(view) {
         <div style="margin-top:16px;">
           <button class="profile-modal-btn" style="width:100%">EDIT PROFILE</button>
         </div>
+        <button class="profile-modal-btn" style="width:100%;margin-top:8px;" onclick="openMobileSettings()">SETTINGS</button>
         <button class="profile-modal-btn danger" style="width:100%;margin-top:8px;" onclick="setAuthState('welcome')">LOG OUT</button>
       `;
     } else {
