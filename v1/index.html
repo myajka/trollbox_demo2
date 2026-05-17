@@ -52,9 +52,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Space Mono', monospace; cursor: pointer; text-align: center; }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
 .section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
-.search-box { margin: 7px 10px; background: #141414; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; }
-.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; }
+.search-box { margin: 7px 10px; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; caret-color: transparent; }
 .search-box input::placeholder { color: #555; }
+.search-box .search-cursor { display: none; width: 8px; height: 16px; background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; flex-shrink: 0; }
+.search-box.focused .search-cursor { display: block; }
 
 /* CENTER */
 .center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; }
@@ -114,8 +116,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .r-block { border-bottom: 1px solid #2a2a2a; padding: 10px 12px; }
 .r-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .r-title { font-size: 14px; color: #e0e0e0; letter-spacing: 0.08em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
-.r-icons { display: flex; gap: 5px; }
-.r-icon { width: 10px; height: 10px; background: #1e1e1e; border-radius: 0; }
+.r-icons { display: flex; gap: 3px; align-items: center; }
+.r-arrow { cursor: pointer; opacity: 0.3; transition: opacity 0.15s; padding: 2px; }
+.r-arrow:hover { opacity: 0.8; }
+.r-arrow.disabled { opacity: 0.1; pointer-events: none; }
 .live-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #3ddc84; margin-right: 4px; animation: blink 1.2s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .big-num { font-size: 24px; color: #e0e0e0; letter-spacing: 0.02em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
@@ -470,8 +474,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- LEFT -->
 <div class="left">
   <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/></div>
+  <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor"></span></div>
   <div class="left-rooms" id="rooms-list"></div>
-  <div class="search-box"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" /></div>
   <div class="create-box-wrap" id="createBoxWrap"><button class="create-box-btn">+ CREATE BOX</button></div>
 
   <!-- PROFILE: authorized -->
@@ -962,12 +966,12 @@ const ROOMS = [
   { id:'btc', label:'#BTC', tag:'[BITCOIN]', count:267, ac:'#f7931a' },
   { id:'eth', label:'#ETH', tag:'[ETHEREUM]', count:295, ac:'#627eea' },
   { id:'sol', label:'#SOL', tag:'[SOLANA]', count:211, ac:'#9945ff' },
+  { id:'stables', label:'#STABLECOINS', tag:'[STABLE]', count:189, ac:'#26a17b' },
+  { id:'etf', label:'#ETF', tag:'[FINANCE]', count:412, ac:'#d4a843' },
   { id:'gaming', label:'#GAMING', tag:'', count:1841, ac:'#9b59f7' },
   { id:'sports', label:'#SPORTS', tag:'', count:4217, ac:'#3ddc84' },
   { id:'politics', label:'#POLITICS', tag:'', count:932, ac:'#ff5555' },
   { id:'ai', label:'#AI', tag:'[TECH]', count:578, ac:'#4ab8e8' },
-  { id:'stables', label:'#STABLECOINS', tag:'[STABLE]', count:189, ac:'#26a17b' },
-  { id:'etf', label:'#ETF', tag:'[FINANCE]', count:412, ac:'#d4a843' },
 ];
 
 let active = 'btc';
@@ -1233,7 +1237,7 @@ const CHATS = {
 ['mymix','eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 
 function rHead(t) {
-  return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons"><div class="r-icon"></div><div class="r-icon"></div></div></div>`;
+  return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons"><span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="7" viewBox="0 0 10 7" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span><span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="7" viewBox="0 0 10 7" fill="#888" style="image-rendering:pixelated"><rect x="0" y="2" width="10" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="4" y="6" width="2" height="1"/></svg></span></div></div>`;
 }
 
 let sparkId = 0;
@@ -1375,14 +1379,77 @@ function renderChat(){
   feed.scrollTop=feed.scrollHeight;
 }
 
+function getWidgetOrder(roomId) {
+  try { const o = JSON.parse(localStorage.getItem('tb_widget_order_'+roomId)); if(Array.isArray(o)) return o; } catch(e){}
+  return null;
+}
+function saveWidgetOrder(roomId, order) {
+  localStorage.setItem('tb_widget_order_'+roomId, JSON.stringify(order));
+}
+
 function renderRight(){
   const r=ROOMS.find(r=>r.id===active);
-  document.getElementById('right-panel').innerHTML=`
-    <div class="section-head"><span>TERMINAL</span><span style="color:#333">&#x2139;</span></div>
-    ${getPanel(active)(r.ac)}
-    <div class="create-widget-wrap"><button class="create-widget-btn" onclick="document.getElementById('widgetModal').classList.remove('hidden')">CREATE WIDGET +</button></div>`;
+  const panelHtml = getPanel(active)(r.ac);
+  // parse r-blocks from panel html
+  const tmp = document.createElement('div');
+  tmp.innerHTML = panelHtml;
+  const blocks = Array.from(tmp.querySelectorAll('.r-block'));
+  // apply saved order
+  const saved = getWidgetOrder(active);
+  if(saved && saved.length === blocks.length) {
+    const reordered = saved.map(i => blocks[i]).filter(Boolean);
+    if(reordered.length === blocks.length) blocks.splice(0, blocks.length, ...reordered);
+  }
+  // build final html
+  const rightEl = document.getElementById('right-panel');
+  rightEl.innerHTML = `<div class="section-head"><span>TERMINAL</span><span style="color:#333">&#x2139;</span></div>`;
+  const container = document.createElement('div');
+  container.id = 'widgets-container';
+  blocks.forEach(b => container.appendChild(b));
+  rightEl.appendChild(container);
+  rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="document.getElementById('widgetModal').classList.remove('hidden')">CREATE WIDGET +</button></div>`);
+  updateArrowStates();
   initVibes();
   initSparkHovers();
+}
+
+function moveWidget(arrowEl, dir) {
+  const block = arrowEl.closest('.r-block');
+  const container = document.getElementById('widgets-container');
+  if(!block || !container) return;
+  const blocks = Array.from(container.querySelectorAll('.r-block'));
+  const idx = blocks.indexOf(block);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= blocks.length) return;
+  // swap DOM
+  if(dir === -1) container.insertBefore(block, blocks[newIdx]);
+  else container.insertBefore(blocks[newIdx], block);
+  // save order by matching original indices
+  const r = ROOMS.find(r=>r.id===active);
+  const origHtml = getPanel(active)(r.ac);
+  const origTmp = document.createElement('div');
+  origTmp.innerHTML = origHtml;
+  const origBlocks = Array.from(origTmp.querySelectorAll('.r-block'));
+  const curBlocks = Array.from(container.querySelectorAll('.r-block'));
+  const order = curBlocks.map(cb => {
+    const title = cb.querySelector('.r-title');
+    if(!title) return 0;
+    return origBlocks.findIndex(ob => { const ot = ob.querySelector('.r-title'); return ot && ot.textContent === title.textContent; });
+  });
+  saveWidgetOrder(active, order);
+  updateArrowStates();
+}
+
+function updateArrowStates() {
+  const container = document.getElementById('widgets-container');
+  if(!container) return;
+  const blocks = Array.from(container.querySelectorAll('.r-block'));
+  blocks.forEach((b, i) => {
+    const up = b.querySelector('.r-arrow-up');
+    const down = b.querySelector('.r-arrow-down');
+    if(up) up.classList.toggle('disabled', i === 0);
+    if(down) down.classList.toggle('disabled', i === blocks.length - 1);
+  });
 }
 
 // === VIBES CHECK ===
@@ -1780,6 +1847,12 @@ createModal.addEventListener('click', e => { if(e.target === createModal) create
 boxNameInput.addEventListener('input', () => {
   boxNameInput.value = boxNameInput.value.replace(/[^a-zA-Z0-9_]/g, '').toUpperCase();
 });
+
+// Search box blinking cursor
+const searchBox = document.getElementById('searchBox');
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('focus', () => searchBox.classList.add('focused'));
+searchInput.addEventListener('blur', () => searchBox.classList.remove('focused'));
 
 // Widget modal
 const widgetModal = document.getElementById('widgetModal');
