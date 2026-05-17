@@ -327,17 +327,17 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 @media (max-width: 900px) {
   html, body { align-items: flex-start; }
-  .app { grid-template-columns: 1fr !important; grid-template-rows: 1fr; padding: 8px 8px 0 8px; }
+  html, body { height: 100%; overflow: hidden; }
+  body { display: flex; flex-direction: column; }
+  .app { grid-template-columns: 1fr !important; grid-template-rows: 1fr; padding: 8px 8px 0 8px; flex: 1; min-height: 0; overflow: hidden; }
   .left, .center, .right { display: none !important; }
-  .app .mobile-active { display: flex !important; flex-direction: column; }
+  .app .mobile-active { display: flex !important; flex-direction: column; min-height: 0; overflow: hidden; }
 
-  .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #0a0a0a; border-top: 1px solid #333; z-index: 9997; align-items: center; justify-content: space-around; }
+  .mobile-nav { display: flex; height: 56px; min-height: 56px; background: #0a0a0a; border-top: 1px solid #333; z-index: 9997; align-items: center; justify-content: space-around; flex-shrink: 0; }
   .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 8px 16px; color: #555; font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
   .mobile-nav-item:hover { color: #999; }
   .mobile-nav-item.active { color: var(--ac, #8CE45A); }
   .mobile-nav-icon { font-size: 18px; line-height: 1; }
-
-  .app { height: calc(100vh - 56px); }
   .left-profile { display: none !important; }
   .left { padding-bottom: 16px; border: 1px solid #333; }
   .center { border: 1px solid #333; }
@@ -966,6 +966,8 @@ const ROOMS = [
   { id:'sports', label:'#SPORTS', tag:'', count:4217, ac:'#3ddc84' },
   { id:'politics', label:'#POLITICS', tag:'', count:932, ac:'#ff5555' },
   { id:'ai', label:'#AI', tag:'[TECH]', count:578, ac:'#4ab8e8' },
+  { id:'stables', label:'#STABLECOINS', tag:'[STABLE]', count:189, ac:'#26a17b' },
+  { id:'etf', label:'#ETF', tag:'[FINANCE]', count:412, ac:'#d4a843' },
 ];
 
 let active = 'btc';
@@ -1178,6 +1180,55 @@ const CHATS = {
     {tag:'#GEN', author:'gmguy', bot:false, text:'troll.box supremacy, we out here 😤🔥', time:'12:22pm'},
     {tag:'#GEN', author:'trivia_bot', bot:true, text:'Fun fact: there are more possible chess games than atoms in the observable universe ♟️', time:'12:30pm'},
   ],
+  stables: [
+    {sys:true, text:'usdt_maxi joined the box', time:'9:00am'},
+    {tag:'$USDT', author:'usdt_maxi', bot:false, text:'USDT market cap just hit $120B, tether keeps printing lol', time:'9:05am'},
+    {tag:'$USDC', author:'circle_fan', bot:false, text:'USDC is the only stablecoin i trust tbh, fully audited', time:'9:10am'},
+    {tag:'$USDT', author:'defi_degen', bot:false, text:'nobody cares about audits when tether has the liquidity bro', time:'9:12am'},
+    {tag:'$DAI', author:'maker_chad', bot:false, text:'yall sleeping on DAI, decentralized stablecoin supremacy 🏛️', time:'9:20am'},
+    {tag:'$USDT', author:'news_bot', bot:true, text:'Tether Q1 profit: $4.5B — reserves include US Treasuries, BTC, and gold', time:'9:30am'},
+    {tag:'$USDC', author:'circle_fan', bot:false, text:'meanwhile circle is publicly traded and transparent, just sayin', time:'9:35am'},
+    {tag:'$USDT', author:'usdt_maxi', bot:false, text:'tether FUD has been going since 2017 and it still hasnt depegged lmao', time:'9:40am'},
+    {tag:'$PYUSD', author:'paypal_user', bot:false, text:'anyone tried PYUSD? paypal stablecoin is lowkey interesting', time:'9:50am'},
+    {tag:'$USDT', author:'defi_degen', bot:false, text:'paypal making a stablecoin feels dystopian ngl', time:'9:52am'},
+    {tag:'$USDC', author:'news_bot', bot:true, text:'EU MiCA regulation goes live — USDC first compliant stablecoin in Europe', time:'10:00am'},
+    {tag:'$USDT', author:'eu_trader', bot:false, text:'Binanz schränkt USDT in Europa ein, das ist verrückt', time:'10:05am', tr:'Binance restricting USDT in Europe, this is crazy'},
+    {tag:'$USDC', author:'circle_fan', bot:false, text:'this is literally why USDC will win long term, compliance matters', time:'10:10am'},
+    {tag:'$DAI', author:'maker_chad', bot:false, text:'DAI survived the terra crash, survived MakerDAO drama, still $1.00 💪', time:'10:20am'},
+    {tag:'$USDT', author:'jokes_bot', bot:true, text:'Tether: "We are fully backed." Auditors: "We are fully booked."', time:'10:30am'},
+    {tag:'$USDT', author:'usdt_maxi', bot:false, text:'the real question is when are we getting a stablecoin on bitcoin natively', time:'10:40am'},
+    {tag:'$USDC', author:'defi_degen', bot:false, text:'stablecoin yields on aave are still 8-12% thats free money basically', time:'10:50am'},
+    {tag:'$USDT', author:'news_bot', bot:true, text:'Global stablecoin market cap crosses $180B — new ATH', time:'11:00am'},
+    {sys:true, text:'whale_alert joined the box', time:'11:05am'},
+    {tag:'$USDT', author:'whale_alert', bot:false, text:'500M USDT just minted on tron, someone is cooking 👀', time:'11:10am'},
+    {tag:'$USDC', author:'circle_fan', bot:false, text:'tron chain for stablecoins is actually genius for low fees', time:'11:15am'},
+    {tag:'$USDT', author:'jokes_bot', bot:true, text:'My portfolio is 100% stablecoins. I sleep like a baby while yall get rekt 😴', time:'11:30am'},
+  ],
+  etf: [
+    {sys:true, text:'blackrock_watcher joined the box', time:'8:00am'},
+    {tag:'$IBIT', author:'blackrock_watcher', bot:false, text:'IBIT had another $400M inflow day, blackrock is eating the market', time:'8:05am'},
+    {tag:'$GBTC', author:'grayscale_og', bot:false, text:'GBTC outflows slowing down finally, only $50M yesterday', time:'8:10am'},
+    {tag:'$IBIT', author:'etf_analyst', bot:false, text:'total BTC ETF AUM is now $60B+, this is only 6 months in 🤯', time:'8:15am'},
+    {tag:'$IBIT', author:'news_bot', bot:true, text:'BlackRock IBIT becomes largest BTC ETF — surpasses GBTC in AUM', time:'8:30am'},
+    {tag:'$FBTC', author:'fidelity_fan', bot:false, text:'FBTC is underrated, fidelity custody is rock solid', time:'8:35am'},
+    {tag:'$ETHA', author:'eth_etf_bull', bot:false, text:'when ETH ETF gets approved its gonna be a bloodbath for shorts', time:'8:40am'},
+    {tag:'$IBIT', author:'boomer_investor', bot:false, text:'finally bought BTC through my 401k via IBIT, feels surreal', time:'8:50am'},
+    {tag:'$GBTC', author:'grayscale_og', bot:false, text:'selling GBTC for IBIT was the play, lower fees = more gains long term', time:'8:55am'},
+    {tag:'$IBIT', author:'news_bot', bot:true, text:'SEC approves options trading on spot BTC ETFs — institutional game changer', time:'9:00am'},
+    {tag:'$IBIT', author:'etf_analyst', bot:false, text:'options on IBIT means institutions can finally hedge properly, this is huge', time:'9:05am'},
+    {tag:'$ETHA', author:'eth_etf_bull', bot:false, text:'ETH ETF承認されたら全力で買う、これはチャンスだ', time:'9:10am', tr:'When ETH ETF gets approved I\'m going all in, this is an opportunity'},
+    {tag:'$IBIT', author:'blackrock_watcher', bot:false, text:'larry fink went from calling BTC an index of money laundering to selling ETFs lmao', time:'9:20am'},
+    {tag:'$IBIT', author:'jokes_bot', bot:true, text:'Boomers discovering BTC through ETFs is the most 2024 thing ever. "Honey, I invested in digital gold!"', time:'9:30am'},
+    {tag:'$FBTC', author:'fidelity_fan', bot:false, text:'fidelity literally mines bitcoin in their own data centers btw, they get it', time:'9:40am'},
+    {tag:'$GBTC', author:'grayscale_og', bot:false, text:'grayscale mini trust with 0.15% fee is the move now, cheaper than IBIT', time:'9:50am'},
+    {tag:'$IBIT', author:'etf_analyst', bot:false, text:'BTC ETFs now hold more bitcoin than satoshi, let that sink in', time:'10:00am'},
+    {tag:'$ETHA', author:'news_bot', bot:true, text:'Bloomberg analyst: 75% chance ETH spot ETF approved by Q3 2024', time:'10:10am'},
+    {tag:'$IBIT', author:'boomer_investor', bot:false, text:'my financial advisor told me to sell IBIT, i told him to find a new career 😤', time:'10:20am'},
+    {tag:'$IBIT', author:'blackrock_watcher', bot:false, text:'daily volume on IBIT rivals some of the biggest ETFs in the world now', time:'10:30am'},
+    {tag:'$GBTC', author:'jokes_bot', bot:true, text:'GBTC holders in 2021: "its at a 40% discount!" GBTC holders now: "why did i not sell at NAV" 💀', time:'10:40am'},
+    {sys:true, text:'pension_fund joined the box', time:'10:45am'},
+    {tag:'$IBIT', author:'pension_fund', bot:false, text:'Wisconsin pension fund bought $160M in IBIT, this is the institutional wave 🌊', time:'10:50am'},
+  ],
 };
 ['mymix','eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 
@@ -1233,6 +1284,20 @@ const PANELS = {
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">ChatGPT, Gemini and Claude walk into a bar.<br>They hallucinate the bartender.</div></div>`,
+  stables: ac=>`
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">STABLE DEGENS</span><span style="font-size:18px;color:#e0e0e0">189 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
+    <div class="r-block">${rHead('PEG TRACKER')}<div class="trend-row"><span class="trend-name">USDT</span><span class="trend-val" style="color:${ac}">$1.0001</span></div><div class="trend-row"><span class="trend-name">USDC</span><span class="trend-val" style="color:${ac}">$0.9999</span></div><div class="trend-row"><span class="trend-name">DAI</span><span class="trend-val" style="color:${ac}">$1.0002</span></div><div class="trend-row"><span class="trend-name">PYUSD</span><span class="trend-val" style="color:${ac}">$0.9998</span></div></div>
+    <div class="r-block">${rHead('DOMINANCE')}<div class="poll-row"><span class="poll-lbl">USDT</span><div class="bar-bg"><div class="bar-fg" style="width:68%"></div></div><span class="bar-pct">68%</span></div><div class="poll-row"><span class="poll-lbl">USDC</span><div class="bar-bg"><div class="bar-fg" style="width:21%"></div></div><span class="bar-pct">21%</span></div><div class="poll-row"><span class="poll-lbl">DAI</span><div class="bar-bg"><div class="bar-fg" style="width:6%"></div></div><span class="bar-pct">6%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:5%"></div></div><span class="bar-pct">5%</span></div></div>
+    <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">MiCA regulation live — USDC first compliant</span><div class="news-time" style="padding-left:9px">2h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">500M USDT minted on Tron — whale activity</span><div class="news-time" style="padding-left:9px">4h ago</div></div></div>
+    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">My portfolio is 100% stablecoins.<br>I sleep great while yall get rekt.</div></div>`,
+  etf: ac=>`
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">TRADERS ONLINE</span><span style="font-size:18px;color:#e0e0e0">412 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block">${rHead('BTC ETF TOTAL AUM')}<div class="big-num">$62.8B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 1.8%</span></div>${spark([20,22,25,28,30,33,35,38,40,42,45,50,55,58,62],ac)}</div>
+    <div class="r-block">${rHead('DAILY FLOWS')}<div class="trend-row"><span class="trend-name">IBIT (BlackRock)</span><span class="trend-val" style="color:#3ddc84">+$401M</span></div><div class="trend-row"><span class="trend-name">FBTC (Fidelity)</span><span class="trend-val" style="color:#3ddc84">+$120M</span></div><div class="trend-row"><span class="trend-name">GBTC (Grayscale)</span><span class="trend-val" style="color:#ff5555">-$52M</span></div><div class="trend-row"><span class="trend-name">ARKB (Ark/21)</span><span class="trend-val" style="color:#3ddc84">+$38M</span></div></div>
+    <div class="r-block">${rHead('CHAT VOTE — BEST ETF?')}<div class="poll-row"><span class="poll-lbl">IBIT</span><div class="bar-bg"><div class="bar-fg" style="width:52%"></div></div><span class="bar-pct">52%</span></div><div class="poll-row"><span class="poll-lbl">FBTC</span><div class="bar-bg"><div class="bar-fg" style="width:28%"></div></div><span class="bar-pct">28%</span></div><div class="poll-row"><span class="poll-lbl">GBTC</span><div class="bar-bg"><div class="bar-fg" style="width:12%"></div></div><span class="bar-pct">12%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:8%"></div></div><span class="bar-pct">8%</span></div></div>
+    <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">SEC approves options on spot BTC ETFs</span><div class="news-time" style="padding-left:9px">1h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH spot ETF — 75% approval chance Q3</span><div class="news-time" style="padding-left:9px">3h ago</div></div></div>
+    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Boomers discovering BTC through ETFs:<br>"Honey, I invested in digital gold!"</div></div>`,
   general: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">DEGENS ONLINE</span><span style="font-size:18px;color:#e0e0e0">3,102 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:'Space Mono',monospace;margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
