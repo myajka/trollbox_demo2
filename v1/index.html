@@ -2354,7 +2354,9 @@ function renderRight(){
   }
   // build final html
   const rightEl = document.getElementById('right-panel');
-  rightEl.innerHTML = `<div class="section-head"><span>TERMINAL</span><span style="color:#333">&#x2139;</span></div>`;
+  const r = ROOMS.find(r=>r.id===active);
+  const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL ' + r.label : 'TERMINAL';
+  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span><span style="color:#333">&#x2139;</span></div>`;
   const container = document.createElement('div');
   container.id = 'widgets-container';
   blocks.forEach(b => container.appendChild(b));
