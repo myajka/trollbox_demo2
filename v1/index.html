@@ -2269,7 +2269,7 @@ function setRoom(id){
   const r=ROOMS.find(r=>r.id===id);
   document.getElementById('root').style.setProperty('--ac',r.ac);
   document.body.style.setProperty('--ac',r.ac);
-  document.getElementById('center-title').textContent=r.label+(r.tag?' '+r.tag:'');
+  document.getElementById('center-title').textContent = (typeof isMobile==='function'&&isMobile()) ? r.label : r.label+(r.tag?' '+r.tag:'');
   document.getElementById('chat-input').placeholder=`Type to ${r.label}...`;
   renderRooms(); renderChat(); renderRight();
 }
