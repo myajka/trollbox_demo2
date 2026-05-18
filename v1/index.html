@@ -119,8 +119,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .r-block { border-bottom: 1px solid #2a2a2a; padding: 10px 12px; }
 .r-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
 .r-title { font-size: 14px; color: #e0e0e0; letter-spacing: 0.08em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
-.r-icons { display: flex; gap: 3px; align-items: flex-start; }
-.r-arrow { cursor: pointer; opacity: 0.3; transition: opacity 0.15s; padding: 2px; }
+.r-icons { display: flex; gap: 2px; align-items: flex-start; margin-top: -2px; margin-right: -2px; }
+.r-arrow { cursor: pointer; opacity: 0.3; transition: opacity 0.15s; padding: 1px; }
 .r-arrow:hover { opacity: 0.8; }
 .r-arrow.disabled { opacity: 0.1; pointer-events: none; }
 .live-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #3ddc84; margin-right: 4px; animation: blink 1.2s step-end infinite; }
@@ -376,7 +376,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .msg-time { font-size: 13px; }
   .msg-tag { font-size: 13px; }
   .msg-troll { width: 22px; height: 22px; }
-  .msg-body { grid-template-columns: 26px 1fr; }
+  .msg-body { grid-template-columns: 1fr; }
+  .msg-body .msg-troll { display: none; }
   .date-sep { font-size: 13px; }
   .center-title { font-size: 17px; line-height: 1; cursor: pointer; }
 
