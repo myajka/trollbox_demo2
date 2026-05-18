@@ -1858,6 +1858,9 @@ function setAuthState(state) {
 // Welcome → Anon
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
+// Auto-skip welcome if coming from v1
+if (new URLSearchParams(window.location.search).has('from')) { setAuthState('anon'); }
+
 // Login
 document.getElementById('loginBtn').addEventListener('click', () => {
   const username = document.getElementById('authUsername').value.trim();
