@@ -43,8 +43,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-user-icon { fill: #555; }
 .room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
 .room-item.active .room-count { color: #777; }
-.pin-icon { display: inline-block; width: 10px; height: 12px; margin-right: 4px; vertical-align: middle; }
-.pin-icon svg { width: 100%; height: 100%; }
+.room-item.pinned .room-name::before { content: '📌 '; font-size: 10px; }
 
 /* Desktop context menu */
 .ctx-menu { position: fixed; z-index: 99999; background: #1a1a1a; border: 1px solid #333; padding: 4px 0; min-width: 140px; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; display: none; }
@@ -3001,13 +3000,10 @@ window.addEventListener('resize', () => {
   }
 });
 
-// === PIXEL FLAG ICON ===
-const PIN_SVG = '<svg width="10" height="12" viewBox="0 0 5 6" fill="currentColor" style="image-rendering:pixelated"><rect x="0" y="0" width="1" height="6"/><rect x="1" y="0" width="4" height="3"/></svg>';
-
 // === CONTEXT MENU (desktop) ===
 const ctxMenu = document.createElement('div');
 ctxMenu.className = 'ctx-menu';
-ctxMenu.innerHTML = `<div class="ctx-menu-item" data-action="pin">${PIN_SVG} Pin</div><div class="ctx-menu-item danger" data-action="report">⚠ Report</div>`;
+ctxMenu.innerHTML = '<div class="ctx-menu-item" data-action="pin">📌 Pin</div><div class="ctx-menu-item danger" data-action="report">⚠ Report</div>';
 document.body.appendChild(ctxMenu);
 let ctxRoomId = null;
 
@@ -3051,9 +3047,9 @@ renderRooms = function() {
     // Mobile: wrap rooms with swipe action
     document.getElementById('rooms-list').innerHTML = ROOMS.map(r => `
       <div class="room-item-wrap" data-room="${r.id}">
-        <div class="room-swipe-action">${PIN_SVG} PIN</div>
+        <div class="room-swipe-action">📌 PIN</div>
         <div class="room-item ${r.id===active?'active':''} ${pinnedRooms.includes(r.id)?'pinned':''}" onclick="setRoomMobile('${r.id}')">
-          <span class="room-name">${pinnedRooms.includes(r.id)?'<span class="pin-icon">'+PIN_SVG+'</span>':''}${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+          <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
           ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
         </div>
       </div>`).join('');
@@ -3062,7 +3058,7 @@ renderRooms = function() {
     // Desktop: normal render + context menu
     document.getElementById('rooms-list').innerHTML = ROOMS.map(r => `
       <div class="room-item ${r.id===active?'active':''} ${pinnedRooms.includes(r.id)?'pinned':''}" onclick="setRoom('${r.id}')" data-room="${r.id}">
-        <span class="room-name">${pinnedRooms.includes(r.id)?'<span class="pin-icon">'+PIN_SVG+'</span>':''}${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+        <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
         ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
       </div>`).join('');
     // Attach right-click
@@ -3071,7 +3067,7 @@ renderRooms = function() {
         e.preventDefault();
         ctxRoomId = el.dataset.room;
         const pinItem = ctxMenu.querySelector('[data-action="pin"]');
-        pinItem.innerHTML = pinnedRooms.includes(ctxRoomId) ? PIN_SVG + ' Unpin' : PIN_SVG + ' Pin';
+        pinItem.textContent = pinnedRooms.includes(ctxRoomId) ? '📌 Unpin' : '📌 Pin';
         ctxMenu.style.left = e.clientX + 'px';
         ctxMenu.style.top = e.clientY + 'px';
         ctxMenu.classList.add('show');
