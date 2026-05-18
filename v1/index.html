@@ -98,7 +98,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .date-sep::before { left: 5%; }
 .date-sep::after { right: 5%; }
 .chat-input-row { border-top: 1px solid #333; padding: 8px 12px; display: flex; gap: 6px; align-items: center; flex-shrink: 0; position: relative; }
-.chat-input { flex: 1; background: #141414; border: 1px solid #333; border-radius: 0; padding: 7px 10px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 14px; outline: none; caret-color: transparent; }
+.chat-input { flex: 1; background: #141414; border: 1px solid #333; border-radius: 0; padding: 7px 10px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 14px; outline: none; caret-color: var(--ac, #8CE45A); }
 .chat-input:focus { border-color: #333; }
 @keyframes crt-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 .crt-cursor { display: none; position: absolute; width: 8px; height: 16px; background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
@@ -498,7 +498,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="amber"] .search-box input { color: #d4a54a; caret-color: #ffb347; }
 [data-crt-theme="amber"] .search-box input::placeholder { color: #6b5530; }
 [data-crt-theme="amber"] .chat-input-row { border-top-color: #302818; box-shadow: 0 -1px 6px -3px rgba(255,165,50,0.06); }
-[data-crt-theme="amber"] .chat-input { background: #131008; border-color: #302818; color: #e8c060; }
+[data-crt-theme="amber"] .chat-input { background: #131008; border-color: #302818; color: #e8c060; caret-color: #ffb347; }
 [data-crt-theme="amber"] .chat-input::placeholder { color: #6b5530; }
 [data-crt-theme="amber"] .chat-input:focus { border-color: #504020; box-shadow: 0 0 6px rgba(255,165,50,0.2), inset 0 0 4px rgba(0,0,0,0.4); }
 [data-crt-theme="amber"] .send-btn { background: #131008; border-color: #504020; color: #8a6e3c; }
@@ -848,7 +848,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="hacker"] .search-box input { color: #40c840; caret-color: #00ff41; }
 [data-crt-theme="hacker"] .search-box input::placeholder { color: #1a5a1a; }
 [data-crt-theme="hacker"] .chat-input-row { border-top-color: #0a280a; box-shadow: 0 -1px 6px -3px rgba(0,255,65,0.06); }
-[data-crt-theme="hacker"] .chat-input { background: #030803; border-color: #0a280a; color: #50e850; }
+[data-crt-theme="hacker"] .chat-input { background: #030803; border-color: #0a280a; color: #50e850; caret-color: #00ff41; }
 [data-crt-theme="hacker"] .chat-input::placeholder { color: #1a5a1a; }
 [data-crt-theme="hacker"] .chat-input:focus { border-color: #0f3f0f; box-shadow: 0 0 6px rgba(0,255,65,0.25), inset 0 0 4px rgba(0,0,0,0.4); }
 [data-crt-theme="hacker"] .send-btn { background: #030803; border-color: #0f3f0f; color: #258025; }
@@ -1219,7 +1219,6 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
   <!-- Chat input: authorized -->
   <div class="chat-input-row hidden" id="chatInputAuth">
-    <span class="crt-cursor" id="crt-cursor"></span>
     <input class="chat-input" placeholder="Type to #btc, we will translate" id="chat-input" />
     <button class="send-btn">&#9658;</button>
   </div>
