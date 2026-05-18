@@ -349,7 +349,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .left { padding-bottom: 16px; border: 1px solid #333; }
   .center { border: 1px solid #333; }
   .right { border: 1px solid #333; padding-bottom: 16px; }
-  .center .chat-input-row, .center .anon-chat-block { margin-bottom: 32px; }
+  .center .chat-input-row, .center .anon-chat-block { margin-bottom: 0; }
   .create-widget-wrap { margin-bottom: 16px; }
   .welcome-overlay { height: 100vh; padding: 0 22px; }
   .welcome-overlay img { max-width: 100%; height: auto; }
@@ -361,10 +361,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .room-item:hover { background: transparent; color: inherit; box-shadow: none; }
   .room-name { font-size: 16px; }
   .room-count { font-size: 14px; }
-  .search-box { margin: 7px 16px; padding: 10px 12px; }
+  .search-box { margin: 0; padding: 10px 12px; }
   .search-box input { font-size: 15px; }
-  .search-create-row { padding: 10px 12px; }
-  .create-box-btn { width: 44px; min-width: 44px; font-size: 20px; }
+  .search-create-row { padding: 10px 16px; display: flex; align-items: stretch; gap: 6px; }
+  .search-create-row .search-box { flex: 1; margin: 0; }
+  .create-box-btn { width: 44px; min-width: 44px; height: 44px; font-size: 20px; display: flex; align-items: center; justify-content: center; padding: 0; }
 
   /* Mobile: chat */
   .center-head { justify-content: flex-start; gap: 8px; align-items: center; min-height: 48px; padding: 0 12px; }
@@ -388,7 +389,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .pbtn { font-size: 13px; padding: 8px 0; }
   .toggle-row { font-size: 13px; }
   .chat-input { font-size: 15px; }
-  .send-btn { font-size: 14px; }
+  .send-btn { font-size: 16px; aspect-ratio: 1; padding: 0; width: auto; }
 
   /* Mobile: profile modal styles */
   .profile-stat-label { font-size: 12px; }
@@ -2867,6 +2868,7 @@ function setMobileView(view) {
 
   [leftPanel, centerPanel, rightPanel, mobileProfileView].forEach(el => el.classList.remove('mobile-active'));
   mobileBack.style.display = 'none';
+  document.querySelector('.mobile-nav').style.display = 'flex';
 
   document.querySelectorAll('.mobile-nav-item').forEach(item => {
     item.classList.toggle('active', item.dataset.view === view || (view === 'chat' && item.dataset.view === 'boxes'));
@@ -2877,6 +2879,7 @@ function setMobileView(view) {
   } else if (view === 'chat') {
     centerPanel.classList.add('mobile-active');
     mobileBack.style.display = 'block';
+    document.querySelector('.mobile-nav').style.display = 'none';
     setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'terminal') {
     rightPanel.classList.add('mobile-active');
