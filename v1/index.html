@@ -378,7 +378,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .msg-troll { width: 22px; height: 22px; }
   .msg-body { grid-template-columns: 26px 1fr; }
   .date-sep { font-size: 13px; }
-  .center-title { font-size: 17px; line-height: 1; }
+  .center-title { font-size: 17px; line-height: 1; cursor: pointer; }
 
   /* Mobile: general font bump — kill all tiny sizes */
   .section-head { font-size: 14px; min-height: 48px; }
@@ -2937,6 +2937,9 @@ document.querySelectorAll('.mobile-nav-item').forEach(item => {
 
 // Mobile back button (chat → boxes)
 mobileBack.addEventListener('click', () => setMobileView('boxes'));
+
+// Mobile: tap chat title → terminal
+document.getElementById('center-title').addEventListener('click', () => { if (isMobile()) setMobileView('terminal'); });
 
 // Override setRoom to open chat on mobile
 const origSetRoom = setRoom;
