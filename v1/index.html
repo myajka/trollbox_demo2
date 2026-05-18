@@ -39,6 +39,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-item:hover { background: #121212; color: #fff; }
 .room-item.active { background: linear-gradient(to right, #161616, transparent); color: #fff; border-left: 2px solid var(--ac, #8CE45A); padding-left: 10px; }
 .room-name { font-size: 13px; letter-spacing: 0.03em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.room-tag { font-size: 11px; color: #888; }
+.room-user-icon { fill: #555; }
 .room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
 .room-item.active .room-count { color: #777; }
 .left-profile { border-top: 1px solid #333; padding: 12px; flex-shrink: 0; cursor: pointer; transition: background 0.15s; }
@@ -52,7 +54,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Space Mono', monospace; cursor: pointer; text-align: center; }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
 .section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
-.search-box { margin: 7px 10px; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.search-create-row { display: flex; gap: 6px; padding: 7px 10px; border-top: 1px solid #333; flex-shrink: 0; align-items: stretch; }
+.search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; }
 .search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; caret-color: transparent; }
 .search-box input::placeholder { color: #555; }
 .search-box .search-cursor { display: none; width: 8px; height: 16px; background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; flex-shrink: 0; }
@@ -174,8 +177,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .trend-row:last-child { border-bottom: none; }
 .trend-name { color: #ccc; font-family: 'Roboto', sans-serif; font-size: 13px; }
 .trend-val { color: var(--ac); font-family: 'Space Mono', monospace; font-size: 12px; }
-.create-box-wrap { padding: 10px 12px; border-top: 1px solid #333; flex-shrink: 0; }
-.create-box-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
+.create-box-btn { width: 38px; min-width: 38px; padding: 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 .create-widget-wrap { padding: 10px 12px; }
 .create-widget-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
@@ -359,8 +361,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .room-count { font-size: 14px; }
   .search-box { margin: 7px 16px; padding: 10px 12px; }
   .search-box input { font-size: 15px; }
-  .create-box-wrap { padding: 10px 16px; }
-  .create-box-btn { font-size: 15px; padding: 13px 0; }
+  .search-create-row { padding: 10px 12px; }
+  .create-box-btn { width: 44px; min-width: 44px; font-size: 20px; }
 
   /* Mobile: chat */
   .center-head { justify-content: flex-start; gap: 8px; align-items: center; min-height: 48px; padding: 0 12px; }
@@ -546,6 +548,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="amber"] .spark-dot { box-shadow: 0 0 8px rgba(255,165,50,0.5) !important; }
 
 /* Buttons */
+[data-crt-theme="amber"] .search-create-row { border-top-color: #302818; }
 [data-crt-theme="amber"] .create-box-btn,
 [data-crt-theme="amber"] .create-widget-btn { background: #131008; border-color: #504020; color: #8a6e3c; }
 [data-crt-theme="amber"] .create-box-btn:hover,
@@ -779,13 +782,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="amber"] .tag-pill { color: #8a6e3c !important; border-color: #504020; }
 [data-crt-theme="amber"] .tag-pill:hover { color: #ffb347 !important; border-color: #ffb347; }
 [data-crt-theme="amber"] .user-grid .u-dot { background: #ffb347; }
-[data-crt-theme="amber"] .room-count svg circle,
-[data-crt-theme="amber"] .room-count svg path { fill: #6b5530 !important; }
-[data-crt-theme="amber"] .room-item.active .room-count svg circle,
-[data-crt-theme="amber"] .room-item.active .room-count svg path { fill: #8a6e3c !important; }
+[data-crt-theme="amber"] .room-user-icon { fill: #6b5530; }
+[data-crt-theme="amber"] .room-item.active .room-user-icon { fill: #8a6e3c; }
+[data-crt-theme="amber"] .room-tag { color: #6b5530; }
 
 /* ── Amber: catch-all for ANY remaining inline grays ── */
-[data-crt-theme="amber"] .room-name span { color: #6b5530 !important; }
+[data-crt-theme="amber"] .room-name span { color: #6b5530; }
 [data-crt-theme="amber"] .right .section-head { background: #131008; }
 [data-crt-theme="amber"] .right .section-head span { color: #d4a54a !important; }
 [data-crt-theme="amber"] .r-block div[style] { color: #b08840 !important; }
@@ -896,6 +898,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="hacker"] .spark-dot { box-shadow: 0 0 8px rgba(0,255,65,0.6) !important; }
 
 /* Buttons */
+[data-crt-theme="hacker"] .search-create-row { border-top-color: #0a280a; }
 [data-crt-theme="hacker"] .create-box-btn,
 [data-crt-theme="hacker"] .create-widget-btn { background: #030803; border-color: #0f3f0f; color: #258025; }
 [data-crt-theme="hacker"] .create-box-btn:hover,
@@ -1129,13 +1132,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="hacker"] .tag-pill { color: #258025 !important; border-color: #0f3f0f; }
 [data-crt-theme="hacker"] .tag-pill:hover { color: #00ff41 !important; border-color: #00ff41; }
 [data-crt-theme="hacker"] .user-grid .u-dot { background: #00ff41; }
-[data-crt-theme="hacker"] .room-count svg circle,
-[data-crt-theme="hacker"] .room-count svg path { fill: #1a5a1a !important; }
-[data-crt-theme="hacker"] .room-item.active .room-count svg circle,
-[data-crt-theme="hacker"] .room-item.active .room-count svg path { fill: #258025 !important; }
+[data-crt-theme="hacker"] .room-user-icon { fill: #1a5a1a; }
+[data-crt-theme="hacker"] .room-item.active .room-user-icon { fill: #258025; }
+[data-crt-theme="hacker"] .room-tag { color: #1a5a1a; }
 
 /* ── Hacker: catch-all for ANY remaining inline grays ── */
-[data-crt-theme="hacker"] .room-name span { color: #1a5a1a !important; }
+[data-crt-theme="hacker"] .room-name span { color: #1a5a1a; }
 [data-crt-theme="hacker"] .right .section-head { background: #030803; }
 [data-crt-theme="hacker"] .right .section-head span { color: #40c840 !important; }
 [data-crt-theme="hacker"] .r-block div[style] { color: #309030 !important; }
@@ -1173,9 +1175,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- LEFT -->
 <div class="left">
   <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/></div>
-  <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor"></span></div>
   <div class="left-rooms" id="rooms-list"></div>
-  <div class="create-box-wrap" id="createBoxWrap"><button class="create-box-btn">+ CREATE BOX</button></div>
+  <div class="search-create-row">
+    <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor"></span></div>
+    <button class="create-box-btn" id="createBoxBtn" title="Create box">+</button>
+  </div>
 
   <!-- PROFILE: authorized -->
   <div class="left-profile hidden" id="profileAuth">
@@ -2024,8 +2028,8 @@ function setRoom(id){
 function renderRooms(){
   document.getElementById('rooms-list').innerHTML=ROOMS.map(r=>`
     <div class="room-item ${r.id===active?'active':''}" onclick="setRoom('${r.id}')">
-      <span class="room-name">${r.label}${r.tag?' <span style="font-size:11px;color:#888">'+r.tag+'</span>':''}</span>
-      ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span>`:''}
+      <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+      ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
     </div>`).join('');
 }
 
@@ -2361,7 +2365,7 @@ function setAuthState(state) {
   const authBlock = document.getElementById('authBlock');
   const chatInputAuth = document.getElementById('chatInputAuth');
   const chatInputAnon = document.getElementById('chatInputAnon');
-  const createBoxWrap = document.getElementById('createBoxWrap');
+  const createBoxBtn = document.getElementById('createBoxBtn');
 
   if (state === 'welcome') {
     welcome.classList.remove('hidden');
@@ -2374,13 +2378,13 @@ function setAuthState(state) {
     authBlock.classList.add('hidden');
     chatInputAuth.classList.remove('hidden');
     chatInputAnon.classList.add('hidden');
-    createBoxWrap.classList.remove('hidden');
+    createBoxBtn.classList.remove('hidden');
   } else {
     profileAuth.classList.add('hidden');
     authBlock.classList.remove('hidden');
     chatInputAuth.classList.add('hidden');
     chatInputAnon.classList.remove('hidden');
-    createBoxWrap.classList.add('hidden');
+    createBoxBtn.classList.add('hidden');
   }
 }
 
