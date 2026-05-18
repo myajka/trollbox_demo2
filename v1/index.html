@@ -43,6 +43,21 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-user-icon { fill: #555; }
 .room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
 .room-item.active .room-count { color: #777; }
+.room-item.pinned .room-name::before { content: '📌 '; font-size: 10px; }
+
+/* Desktop context menu */
+.ctx-menu { position: fixed; z-index: 99999; background: #1a1a1a; border: 1px solid #333; padding: 4px 0; min-width: 140px; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; display: none; }
+.ctx-menu.show { display: block; }
+.ctx-menu-item { padding: 8px 14px; color: #ccc; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; }
+.ctx-menu-item:hover { background: #252525; color: #fff; }
+.ctx-menu-item.danger { color: #ff5555; }
+.ctx-menu-item.danger:hover { background: #2a1515; }
+
+/* Mobile swipe */
+.room-item-wrap { position: relative; overflow: hidden; }
+.room-item-wrap .room-item { transition: transform 0.2s ease; position: relative; z-index: 1; }
+.room-swipe-action { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; display: flex; align-items: center; justify-content: center; background: var(--ac, #8CE45A); color: #000; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: bold; }
+
 .left-profile { border-top: 1px solid #333; padding: 12px; flex-shrink: 0; cursor: pointer; transition: background 0.15s; }
 .left-profile:hover { background: #151515; }
 .profile-label { font-size: 12px; color: #eee; margin-bottom: 8px; letter-spacing: 0.1em; font-family: 'CHNOPixelCodePro', monospace; }
@@ -558,6 +573,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="amber"] .create-widget-btn { background: #131008; border-color: #504020; color: #8a6e3c; }
 [data-crt-theme="amber"] .create-box-btn:hover,
 [data-crt-theme="amber"] .create-widget-btn:hover { border-color: #ffb347; color: #ffb347; box-shadow: 0 0 12px rgba(255,165,50,0.3); }
+[data-crt-theme="amber"] .ctx-menu { background: #131008; border-color: #504020; }
+[data-crt-theme="amber"] .ctx-menu-item { color: #c49848; }
+[data-crt-theme="amber"] .ctx-menu-item:hover { background: #1e1400; color: #ffb347; }
 
 /* Modals */
 [data-crt-theme="amber"] .modal-wrap { background: rgba(8,6,2,0.8); }
@@ -908,6 +926,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="hacker"] .create-widget-btn { background: #030803; border-color: #0f3f0f; color: #258025; }
 [data-crt-theme="hacker"] .create-box-btn:hover,
 [data-crt-theme="hacker"] .create-widget-btn:hover { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 16px rgba(0,255,65,0.3); }
+[data-crt-theme="hacker"] .ctx-menu { background: #030803; border-color: #0f3f0f; }
+[data-crt-theme="hacker"] .ctx-menu-item { color: #38b038; }
+[data-crt-theme="hacker"] .ctx-menu-item:hover { background: #061206; color: #00ff41; }
 
 /* Modals */
 [data-crt-theme="hacker"] .modal-wrap { background: rgba(2,5,2,0.85); }
@@ -1200,6 +1221,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="snow"] .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 [data-crt-theme="snow"] .create-widget-btn { background: #f0f0f0; border-color: #d8d8d8; color: #888; }
 [data-crt-theme="snow"] .create-widget-btn:hover { border-color: var(--ac); color: var(--ac); }
+[data-crt-theme="snow"] .ctx-menu { background: #fafafa; border-color: #d8d8d8; }
+[data-crt-theme="snow"] .ctx-menu-item { color: #666; }
+[data-crt-theme="snow"] .ctx-menu-item:hover { background: #f0f0f0; color: #1a1a1a; }
+[data-crt-theme="snow"] .ctx-menu-item.danger { color: #ff4444; }
 
 /* Headers */
 [data-crt-theme="snow"] .center-head { border-bottom-color: #e0e0e0; }
@@ -2974,6 +2999,105 @@ window.addEventListener('resize', () => {
     renderRooms();
   }
 });
+
+// === CONTEXT MENU (desktop) ===
+const ctxMenu = document.createElement('div');
+ctxMenu.className = 'ctx-menu';
+ctxMenu.innerHTML = '<div class="ctx-menu-item" data-action="pin">📌 Pin</div><div class="ctx-menu-item danger" data-action="report">⚠ Report</div>';
+document.body.appendChild(ctxMenu);
+let ctxRoomId = null;
+
+document.addEventListener('click', () => { ctxMenu.classList.remove('show'); });
+document.addEventListener('contextmenu', e => { ctxMenu.classList.remove('show'); });
+
+ctxMenu.addEventListener('click', e => {
+  const action = e.target.dataset.action;
+  if (!action || !ctxRoomId) return;
+  if (action === 'pin') togglePin(ctxRoomId);
+  ctxMenu.classList.remove('show');
+  ctxRoomId = null;
+});
+
+// === PIN LOGIC ===
+let pinnedRooms = JSON.parse(localStorage.getItem('pinnedRooms') || '[]');
+
+function togglePin(id) {
+  const idx = pinnedRooms.indexOf(id);
+  if (idx > -1) pinnedRooms.splice(idx, 1);
+  else pinnedRooms.push(id);
+  localStorage.setItem('pinnedRooms', JSON.stringify(pinnedRooms));
+  sortRooms();
+  renderRooms();
+}
+
+function sortRooms() {
+  ROOMS.sort((a, b) => {
+    const ap = pinnedRooms.includes(a.id) ? 0 : 1;
+    const bp = pinnedRooms.includes(b.id) ? 0 : 1;
+    return ap - bp;
+  });
+}
+sortRooms();
+
+// Patch renderRooms for context menu + swipe
+const _origRenderRooms = renderRooms;
+renderRooms = function() {
+  const isMob = window.matchMedia('(max-width: 900px)').matches;
+  if (isMob) {
+    // Mobile: wrap rooms with swipe action
+    document.getElementById('rooms-list').innerHTML = ROOMS.map(r => `
+      <div class="room-item-wrap" data-room="${r.id}">
+        <div class="room-swipe-action">📌 PIN</div>
+        <div class="room-item ${r.id===active?'active':''} ${pinnedRooms.includes(r.id)?'pinned':''}" onclick="setRoomMobile('${r.id}')">
+          <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+          ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
+        </div>
+      </div>`).join('');
+    initSwipe();
+  } else {
+    // Desktop: normal render + context menu
+    document.getElementById('rooms-list').innerHTML = ROOMS.map(r => `
+      <div class="room-item ${r.id===active?'active':''} ${pinnedRooms.includes(r.id)?'pinned':''}" onclick="setRoom('${r.id}')" data-room="${r.id}">
+        <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+        ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
+      </div>`).join('');
+    // Attach right-click
+    document.querySelectorAll('.room-item[data-room]').forEach(el => {
+      el.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        ctxRoomId = el.dataset.room;
+        const pinItem = ctxMenu.querySelector('[data-action="pin"]');
+        pinItem.textContent = pinnedRooms.includes(ctxRoomId) ? '📌 Unpin' : '📌 Pin';
+        ctxMenu.style.left = e.clientX + 'px';
+        ctxMenu.style.top = e.clientY + 'px';
+        ctxMenu.classList.add('show');
+      });
+    });
+  }
+};
+
+// === MOBILE SWIPE ===
+function initSwipe() {
+  document.querySelectorAll('.room-item-wrap').forEach(wrap => {
+    const item = wrap.querySelector('.room-item');
+    let startX = 0, dx = 0, swiping = false;
+    wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; dx = 0; swiping = true; }, { passive: true });
+    wrap.addEventListener('touchmove', e => {
+      if (!swiping) return;
+      dx = e.touches[0].clientX - startX;
+      if (dx < -5) { item.style.transform = `translateX(${Math.max(dx, -80)}px)`; item.style.transition = 'none'; }
+    }, { passive: true });
+    wrap.addEventListener('touchend', () => {
+      swiping = false;
+      item.style.transition = 'transform 0.2s ease';
+      if (dx < -50) {
+        togglePin(wrap.dataset.room);
+      } else {
+        item.style.transform = '';
+      }
+    });
+  });
+}
 </script>
 </body>
 </html>
