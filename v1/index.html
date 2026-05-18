@@ -2543,7 +2543,7 @@ function showOnlineUsers(el) {
     </div>`;
   }).join('');
 
-  if (typeof isMobile === 'function' && isMobile()) {
+  if (window.matchMedia('(max-width: 900px)').matches) {
     // Mobile: show as full page
     const mobileProfileView = document.getElementById('mobileProfileView');
     const mpc = document.getElementById('mobileProfileContent');
@@ -2683,7 +2683,7 @@ const closeProfileModal = document.getElementById('closeProfileModal');
 // Desktop: click on profile block opens modal
 document.getElementById('profileAuth').addEventListener('click', (e) => {
   if (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn')) return;
-  if (isMobile && typeof isMobile === 'function' && isMobile()) return;
+  if (window.matchMedia('(max-width: 900px)').matches) return;
   profileModal.classList.remove('hidden');
   // Sync nick
   document.getElementById('profileModalNick').textContent = document.getElementById('profileDisplayName').textContent;
