@@ -346,7 +346,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .mobile-nav-item.active { color: var(--ac, #8CE45A); }
   .mobile-nav-icon { font-size: 18px; line-height: 1; }
   .left-profile { display: none !important; }
-  .left { padding-bottom: 16px; border: 1px solid #333; }
+  .left { padding-bottom: 0; border: 1px solid #333; border-bottom: none; }
   .center { border: 1px solid #333; }
   .right { border: 1px solid #333; padding-bottom: 16px; }
   .center .chat-input-row, .center .anon-chat-block { margin-bottom: 0; }
@@ -365,7 +365,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .search-box input { font-size: 15px; }
   .search-create-row { padding: 10px 16px; display: flex; align-items: stretch; gap: 6px; }
   .search-create-row .search-box { flex: 1; margin: 0; }
-  .create-box-btn { width: 44px; min-width: 44px; height: 44px; font-size: 20px; display: flex; align-items: center; justify-content: center; padding: 0; }
+  .create-box-btn { width: auto; min-width: auto; aspect-ratio: 1; height: auto; font-size: 20px; display: flex; align-items: center; justify-content: center; padding: 0; }
 
   /* Mobile: chat */
   .center-head { justify-content: flex-start; gap: 8px; align-items: center; min-height: 48px; padding: 0 12px; }
