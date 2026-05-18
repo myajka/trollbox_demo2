@@ -55,8 +55,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
 .section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
 .search-create-row { display: flex; gap: 6px; padding: 7px 10px; border-top: 1px solid #333; flex-shrink: 0; align-items: stretch; }
-.search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; }
-.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; caret-color: var(--ac, #8CE45A); }
+.search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; position: relative; }
+.search-cursor { display: none; position: absolute; width: 9px; height: 14px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
+.search-box.focused .search-cursor { display: block; }
+.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; caret-color: transparent; }
 .search-box input::placeholder { color: #555; }
 
 /* CENTER */
@@ -98,10 +100,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .date-sep::before { left: 5%; }
 .date-sep::after { right: 5%; }
 .chat-input-row { border-top: 1px solid #333; padding: 8px 12px; display: flex; gap: 6px; align-items: center; flex-shrink: 0; position: relative; }
-.chat-input { flex: 1; background: #141414; border: 1px solid #333; border-radius: 0; padding: 7px 10px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 14px; outline: none; caret-color: var(--ac, #8CE45A); }
+.chat-input { flex: 1; background: #141414; border: 1px solid #333; border-radius: 0; padding: 7px 10px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 14px; outline: none; caret-color: transparent; }
 .chat-input:focus { border-color: #333; }
 @keyframes crt-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
-.crt-cursor { display: none; position: absolute; width: 8px; height: 16px; background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
+.crt-cursor { display: none; position: absolute; width: 9px; height: 16px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
 .send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 7px 12px; font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; }
 .send-btn:hover { color: #e0e0e0; }
 .announce { background: #111; border-bottom: 1px solid #2a2a2a; padding: 6px 14px; font-size: 13px; color: #777; display: flex; gap: 6px; align-items: center; font-family: 'Roboto', sans-serif; }
@@ -495,10 +497,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 /* Inputs */
 [data-crt-theme="amber"] .search-box { background: #131008; border-color: #302818; }
-[data-crt-theme="amber"] .search-box input { color: #d4a54a; caret-color: #ffb347; }
+[data-crt-theme="amber"] .search-box input { color: #d4a54a; caret-color: transparent; }
 [data-crt-theme="amber"] .search-box input::placeholder { color: #6b5530; }
 [data-crt-theme="amber"] .chat-input-row { border-top-color: #302818; box-shadow: 0 -1px 6px -3px rgba(255,165,50,0.06); }
-[data-crt-theme="amber"] .chat-input { background: #131008; border-color: #302818; color: #e8c060; caret-color: #ffb347; }
+[data-crt-theme="amber"] .chat-input { background: #131008; border-color: #302818; color: #e8c060; caret-color: transparent; }
 [data-crt-theme="amber"] .chat-input::placeholder { color: #6b5530; }
 [data-crt-theme="amber"] .chat-input:focus { border-color: #504020; box-shadow: 0 0 6px rgba(255,165,50,0.2), inset 0 0 4px rgba(0,0,0,0.4); }
 [data-crt-theme="amber"] .send-btn { background: #131008; border-color: #504020; color: #8a6e3c; }
@@ -845,10 +847,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 /* Inputs */
 [data-crt-theme="hacker"] .search-box { background: #030803; border-color: #0a280a; }
-[data-crt-theme="hacker"] .search-box input { color: #40c840; caret-color: #00ff41; }
+[data-crt-theme="hacker"] .search-box input { color: #40c840; caret-color: transparent; }
 [data-crt-theme="hacker"] .search-box input::placeholder { color: #1a5a1a; }
 [data-crt-theme="hacker"] .chat-input-row { border-top-color: #0a280a; box-shadow: 0 -1px 6px -3px rgba(0,255,65,0.06); }
-[data-crt-theme="hacker"] .chat-input { background: #030803; border-color: #0a280a; color: #50e850; caret-color: #00ff41; }
+[data-crt-theme="hacker"] .chat-input { background: #030803; border-color: #0a280a; color: #50e850; caret-color: transparent; }
 [data-crt-theme="hacker"] .chat-input::placeholder { color: #1a5a1a; }
 [data-crt-theme="hacker"] .chat-input:focus { border-color: #0f3f0f; box-shadow: 0 0 6px rgba(0,255,65,0.25), inset 0 0 4px rgba(0,0,0,0.4); }
 [data-crt-theme="hacker"] .send-btn { background: #030803; border-color: #0f3f0f; color: #258025; }
@@ -1175,7 +1177,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/></div>
   <div class="left-rooms" id="rooms-list"></div>
   <div class="search-create-row">
-    <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /></div>
+    <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor" id="searchCursor"></span></div>
     <button class="create-box-btn" id="createBoxBtn" title="Create box">+</button>
   </div>
 
@@ -1219,6 +1221,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
   <!-- Chat input: authorized -->
   <div class="chat-input-row hidden" id="chatInputAuth">
+    <span class="crt-cursor" id="crt-cursor"></span>
     <input class="chat-input" placeholder="Type to #btc, we will translate" id="chat-input" />
     <button class="send-btn">&#9658;</button>
   </div>
@@ -2567,35 +2570,41 @@ boxNameInput.addEventListener('input', () => {
   boxNameInput.value = boxNameInput.value.replace(/[^a-zA-Z0-9_]/g, '').toUpperCase();
 });
 
-// Search box blinking cursor
+// Search box
 const searchBox = document.getElementById('searchBox');
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('focus', () => searchBox.classList.add('focused'));
-searchInput.addEventListener('blur', () => searchBox.classList.remove('focused'));
 
 // Widget modal
 const widgetModal = document.getElementById('widgetModal');
 widgetModal.addEventListener('click', e => { if(e.target === widgetModal) widgetModal.classList.add('hidden'); });
 
-// CRT cursor
-const crtCursor = document.getElementById('crt-cursor');
-const chatInput = document.getElementById('chat-input');
-function updateCursor(){
-  if(document.activeElement !== chatInput){ crtCursor.style.display='none'; return; }
-  crtCursor.style.display='block';
+// CRT block cursors (chat + search)
+function setupBlockCursor(input, cursor, fontSize) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  ctx.font = '14px "Space Mono", monospace';
-  const textW = ctx.measureText(chatInput.value).width;
-  const rect = chatInput.getBoundingClientRect();
-  const rowRect = chatInput.parentElement.getBoundingClientRect();
-  crtCursor.style.left = (rect.left - rowRect.left + 10 + textW) + 'px';
-  crtCursor.style.top = (rect.top - rowRect.top + 6) + 'px';
+  ctx.font = fontSize + ' "Space Mono", monospace';
+  function update() {
+    if (document.activeElement !== input) { cursor.style.display = 'none'; return; }
+    cursor.style.display = 'block';
+    const textW = ctx.measureText(input.value).width;
+    const inputRect = input.getBoundingClientRect();
+    const parentRect = cursor.parentElement.getBoundingClientRect();
+    cursor.style.left = (inputRect.left - parentRect.left + parseInt(getComputedStyle(input).paddingLeft) + textW) + 'px';
+  }
+  input.addEventListener('focus', update);
+  input.addEventListener('blur', update);
+  input.addEventListener('input', update);
+  input.addEventListener('keyup', update);
+  return update;
 }
-chatInput.addEventListener('focus', updateCursor);
-chatInput.addEventListener('blur', updateCursor);
-chatInput.addEventListener('input', updateCursor);
-chatInput.addEventListener('keyup', updateCursor);
+const chatInput = document.getElementById('chat-input');
+const crtCursor = document.getElementById('crt-cursor');
+const updateChatCursor = setupBlockCursor(chatInput, crtCursor, '14px');
+
+const searchInput = document.getElementById('searchInput');
+const searchCursor = document.getElementById('searchCursor');
+const updateSearchCursor = setupBlockCursor(searchInput, searchCursor, '13px');
+searchInput.addEventListener('focus', () => searchBox.classList.add('focused'));
+searchInput.addEventListener('blur', () => searchBox.classList.remove('focused'));
 
 // === MOBILE NAVIGATION ===
 const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
