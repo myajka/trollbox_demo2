@@ -186,6 +186,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 /* ─── MESSAGE REACTIONS POPUP ─── */
 .msg { position: relative; cursor: pointer; }
 .msg-popup { position: absolute; top: 100%; left: 60px; z-index: 100; background: #161616; border: 1px solid #333; box-shadow: 0 8px 24px rgba(0,0,0,0.7); min-width: 240px; font-family: 'CHNOPixelCodePro', monospace; }
+.msg-popup.above { top: auto; bottom: 100%; box-shadow: 0 -8px 24px rgba(0,0,0,0.7); }
 .msg-popup-emojis { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
 .msg-popup-emoji { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; background: #1e1e1e; border: 1px solid #333; transition: background 0.15s; }
 .msg-popup-emoji:hover { background: #2a2a2a; border-color: var(--ac, #8CE45A); }
@@ -2695,6 +2696,15 @@ function openMsgPopup(msgEl, idx, author) {
   popup.addEventListener('click', e => e.stopPropagation());
   msgEl.appendChild(popup);
   msgPopupEl = popup;
+  // Position: above msg if not enough space below
+  requestAnimationFrame(() => {
+    const feed = document.getElementById('chat-feed');
+    const msgRect = msgEl.getBoundingClientRect();
+    const feedRect = feed.getBoundingClientRect();
+    const popupH = popup.offsetHeight;
+    const spaceBelow = feedRect.bottom - msgRect.bottom;
+    if (spaceBelow < popupH + 8) popup.classList.add('above');
+  });
 }
 document.addEventListener('click', () => closeMsgPopup());
 
