@@ -3058,67 +3058,10 @@ function setAuthState(state) {
 // Welcome → Anon
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
-// ─── Firebase Realtime DB chat (REST + SSE, no SDK needed) ───
+// ─── Simple local chat send + best-effort Firebase sync ───
 const FB_URL = 'https://trblxscljn-default-rtdb.europe-west1.firebasedatabase.app';
 const seenFbIds = new Set();
-const liveMsgsByRoom = {}; // roomId -> array of live msgs
 
-function addLiveMsg(roomId, id, data) {
-  if (!data || !data.text || !data.author) return;
-  const key = roomId + ':' + id;
-  if (seenFbIds.has(key)) return;
-  seenFbIds.add(key);
-  console.log('[fb] recv', roomId, data);
-  // dedup against optimistic local message (same ts+text+author)
-  const fp = (data.ts||0)+':'+data.author+':'+data.text;
-  const existing = (liveMsgsByRoom[roomId]||[]).find(m => (m._ts+':'+m.author+':'+m.text) === fp);
-  if (existing) { existing._id = id; return; }
-  liveMsgsByRoom[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0, _live: true, _id: id });
-  liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
-  if (active === roomId) renderChat();
-}
-
-function subscribeRoom(roomId) {
-  if (!liveMsgsByRoom[roomId]) liveMsgsByRoom[roomId] = [];
-  const es = new EventSource(`${FB_URL}/rooms/${roomId}/messages.json`);
-  es.addEventListener('put', e => {
-    try {
-      const { path, data } = JSON.parse(e.data);
-      if (path === '/' && data) {
-        Object.entries(data).forEach(([id, msg]) => addLiveMsg(roomId, id, msg));
-      } else if (path && path !== '/') {
-        const id = path.slice(1);
-        if (data) addLiveMsg(roomId, id, data);
-      }
-    } catch(err) { console.warn('[fb] parse put', err); }
-  });
-  es.addEventListener('patch', e => {
-    try {
-      const { path, data } = JSON.parse(e.data);
-      if (path === '/' && data) {
-        Object.entries(data).forEach(([id, msg]) => addLiveMsg(roomId, id, msg));
-      }
-    } catch(err) { console.warn('[fb] parse patch', err); }
-  });
-  es.onerror = err => console.warn('[fb] SSE error', roomId);
-  console.log('[fb] subscribed', roomId);
-}
-
-// Patch renderChat to include live messages
-const _origRenderChat = renderChat;
-renderChat = function() {
-  const base = CHATS[active] || CHATS.btc || [];
-  const live = liveMsgsByRoom[active] || [];
-  const merged = base.concat(live);
-  const old = CHATS[active];
-  CHATS[active] = merged;
-  _origRenderChat();
-  CHATS[active] = old;
-};
-
-['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(subscribeRoom);
-
-// ─── Send messages ───
 function sendChatMessage() {
   const inp = document.getElementById('chat-input');
   const text = inp.value.trim();
@@ -3126,17 +3069,15 @@ function sendChatMessage() {
   const now = new Date();
   const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
-  const payload = { author: 'ANONYMOUS', text, time, tag, ts: Date.now() };
-  console.log('[fb] send', active, payload);
-  // optimistic local update
-  if (!liveMsgsByRoom[active]) liveMsgsByRoom[active] = [];
-  liveMsgsByRoom[active].push({ tag, author: 'ANONYMOUS', bot: false, text, time, _ts: payload.ts, _live: true });
-  renderChat();
-  // sync to firebase
-  fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type':'application/json'} })
-    .then(r => { if (!r.ok) console.warn('[fb] write failed', r.status); else console.log('[fb] write ok'); })
-    .catch(err => console.warn('[fb] send error', err));
+  if (!CHATS[active]) CHATS[active] = [];
+  const msg = { tag, author: 'ANONYMOUS', bot: false, text, time, _ts: Date.now() };
+  CHATS[active].push(msg);
   inp.value = '';
+  renderChat();
+  // best-effort sync to Firebase (won't block UI)
+  try {
+    fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify({ author: 'ANONYMOUS', text, time, tag, ts: msg._ts }), headers: {'Content-Type':'application/json'} }).catch(()=>{});
+  } catch(e) {}
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
 }
 (function bindChatSend() {
@@ -3145,6 +3086,37 @@ function sendChatMessage() {
   if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); } });
   if (btn) btn.addEventListener('click', sendChatMessage);
 })();
+
+// Subscribe to incoming messages from Firebase (won't break if it fails)
+['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(roomId => {
+  try {
+    const es = new EventSource(`${FB_URL}/rooms/${roomId}/messages.json`);
+    function handle(path, data) {
+      if (!data) return;
+      if (path === '/' && typeof data === 'object') {
+        Object.entries(data).forEach(([id, m]) => { if (m && m.text && m.author) ingestFbMsg(roomId, id, m); });
+      } else if (path && path !== '/') {
+        ingestFbMsg(roomId, path.slice(1), data);
+      }
+    }
+    es.addEventListener('put', e => { try { const p = JSON.parse(e.data); handle(p.path, p.data); } catch(err) {} });
+    es.addEventListener('patch', e => { try { const p = JSON.parse(e.data); handle(p.path, p.data); } catch(err) {} });
+    es.onerror = () => {};
+  } catch(e) {}
+});
+
+function ingestFbMsg(roomId, id, data) {
+  if (!data || !data.text || !data.author) return;
+  const key = roomId + ':' + id;
+  if (seenFbIds.has(key)) return;
+  seenFbIds.add(key);
+  if (!CHATS[roomId]) CHATS[roomId] = [];
+  // dedup: skip if we already have a message with same ts+text+author (our own optimistic push)
+  const dup = CHATS[roomId].some(m => m._ts === data.ts && m.author === data.author && m.text === data.text);
+  if (dup) return;
+  CHATS[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0 });
+  if (active === roomId) renderChat();
+}
 
 // Login
 document.getElementById('loginBtn').addEventListener('click', () => {
