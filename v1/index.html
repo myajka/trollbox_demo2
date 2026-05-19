@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>troll.box</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <style>
 @font-face {
   font-family: 'CHNOPixelCodePro';
@@ -3057,7 +3058,46 @@ function setAuthState(state) {
 // Welcome → Anon
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
-// ─── Send messages (local) ───
+// ─── GunDB realtime chat ───
+const GUN_NS = 'trollbox-public-v1';
+const gun = (typeof Gun !== 'undefined') ? Gun(['https://gun-manhattan.herokuapp.com/gun','https://peer.wallie.io/gun']) : null;
+const seenGunIds = new Set();
+const liveMsgsByRoom = {}; // roomId -> array of live msgs
+
+function roomGunNode(roomId) { return gun.get(GUN_NS).get('rooms').get(roomId).get('messages'); }
+
+function subscribeRoom(roomId) {
+  if (!gun) return;
+  if (!liveMsgsByRoom[roomId]) liveMsgsByRoom[roomId] = [];
+  roomGunNode(roomId).map().on((data, id) => {
+    if (!data || !data.text || !data.author) return;
+    const uniqKey = roomId + ':' + id;
+    if (seenGunIds.has(uniqKey)) return;
+    seenGunIds.add(uniqKey);
+    const msg = { tag: data.tag || '', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts || 0, _live: true };
+    liveMsgsByRoom[roomId].push(msg);
+    liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
+    if (active === roomId) renderChat();
+  });
+}
+
+// Patch renderChat to include live messages
+const _origRenderChat = renderChat;
+renderChat = function() {
+  const base = CHATS[active] || CHATS.btc || [];
+  const live = liveMsgsByRoom[active] || [];
+  // merge: base first (historical), then live
+  const merged = base.concat(live);
+  const old = CHATS[active];
+  CHATS[active] = merged;
+  _origRenderChat();
+  CHATS[active] = old; // restore so we don't double-append on next call
+};
+
+// Subscribe to all rooms upfront
+['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(subscribeRoom);
+
+// ─── Send messages ───
 function sendChatMessage() {
   const inp = document.getElementById('chat-input');
   const text = inp.value.trim();
@@ -3065,11 +3105,16 @@ function sendChatMessage() {
   const now = new Date();
   const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
-  if (!CHATS[active]) CHATS[active] = [];
-  CHATS[active].push({ tag, author: 'ANONYMOUS', bot: false, text, time });
+  const payload = { author: 'ANONYMOUS', text, time, tag, ts: Date.now() };
+  if (gun) {
+    roomGunNode(active).set(payload);
+  } else {
+    // fallback: local only
+    if (!liveMsgsByRoom[active]) liveMsgsByRoom[active] = [];
+    liveMsgsByRoom[active].push({ ...payload, bot: false, _ts: payload.ts, _live: true });
+    renderChat();
+  }
   inp.value = '';
-  renderChat();
-  // ensure cursor blink position resets if used
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
 }
 (function bindChatSend() {
