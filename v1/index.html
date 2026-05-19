@@ -1458,13 +1458,16 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 /* Center head */
 [data-crt-theme="aurora"] .center-head { border-bottom-color: rgba(255,255,255,0.06); }
-[data-crt-theme="aurora"] .center-title { color: #ffffff; text-shadow: none; font-family: 'Inter', sans-serif; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 16px; }
+[data-crt-theme="aurora"] .center-title { color: #ffffff; text-shadow: none; font-family: 'Inter', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+[data-crt-theme="aurora"] .online-row span[style] { font-family: 'Inter', sans-serif !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; font-size: 11px !important; color: #ffffff !important; }
+[data-crt-theme="aurora"] .online-row span[style*="font-size:18px"] { font-size: 18px !important; font-weight: 700 !important; text-transform: none !important; letter-spacing: 0 !important; color: #ffffff !important; font-variant-numeric: tabular-nums; }
 [data-crt-theme="aurora"] .toggle-row { color: #6b6b6b; font-family: 'Inter', sans-serif; }
 
 /* Messages */
-[data-crt-theme="aurora"] .msg { padding: 10px 14px; transition: background 0.2s ease; }
+[data-crt-theme="aurora"] .msg { padding: 6px 14px; transition: background 0.2s ease; }
+[data-crt-theme="aurora"] .msg-text, [data-crt-theme="aurora"] .msg-translate .tr-text { line-height: 1.45; font-weight: 300; }
 [data-crt-theme="aurora"] .msg:hover { background: rgba(255,255,255,0.02); }
-[data-crt-theme="aurora"] .msg-text { color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 400; }
+[data-crt-theme="aurora"] .msg-text { color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; }
 [data-crt-theme="aurora"] .msg-author { font-family: 'Inter', sans-serif; font-weight: 500; text-shadow: none; }
 [data-crt-theme="aurora"] .msg-tag { color: #6b6b6b; font-family: 'Inter', sans-serif; }
 [data-crt-theme="aurora"] .msg-time { color: #3a3a3a; font-family: 'Inter', sans-serif; opacity: 0; transition: opacity 0.2s ease; }
