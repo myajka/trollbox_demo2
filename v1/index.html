@@ -3069,7 +3069,11 @@ function addLiveMsg(roomId, id, data) {
   if (seenFbIds.has(key)) return;
   seenFbIds.add(key);
   console.log('[fb] recv', roomId, data);
-  liveMsgsByRoom[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0, _live: true });
+  // dedup against optimistic local message (same ts+text+author)
+  const fp = (data.ts||0)+':'+data.author+':'+data.text;
+  const existing = (liveMsgsByRoom[roomId]||[]).find(m => (m._ts+':'+m.author+':'+m.text) === fp);
+  if (existing) { existing._id = id; return; }
+  liveMsgsByRoom[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0, _live: true, _id: id });
   liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
   if (active === roomId) renderChat();
 }
@@ -3124,7 +3128,13 @@ function sendChatMessage() {
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
   const payload = { author: 'ANONYMOUS', text, time, tag, ts: Date.now() };
   console.log('[fb] send', active, payload);
-  fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify(payload) })
+  // optimistic local update
+  if (!liveMsgsByRoom[active]) liveMsgsByRoom[active] = [];
+  liveMsgsByRoom[active].push({ tag, author: 'ANONYMOUS', bot: false, text, time, _ts: payload.ts, _live: true });
+  renderChat();
+  // sync to firebase
+  fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type':'application/json'} })
+    .then(r => { if (!r.ok) console.warn('[fb] write failed', r.status); else console.log('[fb] write ok'); })
     .catch(err => console.warn('[fb] send error', err));
   inp.value = '';
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
