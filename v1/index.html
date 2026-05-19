@@ -2635,6 +2635,7 @@ const TROLL_COLORS = {
 const trollMap = {};
 function getTroll(author, isBot) {
   if (isBot) return { src: 'trolls/7_bot.svg', color: TROLL_COLORS[7] };
+  if (author === 'ANONYMOUS') return { src: 'trolls/anon.svg', color: '#ffffff' };
   if (!trollMap[author]) {
     const n = Math.floor(Math.random() * TROLL_COUNT) + 1;
     trollMap[author] = { src: 'trolls/' + n + '.svg', color: TROLL_COLORS[n] };
