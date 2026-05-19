@@ -183,6 +183,30 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .create-widget-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
 .create-widget-btn:hover { border-color: var(--ac); color: var(--ac); }
 
+/* ─── NEW STYLE WIDGETS (default theme) ─── */
+.budget-row { display: flex; justify-content: space-between; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #e0e0e0; margin: 8px 0 6px; letter-spacing: 0.04em; }
+.budget-bar { display: flex; gap: 2px; margin: 8px 0 10px; }
+.budget-cell { flex: 1; height: 12px; background: #2a2a2a; }
+.budget-cell.fill { background: #e0e0e0; }
+.budget-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; }
+.budget-msg { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #888; line-height: 1.5; letter-spacing: 0.04em; text-transform: uppercase; flex: 1; }
+.budget-details { background: #e0e0e0; color: #000; padding: 6px 14px; border: none; border-radius: 999px; font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; letter-spacing: 0.08em; cursor: pointer; text-transform: uppercase; }
+.budget-details:hover { background: var(--ac, #8CE45A); }
+
+.bracket-stat { display: flex; align-items: center; gap: 6px; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #e0e0e0; margin: 4px 0; letter-spacing: 0.04em; }
+.bracket-stat .br { color: #555; }
+.bracket-stat .lbl { color: #999; flex: 1; }
+.bracket-stat .val { color: #fff; font-weight: bold; }
+
+.res-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; margin: 6px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #999; letter-spacing: 0.04em; }
+.res-legend-item { display: flex; align-items: center; gap: 6px; }
+.res-legend-item .br { color: #555; }
+.res-legend-item .sq { width: 7px; height: 7px; display: inline-block; }
+.res-chart { display: flex; align-items: flex-end; gap: 1px; height: 90px; padding: 4px 0; margin: 4px 0; }
+.res-col { flex: 1; display: flex; flex-direction: column-reverse; gap: 0; min-width: 0; }
+.res-seg { width: 100%; }
+.res-axis { display: flex; justify-content: space-between; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #555; letter-spacing: 0.04em; padding: 0 2px; margin-top: 2px; }
+
 .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; }
 .modal { background: #111; border: 1px solid #444; border-radius: 0; padding: 20px; width: 300px; font-family: 'Space Mono', monospace; }
 .modal-title { font-size: 14px; color: #fff; letter-spacing: 0.08em; margin: 0 0 16px; text-transform: uppercase; font-family: 'CHNOPixelCodePro', monospace; }
@@ -2392,6 +2416,41 @@ function rHead(t) {
   return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons"><span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span><span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span></div></div>`;
 }
 
+// ─── New widgets: budget bar + resource chart ───
+function budgetBar(spent, limit, cells=30) {
+  const fillCount = Math.round((spent / limit) * cells);
+  const arr = [];
+  for (let i = 0; i < cells; i++) arr.push(`<div class="budget-cell${i<fillCount?' fill':''}"></div>`);
+  return `<div class="budget-bar">${arr.join('')}</div>`;
+}
+function bracketStat(label, val) {
+  return `<div class="bracket-stat"><span class="br">[</span><span class="lbl">${label}:</span><span class="val">${val}</span><span class="br">]</span></div>`;
+}
+function resourceChart(seed) {
+  const COLORS = ['#FF3D2E','#FF7A3D','#FFB347','#FFD580']; // red, orange, amber, yellow
+  const LABELS = ['text-gen-pro','speech-captor','image-fusion','api-sentinel'];
+  let html = '<div class="res-legend">';
+  for (let i = 0; i < 4; i++) {
+    html += `<div class="res-legend-item"><span class="br">[</span><span class="sq" style="background:${COLORS[i]}"></span><span>${LABELS[i]}</span><span class="br">]</span></div>`;
+  }
+  html += '</div><div class="res-chart">';
+  // 24 cols, each with 4 segments summing to a height
+  const rng = (n)=>{ const s=Math.sin((seed+n)*9999)*1e4; return s-Math.floor(s); };
+  for (let c = 0; c < 24; c++) {
+    const peak = 0.3 + 0.6 * (0.5 + 0.4*Math.sin(c/4) + 0.2*rng(c));
+    let html2 = '<div class="res-col">';
+    for (let s = 0; s < 4; s++) {
+      const segH = peak * (0.15 + 0.1*rng(c*10+s)) * 80;
+      html2 += `<div class="res-seg" style="height:${segH.toFixed(1)}px;background:${COLORS[s]}"></div>`;
+    }
+    html += html2 + '</div>';
+  }
+  html += '</div><div class="res-axis">';
+  for (let i = 1; i <= 24; i++) html += `<span>${i}</span>`;
+  html += '</div>';
+  return html;
+}
+
 let sparkId = 0;
 function spark(data, color, h=56, interactive=false) {
   const w=200, min=Math.min(...data), max=Math.max(...data);
@@ -2411,7 +2470,8 @@ const PANELS = {
     <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down">▼ 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
     <div class="r-block">${rHead('COMMUNITY SENTIMENT')}<div class="mood-grid"><div class="mood-btn sel">BULLISH ▲</div><div class="mood-btn">BEARISH ▼</div><div class="mood-btn">HODL</div><div class="mood-btn">NGMI</div></div><div style="margin-top:7px"><div class="poll-row"><span class="poll-lbl">Bullish</span><div class="bar-bg"><div class="bar-fg" style="width:62%"></div></div><span class="bar-pct">62%</span></div><div class="poll-row"><span class="poll-lbl">Bearish</span><div class="bar-bg"><div class="bar-fg" style="width:24%"></div></div><span class="bar-pct">24%</span></div><div class="poll-row"><span class="poll-lbl">Neutral</span><div class="bar-bg"><div class="bar-fg" style="width:14%"></div></div><span class="bar-pct">14%</span></div></div></div>
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Fed holds rates — BTC pumps 1.2%</span><div class="news-time" style="padding-left:9px">3 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH staking hits ATH — 32M ETH locked</span><div class="news-time" style="padding-left:9px">18 min ago</div></div></div>
-    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Don't burn your savings on the stock market alone; do it under the guidance of an experienced investment advisor!</div></div>`,
+    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Don't burn your savings on the stock market alone; do it under the guidance of an experienced investment advisor!</div></div>
+    <div class="r-block">${rHead('BUDGET')}<div class="budget-row"><span>SPENT: $1,400</span><span>LIMIT: $2,000</span></div>${budgetBar(1400,2000,28)}<div class="budget-foot"><div class="budget-msg">You're getting close to your limit. Consider slowing down spending.</div><button class="budget-details">Details</button></div></div>`,
   gaming: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE GAMERS</span><span style="font-size:18px;color:#e0e0e0">1,841 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('LIVE STREAMS NOW')}<div class="trend-row"><span class="trend-name">xQc — Minecraft</span><span class="trend-val">127k &#9654;</span></div><div class="trend-row"><span class="trend-name">shroud — Valorant</span><span class="trend-val">84k &#9654;</span></div><div class="trend-row"><span class="trend-name">pokimane — Chat</span><span class="trend-val">51k &#9654;</span></div></div>
@@ -2439,7 +2499,8 @@ const PANELS = {
     <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val">★18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val">★11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val">★9k</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
-    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">ChatGPT, Gemini and Claude walk into a bar.<br>They hallucinate the bartender.</div></div>`,
+    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">ChatGPT, Gemini and Claude walk into a bar.<br>They hallucinate the bartender.</div></div>
+    <div class="r-block">${rHead('RESOURCE OVERVIEW')}${bracketStat("GPU's",'24')}${bracketStat('Units','130')}${bracketStat('A100s','15')}${bracketStat('H100s','7')}<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-family:'CHNOPixelCodePro',monospace;font-size:11px;color:#999;letter-spacing:0.04em"><span style="color:#e0e0e0">BREAKDOWN</span><span style="color:#888">1 day · A100 GPUs</span></div>${resourceChart(1)}</div>`,
   stables: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">STABLE DEGENS</span><span style="font-size:18px;color:#e0e0e0">189 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
