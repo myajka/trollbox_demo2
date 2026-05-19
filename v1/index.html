@@ -3060,8 +3060,16 @@ function setAuthState(state) {
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
 // ─── GunDB realtime chat ───
-const GUN_NS = 'trollbox-public-v1';
-const gun = (typeof Gun !== 'undefined') ? Gun(['https://gun-manhattan.herokuapp.com/gun','https://peer.wallie.io/gun']) : null;
+const GUN_NS = 'trollbox-public-v2';
+const GUN_PEERS = [
+  'https://gun-manhattan.herokuapp.com/gun',
+  'https://peer.wallie.io/gun',
+  'https://gundb-relay-mlccl.ondigitalocean.app/gun',
+  'https://gun-relays.deno.dev/gun',
+  'https://relay.peer.ooo/gun'
+];
+const gun = (typeof Gun !== 'undefined') ? Gun({ peers: GUN_PEERS, localStorage: false, radisk: false }) : null;
+if (gun) console.log('[gun] initialized, peers:', GUN_PEERS); else console.warn('[gun] Gun not loaded');
 const seenGunIds = new Set();
 const liveMsgsByRoom = {}; // roomId -> array of live msgs
 
@@ -3075,6 +3083,7 @@ function subscribeRoom(roomId) {
     const uniqKey = roomId + ':' + id;
     if (seenGunIds.has(uniqKey)) return;
     seenGunIds.add(uniqKey);
+    console.log('[gun] recv', roomId, data);
     const msg = { tag: data.tag || '', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts || 0, _live: true };
     liveMsgsByRoom[roomId].push(msg);
     liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
@@ -3108,6 +3117,7 @@ function sendChatMessage() {
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
   const payload = { author: 'ANONYMOUS', text, time, tag, ts: Date.now() };
   if (gun) {
+    console.log('[gun] send', active, payload);
     roomGunNode(active).set(payload);
   } else {
     // fallback: local only
