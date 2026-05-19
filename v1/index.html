@@ -202,9 +202,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .res-legend-item { display: flex; align-items: center; gap: 6px; }
 .res-legend-item .br { color: #555; }
 .res-legend-item .sq { width: 7px; height: 7px; display: inline-block; }
-.res-chart { display: flex; align-items: flex-end; gap: 1px; height: 90px; padding: 4px 0; margin: 4px 0; }
+.res-chart { display: flex; align-items: flex-end; gap: 2px; height: 90px; padding: 4px 0; margin: 4px 0; }
 .res-col { flex: 1; display: flex; flex-direction: column-reverse; gap: 0; min-width: 0; }
-.res-seg { width: 100%; }
+.res-seg { width: 100%; background-image: repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, rgba(0,0,0,0.85) 1px, rgba(0,0,0,0.85) 2px); }
 .res-axis { display: flex; justify-content: space-between; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #555; letter-spacing: 0.04em; padding: 0 2px; margin-top: 2px; }
 
 .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; }
@@ -2441,7 +2441,7 @@ function resourceChart(seed) {
     let html2 = '<div class="res-col">';
     for (let s = 0; s < 4; s++) {
       const segH = peak * (0.15 + 0.1*rng(c*10+s)) * 80;
-      html2 += `<div class="res-seg" style="height:${segH.toFixed(1)}px;background:${COLORS[s]}"></div>`;
+      html2 += `<div class="res-seg" style="height:${segH.toFixed(1)}px;color:${COLORS[s]}"></div>`;
     }
     html += html2 + '</div>';
   }
@@ -2495,7 +2495,7 @@ const PANELS = {
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Finally something that can lie faster than politicians — AI.</div></div>`,
   ai: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">NERDS ONLINE</span><span style="font-size:18px;color:#e0e0e0">578 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('AI HYPE INDEX')}<div class="big-num">9,340</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up">▲ 12.4%</span></div>${spark([10,18,15,24,30,28,35,40,38,44,50,55,60,58,65,70],ac)}</div>
+    <div class="r-block">${rHead('AI STOCK INDEX')}<div class="big-num">$842.5</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up">▲ 2.4%</span></div>${spark([720,728,735,742,750,755,748,760,775,790,805,815,822,830,842],ac)}<div style="margin-top:8px"><div class="trend-row"><span class="trend-name">NVDA</span><span class="trend-val small-change up">▲ 3.8%</span></div><div class="trend-row"><span class="trend-name">MSFT</span><span class="trend-val small-change up">▲ 1.6%</span></div><div class="trend-row"><span class="trend-name">GOOGL</span><span class="trend-val small-change up">▲ 2.1%</span></div><div class="trend-row"><span class="trend-name">META</span><span class="trend-val small-change down">▼ 0.4%</span></div></div></div>
     <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val">★18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val">★11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val">★9k</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
