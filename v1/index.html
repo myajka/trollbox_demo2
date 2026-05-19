@@ -3057,6 +3057,28 @@ function setAuthState(state) {
 // Welcome → Anon
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
+// ─── Send messages (local) ───
+function sendChatMessage() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
+  const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
+  if (!CHATS[active]) CHATS[active] = [];
+  CHATS[active].push({ tag, author: 'ANONYMOUS', bot: false, text, time });
+  inp.value = '';
+  renderChat();
+  // ensure cursor blink position resets if used
+  const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
+}
+(function bindChatSend() {
+  const inp = document.getElementById('chat-input');
+  const btn = document.querySelector('#chatInputAuth .send-btn');
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); } });
+  if (btn) btn.addEventListener('click', sendChatMessage);
+})();
+
 // Login
 document.getElementById('loginBtn').addEventListener('click', () => {
   const username = document.getElementById('authUsername').value.trim();
