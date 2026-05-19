@@ -2427,7 +2427,7 @@ function bracketStat(label, val) {
   return `<div class="bracket-stat"><span class="br">[</span><span class="lbl">${label}:</span><span class="val">${val}</span><span class="br">]</span></div>`;
 }
 function resourceChart(seed) {
-  const COLORS = ['#FF3D2E','#FF7A3D','#FFB347','#FFD580'];
+  const COLORS = ['#7DD3FC','#38BDF8','#0EA5E9','#2563EB'];
   const LABELS = ['claude','gpt-4o','gemini','llama-4'];
   const rng = (n)=>{ const s=Math.sin((seed+n)*9999)*1e4; return s-Math.floor(s); };
   let html = '<div class="res-legend">';
