@@ -2427,27 +2427,35 @@ function bracketStat(label, val) {
   return `<div class="bracket-stat"><span class="br">[</span><span class="lbl">${label}:</span><span class="val">${val}</span><span class="br">]</span></div>`;
 }
 function resourceChart(seed) {
-  const COLORS = ['#FF3D2E','#FF7A3D','#FFB347','#FFD580']; // red, orange, amber, yellow
+  const COLORS = ['#FF3D2E','#FF7A3D','#FFB347','#FFD580'];
   const LABELS = ['claude','gpt-4o','gemini','llama-4'];
+  const rng = (n)=>{ const s=Math.sin((seed+n)*9999)*1e4; return s-Math.floor(s); };
   let html = '<div class="res-legend">';
   for (let i = 0; i < 4; i++) {
     html += `<div class="res-legend-item"><span class="br">[</span><span class="sq" style="background:${COLORS[i]}"></span><span>${LABELS[i]}</span><span class="br">]</span></div>`;
   }
-  html += '</div><div class="res-chart">';
-  // 24 cols, each with 4 segments summing to a height
-  const rng = (n)=>{ const s=Math.sin((seed+n)*9999)*1e4; return s-Math.floor(s); };
-  for (let c = 0; c < 24; c++) {
-    const peak = 0.3 + 0.6 * (0.5 + 0.4*Math.sin(c/4) + 0.2*rng(c));
-    let html2 = '<div class="res-col">';
-    for (let s = 0; s < 4; s++) {
-      const segH = peak * (0.15 + 0.1*rng(c*10+s)) * 80;
-      html2 += `<div class="res-seg" style="height:${segH.toFixed(1)}px;color:${COLORS[s]}"></div>`;
-    }
-    html += html2 + '</div>';
-  }
-  html += '</div><div class="res-axis">';
-  for (let i = 1; i <= 24; i++) html += `<span>${i}</span>`;
   html += '</div>';
+  // multi-line sparkline (4 series)
+  const w = 220, h = 80, cols = 24;
+  const series = [];
+  for (let s = 0; s < 4; s++) {
+    const arr = [];
+    for (let c = 0; c < cols; c++) {
+      arr.push(0.3 + 0.5 * (0.5 + 0.4*Math.sin((c+s*3)/4) + 0.3*rng(c*7+s)));
+    }
+    series.push(arr);
+  }
+  let minV = Infinity, maxV = -Infinity;
+  series.forEach(s => s.forEach(v => { if(v<minV) minV=v; if(v>maxV) maxV=v; }));
+  const range = maxV - minV || 1;
+  html += `<svg class="sparkline" viewBox="0 0 ${w} ${h}" height="${h}" width="100%" preserveAspectRatio="none" style="margin:8px 0 4px;display:block">`;
+  series.forEach((arr, i) => {
+    const pts = arr.map((v,c)=>{ const x=(c/(cols-1))*w; const y=h-((v-minV)/range)*(h-10)-4; return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+    const area = `${pts} ${w},${h} 0,${h}`;
+    html += `<polygon points="${area}" fill="${COLORS[i]}" fill-opacity="0.08"/><polyline points="${pts}" fill="none" stroke="${COLORS[i]}" stroke-width="1.2"/>`;
+  });
+  html += '</svg>';
+  html += '<div class="res-axis"><span>1</span><span>4</span><span>8</span><span>12</span><span>16</span><span>20</span><span>24</span></div>';
   return html;
 }
 
