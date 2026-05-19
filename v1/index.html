@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>troll.box</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <style>
 @font-face {
   font-family: 'CHNOPixelCodePro';
@@ -3059,36 +3058,46 @@ function setAuthState(state) {
 // Welcome → Anon
 document.getElementById('welcomeEnter').addEventListener('click', () => setAuthState('anon'));
 
-// ─── GunDB realtime chat ───
-const GUN_NS = 'trollbox-public-v2';
-const GUN_PEERS = [
-  'https://gun-manhattan.herokuapp.com/gun',
-  'https://peer.wallie.io/gun',
-  'https://gundb-relay-mlccl.ondigitalocean.app/gun',
-  'https://gun-relays.deno.dev/gun',
-  'https://relay.peer.ooo/gun'
-];
-const gun = (typeof Gun !== 'undefined') ? Gun({ peers: GUN_PEERS, localStorage: false, radisk: false }) : null;
-if (gun) console.log('[gun] initialized, peers:', GUN_PEERS); else console.warn('[gun] Gun not loaded');
-const seenGunIds = new Set();
+// ─── Firebase Realtime DB chat (REST + SSE, no SDK needed) ───
+const FB_URL = 'https://trblxscljn-default-rtdb.europe-west1.firebasedatabase.app';
+const seenFbIds = new Set();
 const liveMsgsByRoom = {}; // roomId -> array of live msgs
 
-function roomGunNode(roomId) { return gun.get(GUN_NS).get('rooms').get(roomId).get('messages'); }
+function addLiveMsg(roomId, id, data) {
+  if (!data || !data.text || !data.author) return;
+  const key = roomId + ':' + id;
+  if (seenFbIds.has(key)) return;
+  seenFbIds.add(key);
+  console.log('[fb] recv', roomId, data);
+  liveMsgsByRoom[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0, _live: true });
+  liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
+  if (active === roomId) renderChat();
+}
 
 function subscribeRoom(roomId) {
-  if (!gun) return;
   if (!liveMsgsByRoom[roomId]) liveMsgsByRoom[roomId] = [];
-  roomGunNode(roomId).map().on((data, id) => {
-    if (!data || !data.text || !data.author) return;
-    const uniqKey = roomId + ':' + id;
-    if (seenGunIds.has(uniqKey)) return;
-    seenGunIds.add(uniqKey);
-    console.log('[gun] recv', roomId, data);
-    const msg = { tag: data.tag || '', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts || 0, _live: true };
-    liveMsgsByRoom[roomId].push(msg);
-    liveMsgsByRoom[roomId].sort((a,b) => (a._ts||0) - (b._ts||0));
-    if (active === roomId) renderChat();
+  const es = new EventSource(`${FB_URL}/rooms/${roomId}/messages.json`);
+  es.addEventListener('put', e => {
+    try {
+      const { path, data } = JSON.parse(e.data);
+      if (path === '/' && data) {
+        Object.entries(data).forEach(([id, msg]) => addLiveMsg(roomId, id, msg));
+      } else if (path && path !== '/') {
+        const id = path.slice(1);
+        if (data) addLiveMsg(roomId, id, data);
+      }
+    } catch(err) { console.warn('[fb] parse put', err); }
   });
+  es.addEventListener('patch', e => {
+    try {
+      const { path, data } = JSON.parse(e.data);
+      if (path === '/' && data) {
+        Object.entries(data).forEach(([id, msg]) => addLiveMsg(roomId, id, msg));
+      }
+    } catch(err) { console.warn('[fb] parse patch', err); }
+  });
+  es.onerror = err => console.warn('[fb] SSE error', roomId);
+  console.log('[fb] subscribed', roomId);
 }
 
 // Patch renderChat to include live messages
@@ -3096,15 +3105,13 @@ const _origRenderChat = renderChat;
 renderChat = function() {
   const base = CHATS[active] || CHATS.btc || [];
   const live = liveMsgsByRoom[active] || [];
-  // merge: base first (historical), then live
   const merged = base.concat(live);
   const old = CHATS[active];
   CHATS[active] = merged;
   _origRenderChat();
-  CHATS[active] = old; // restore so we don't double-append on next call
+  CHATS[active] = old;
 };
 
-// Subscribe to all rooms upfront
 ['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(subscribeRoom);
 
 // ─── Send messages ───
@@ -3116,15 +3123,9 @@ function sendChatMessage() {
   const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
   const payload = { author: 'ANONYMOUS', text, time, tag, ts: Date.now() };
-  if (gun) {
-    console.log('[gun] send', active, payload);
-    roomGunNode(active).set(payload);
-  } else {
-    // fallback: local only
-    if (!liveMsgsByRoom[active]) liveMsgsByRoom[active] = [];
-    liveMsgsByRoom[active].push({ ...payload, bot: false, _ts: payload.ts, _live: true });
-    renderChat();
-  }
+  console.log('[fb] send', active, payload);
+  fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify(payload) })
+    .catch(err => console.warn('[fb] send error', err));
   inp.value = '';
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
 }
