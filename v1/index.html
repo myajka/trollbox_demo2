@@ -183,6 +183,43 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .create-widget-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
 .create-widget-btn:hover { border-color: var(--ac); color: var(--ac); }
 
+/* ─── MESSAGE REACTIONS POPUP ─── */
+.msg { position: relative; cursor: pointer; }
+.msg-popup { position: absolute; top: 100%; left: 60px; z-index: 100; background: #161616; border: 1px solid #333; box-shadow: 0 8px 24px rgba(0,0,0,0.7); min-width: 240px; font-family: 'CHNOPixelCodePro', monospace; }
+.msg-popup-emojis { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
+.msg-popup-emoji { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; background: #1e1e1e; border: 1px solid #333; transition: background 0.15s; }
+.msg-popup-emoji:hover { background: #2a2a2a; border-color: var(--ac, #8CE45A); }
+.msg-popup-action { padding: 10px 14px; cursor: pointer; font-size: 13px; color: #ccc; border-bottom: 1px solid #2a2a2a; letter-spacing: 0.04em; }
+.msg-popup-action:last-child { border-bottom: none; }
+.msg-popup-action:hover { background: #1e1e1e; }
+.msg-popup-action .pp-user { color: var(--ac, #8CE45A); }
+
+.msg-reactions { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; margin-left: 6px; }
+.msg-reactions.below { display: flex; margin-top: 6px; margin-left: 0; }
+.msg-reaction { display: inline-flex; align-items: center; gap: 4px; background: #1a1a1a; border: 1px solid #333; padding: 2px 8px; font-size: 12px; color: #999; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; transition: all 0.15s; }
+.msg-reaction:hover { border-color: var(--ac, #8CE45A); }
+.msg-reaction.mine { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); background: #161616; }
+.msg-reaction-emoji { font-size: 13px; line-height: 1; }
+.msg-reaction-count { font-variant-numeric: tabular-nums; font-size: 11px; }
+
+/* Aurora overrides */
+[data-crt-theme="aurora"] .msg-popup { background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+[data-crt-theme="aurora"] .msg-popup-emojis { border-bottom-color: rgba(255,255,255,0.06); }
+[data-crt-theme="aurora"] .msg-popup-emoji { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; }
+[data-crt-theme="aurora"] .msg-popup-emoji:hover { background: rgba(255,255,255,0.07); border-color: var(--ac); }
+[data-crt-theme="aurora"] .msg-popup-action { border-bottom-color: rgba(255,255,255,0.06); font-family: 'Inter', sans-serif; font-weight: 500; }
+[data-crt-theme="aurora"] .msg-popup-action:hover { background: rgba(255,255,255,0.04); }
+[data-crt-theme="aurora"] .msg-reaction { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; font-family: 'Inter', sans-serif; font-weight: 500; padding: 2px 10px; }
+[data-crt-theme="aurora"] .msg-reaction.mine { background: color-mix(in srgb, var(--ac) 18%, transparent); border-color: var(--ac); color: var(--ac); }
+
+/* Snow overrides */
+[data-crt-theme="snow"] .msg-popup { background: #fff; border-color: #d8d8d8; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+[data-crt-theme="snow"] .msg-popup-emojis { border-bottom-color: #e8e8e8; }
+[data-crt-theme="snow"] .msg-popup-emoji { background: #f5f5f5; border-color: #e0e0e0; }
+[data-crt-theme="snow"] .msg-popup-action { color: #2a2a2a; border-bottom-color: #e8e8e8; }
+[data-crt-theme="snow"] .msg-popup-action:hover { background: #f0f0f0; }
+[data-crt-theme="snow"] .msg-reaction { background: #f5f5f5; border-color: #e0e0e0; color: #666; }
+
 /* ─── NEW STYLE WIDGETS (default theme) ─── */
 .budget-row { display: flex; justify-content: space-between; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #e0e0e0; margin: 8px 0 6px; letter-spacing: 0.04em; }
 .budget-bar { display: flex; gap: 2px; margin: 8px 0 10px; }
@@ -2594,6 +2631,63 @@ function getTroll(author, isBot) {
 }
 
 const DATE_LABELS = ['May 5, 2026','May 4, 2026','May 3, 2026','May 2, 2026'];
+// ─── REACTIONS ───
+const REACTIONS_PER_ROOM = {
+  btc:   ['🚀','💀','📉','💎','🙌'],
+  eth:   ['🚀','💀','📉','💎','🙌'],
+  sol:   ['🚀','💀','📉','💎','🙌'],
+  etf:   ['🚀','💀','📉','💎','📈'],
+  stables:['💵','💀','😴','📈','🙌'],
+  ai:    ['🤖','💀','🔥','💡','🧠'],
+  gaming:['🎮','💀','🏆','💔','🔥'],
+  sports:['⚽','🏆','💔','🤡','🔥'],
+  politics:['🤡','💀','🔥','⚖️','📢'],
+  general:['🚀','💀','😂','💎','❤️'],
+  mymix: ['🚀','💀','😂','💎','❤️'],
+};
+function reactionsFor(roomId) { return REACTIONS_PER_ROOM[roomId] || REACTIONS_PER_ROOM.btc; }
+const msgReactions = {};
+try { Object.assign(msgReactions, JSON.parse(localStorage.getItem('msgReactions')||'{}')); } catch(e) {}
+function saveReactions() { try { localStorage.setItem('msgReactions', JSON.stringify(msgReactions)); } catch(e){} }
+function getReactions(idx) { return msgReactions[active+':'+idx] || {}; }
+function toggleReaction(idx, emoji) {
+  const key = active+':'+idx;
+  if (!msgReactions[key]) msgReactions[key] = {};
+  const r = msgReactions[key];
+  if (r[emoji] && r[emoji].mine) {
+    r[emoji].count--;
+    r[emoji].mine = false;
+    if (r[emoji].count <= 0) delete r[emoji];
+  } else {
+    if (!r[emoji]) r[emoji] = { count: 0, mine: false };
+    r[emoji].count++;
+    r[emoji].mine = true;
+  }
+  saveReactions();
+  renderChat();
+}
+function renderReactionsForMsg(idx, isLong) {
+  const r = getReactions(idx);
+  const keys = Object.keys(r);
+  if (keys.length === 0) return '';
+  const pills = keys.map(emoji => `<span class="msg-reaction ${r[emoji].mine?'mine':''}" onclick="event.stopPropagation();toggleReaction(${idx},'${emoji}')"><span class="msg-reaction-emoji">${emoji}</span><span class="msg-reaction-count">${r[emoji].count}</span></span>`).join('');
+  return `<span class="msg-reactions${isLong?' below':''}">${pills}</span>`;
+}
+let msgPopupEl = null;
+function closeMsgPopup() { if (msgPopupEl) { msgPopupEl.remove(); msgPopupEl = null; } }
+function openMsgPopup(msgEl, idx, author) {
+  closeMsgPopup();
+  const reactions = reactionsFor(active);
+  const emojis = reactions.map(e => `<div class="msg-popup-emoji" onclick="toggleReaction(${idx},'${e.replace(/'/g,"\\'")}')">${e}</div>`).join('');
+  const popup = document.createElement('div');
+  popup.className = 'msg-popup';
+  popup.innerHTML = `<div class="msg-popup-emojis">${emojis}</div><div class="msg-popup-action">Reply <span class="pp-user">@${author.toUpperCase()}</span></div><div class="msg-popup-action">Show <span class="pp-user">@${author.toUpperCase()}</span> profile</div>`;
+  popup.addEventListener('click', e => e.stopPropagation());
+  msgEl.appendChild(popup);
+  msgPopupEl = popup;
+}
+document.addEventListener('click', () => closeMsgPopup());
+
 function renderChat(){
   const msgs=CHATS[active]||CHATS.btc;
   let html='';
@@ -2607,17 +2701,29 @@ function renderChat(){
       return;
     }
     const showTag = active==='mymix'||active==='general';
-    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" style="${showTag?'':'grid-template-columns:1fr'}">
+    const isLong = (m.text||'').length > 60;
+    const reactionsHtml = renderReactionsForMsg(i, isLong);
+    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" style="${showTag?'':'grid-template-columns:1fr'}">
       ${showTag?`<span class="msg-tag ${m.tag?'active-tag':''}">${m.tag||''}</span>`:''}
       <div class="msg-body">
         <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
         <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g opacity="0.8"><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="#E0E0E0"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="#E0E0E0"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="#E0E0E0"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
-        <span class="msg-time">${m.time}</span></div>
+        <span class="msg-time">${m.time}</span>${reactionsHtml}</div>
       </div>
     </div>`;
   });
   const feed=document.getElementById('chat-feed');
   feed.innerHTML=html;
+  // attach click handlers
+  feed.querySelectorAll('.msg[data-idx]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = parseInt(el.dataset.idx, 10);
+      const author = el.dataset.author;
+      if (msgPopupEl && msgPopupEl.parentElement === el) { closeMsgPopup(); return; }
+      openMsgPopup(el, idx, author);
+    });
+  });
   feed.scrollTop=feed.scrollHeight;
 }
 
