@@ -67,7 +67,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .center-title { color: #e0e0e0; font-size: 15px; letter-spacing: 0.06em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .toggle-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #777; font-family: 'Roboto', sans-serif; }
 .toggle { width: 24px; height: 12px; background: #1e1e1e; border-radius: 6px; position: relative; cursor: pointer; }
-.toggle-dot { width: 8px; height: 8px; background: #444; border-radius: 50%; position: absolute; top: 2px; left: 2px; }
+.toggle-dot { width: 8px; height: 8px; background: #444; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: left 0.15s, background 0.15s; }
+.toggle.on { background: var(--ac, #8CE45A); }
+.toggle.on .toggle-dot { left: 14px; background: #0a0a0a; }
 .chat-feed { flex: 1; overflow-y: auto; padding: 8px 0; min-height: 0; scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .chat-feed:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .chat-feed::-webkit-scrollbar { width: 6px; background: transparent; }
@@ -82,7 +84,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .msg-tag.active-tag { color: var(--ac, #8CE45A); }
 .msg-body { display: grid; grid-template-columns: 28px 1fr; }
 .msg-body-content { display: inline; }
-.msg-troll { width: 24px; height: 24px; margin-right: 4px; display: block; grid-row: 1; }
+.msg-troll { width: 24px; height: 24px; margin-right: 4px; display: block; grid-row: 1; cursor: pointer; }
 .msg-author { display: inline; color: var(--ac, #8CE45A); font-size: 13px; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; font-weight: 400; text-transform: uppercase; }
 .msg-author:hover { text-decoration: underline; }
 .bot-author { color: #8CE45A; }
@@ -289,13 +291,72 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-stat-num { font-size: 16px; color: #fff; font-family: 'CHNOPixelCodePro', monospace; font-weight: 700; }
 .profile-stat-label { font-size: 10px; color: #666; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.04em; }
 .profile-modal-badges { display: flex; gap: 6px; padding: 8px 0; flex-wrap: wrap; }
-.profile-badge { padding: 4px 10px; border: 1px solid #333; font-size: 10px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; }
+.profile-badge { position: relative; padding: 4px 10px; border: 1px solid #333; font-size: 10px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; cursor: default; }
+.profile-badge[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: #0a0a0a; border: 1px solid var(--ac, #8CE45A); color: #cfcfcf;
+  font-family: 'Roboto', sans-serif; font-size: 11px; text-transform: none; letter-spacing: normal;
+  padding: 6px 9px; width: max-content; max-width: 200px; white-space: normal; line-height: 1.35;
+  text-align: center; z-index: 60; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+.profile-badge:not(.active)[data-tip]:hover::after { border-color: #444; }
 .profile-badge.active { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 .profile-modal-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #333; }
 .profile-modal-btn { flex: 1; padding: 10px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; cursor: pointer; border: 1px solid #444; background: transparent; color: #ccc; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
 .profile-modal-btn:hover { border-color: #666; color: #fff; }
 .profile-modal-btn.danger { color: #666; border-color: #333; }
 .profile-modal-btn.danger:hover { color: #f44; border-color: #f44; }
+.bot-tag { display: inline-block; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #0a0a0a; background: var(--ac, #8CE45A); padding: 2px 5px; letter-spacing: 0.08em; vertical-align: middle; }
+.bot-code-panel { margin-top: 12px; border: 1px solid #333; background: #0a0a0a; max-height: 220px; overflow: auto; }
+.bot-code-panel pre { margin: 0; padding: 10px 12px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.5; color: #8CE45A; white-space: pre; tab-size: 2; }
+.bot-online { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888; font-family: 'Roboto', sans-serif; }
+.bot-online-dot { width: 7px; height: 7px; border-radius: 50%; background: #8CE45A; box-shadow: 0 0 6px #8CE45A; }
+.profile-modal-actions.bot-actions { flex-wrap: wrap; }
+.profile-modal-actions.bot-actions .profile-modal-btn { flex: 1 1 calc(50% - 4px); }
+.profile-modal-btn.on { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+.mix-empty { max-width: 360px; margin: 0 auto; padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.mix-empty-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 15px; color: #e0e0e0; letter-spacing: 0.04em; text-transform: uppercase; }
+.mix-empty-text { font-family: 'Roboto', sans-serif; font-size: 13px; color: #888; line-height: 1.6; }
+.mix-empty-text b { color: var(--ac, #8CE45A); font-weight: 700; }
+.mix-empty-steps { text-align: left; margin: 2px 0 4px; padding-left: 20px; font-family: 'Roboto', sans-serif; font-size: 13px; color: #999; line-height: 1.9; }
+.mix-empty-steps b { color: var(--ac, #8CE45A); font-weight: 700; }
+.mix-empty-bots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 6px; }
+.mix-empty-bot { display: flex; align-items: center; gap: 6px; border: 1px solid #333; padding: 5px 9px 5px 5px; cursor: pointer; transition: border-color 0.1s, background 0.1s; }
+.mix-empty-bot:hover { border-color: var(--ac, #8CE45A); background: #111; }
+.mix-empty-bot img { width: 20px; height: 20px; image-rendering: pixelated; }
+.mix-empty-bot span { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; text-transform: uppercase; }
+.mix-empty-hint { font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; margin-top: 4px; }
+/* My Mix terminal */
+.mix-term-empty { padding: 24px 16px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #777; line-height: 1.7; }
+.mix-widget-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.mix-widget-src { font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; letter-spacing: 0.06em; border: 1px solid; padding: 2px 6px; text-transform: uppercase; }
+.mix-widget-ctrls { display: flex; align-items: center; gap: 10px; }
+.mix-widget-ctrls .mix-arrow, .mix-widget-ctrls .mix-remove { cursor: pointer; color: #555; font-size: 14px; line-height: 1; user-select: none; }
+.mix-widget-ctrls .mix-arrow:hover { color: var(--ac, #8CE45A); }
+.mix-widget-ctrls .mix-remove { font-size: 20px; }
+.mix-widget-ctrls .mix-remove:hover { color: #f44; }
+/* My Mix widget picker modal */
+.mix-picker { width: 380px; max-width: 92vw; }
+.mix-picker-search { width: 100%; box-sizing: border-box; background: #141414; border: 1px solid #333; border-radius: 0; padding: 8px 10px; margin-top: 8px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; outline: none; }
+.mix-picker-search:focus { border-color: var(--ac, #8CE45A); }
+.mix-picker-search::placeholder { color: #555; }
+.mix-picker-body { max-height: 50vh; overflow-y: auto; margin: 10px 0; border: 1px solid #2a2a2a; scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.mix-picker-body:hover { scrollbar-color: #2a2a2a #0a0a0a; }
+.mix-picker-body::-webkit-scrollbar { width: 6px; background: transparent; }
+.mix-picker-body::-webkit-scrollbar-track { background: transparent; }
+.mix-picker-body::-webkit-scrollbar-thumb { background: transparent; border-radius: 0; }
+.mix-picker-body:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
+.mix-picker-body:hover::-webkit-scrollbar-track { background: #0a0a0a; }
+.mix-pick-empty { padding: 20px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #666; }
+.mix-pick-group { border-bottom: 1px solid #1e1e1e; }
+.mix-pick-box { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 7px 10px; background: #0d0d0d; border-left: 2px solid; position: sticky; top: 0; }
+.mix-pick-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; cursor: pointer; transition: background 0.1s; }
+.mix-pick-row:hover { background: #161616; }
+.mix-pick-title { font-family: 'Space Mono', monospace; font-size: 12px; color: #ccc; }
+.mix-pick-act { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #666; letter-spacing: 0.04em; }
+.mix-pick-row.added .mix-pick-act { color: var(--ac, #8CE45A); }
+.mix-pick-row.added .mix-pick-title { color: #888; }
 
 /* SETTINGS MODAL */
 .settings-modal { background: #111; border: 1px solid #444; width: 420px; max-height: 80vh; font-family: 'Space Mono', monospace; display: flex; flex-direction: column; }
@@ -448,7 +509,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .section-head { font-size: 14px; min-height: 48px; }
   .mobile-nav-item { font-size: 12px; }
   .mobile-nav-icon { font-size: 20px; }
-  .announce { font-size: 14px; display: none; }
+  .announce { font-size: 14px; }
   .date-sep { font-size: 13px; }
   .pbtn { font-size: 13px; padding: 8px 0; }
   .toggle-row { font-size: 13px; }
@@ -1738,9 +1799,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <div class="center-head">
     <button class="mobile-back" id="mobileBack">&#8592;</button>
     <span class="center-title" id="center-title">#BTC [BITCOIN]</span>
-    <div class="toggle-row">Show bots <div class="toggle"><div class="toggle-dot"></div></div> Hide</div>
+    <div class="toggle-row" id="botToggleRow">Show bots <div class="toggle" id="botToggle"><div class="toggle-dot"></div></div> Hide</div>
   </div>
-  <div class="announce"><span style="color:#333">&#9873;</span> Any long message about the airdrop or other announcements? Everything's here.</div>
+  <div class="announce" id="chatAnnounce"><span style="color:#333">&#9873;</span> Any long message about the airdrop or other announcements? Everything's here.</div>
   <div class="chat-feed" id="chat-feed"></div>
 
   <!-- Chat input: authorized -->
@@ -1989,11 +2050,24 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   </div>
 </div>
 
+<!-- MY MIX WIDGET PICKER -->
+<div class="modal-wrap hidden" id="mixWidgetModal">
+  <div class="modal mix-picker">
+    <p class="modal-title"># add widget to my mix</p>
+    <div class="modal-rules">Pull any widget from any box into your personal terminal.</div>
+    <input class="mix-picker-search" id="mixPickerSearch" type="text" placeholder="Search widgets or boxes — e.g. sol, news, score" oninput="renderMixPicker()" />
+    <div class="mix-picker-body" id="mixPickerBody"></div>
+    <div class="modal-row">
+      <button class="modal-btn confirm" onclick="document.getElementById('mixWidgetModal').classList.add('hidden')">DONE</button>
+    </div>
+  </div>
+</div>
+
 <!-- PROFILE MODAL -->
 <div class="modal-wrap hidden" id="profileModal">
   <div class="profile-modal">
     <div class="profile-modal-head">
-      <span>My Profile</span>
+      <span id="profileModalTitle">My Profile</span>
       <button class="profile-modal-close" id="closeProfileModal">&times;</button>
     </div>
     <div class="profile-modal-avatar">
@@ -2018,15 +2092,56 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       <div class="profile-modal-divider"></div>
       <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
       <div class="profile-modal-badges">
-        <span class="profile-badge active">EARLY ADOPTER</span>
-        <span class="profile-badge active">BOX CREATOR</span>
-        <span class="profile-badge">TOP CHATTER</span>
-        <span class="profile-badge">MODERATOR</span>
+        <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+        <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
+        <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+        <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
       </div>
     </div>
-    <div class="profile-modal-actions">
+    <div class="profile-modal-actions" id="profileModalActions">
       <button class="profile-modal-btn">EDIT PROFILE</button>
       <button class="profile-modal-btn danger" id="profileLogoutBtn">LOG OUT</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOT PROFILE MODAL -->
+<div class="modal-wrap hidden" id="botModal">
+  <div class="profile-modal">
+    <div class="profile-modal-head">
+      <span><span class="bot-tag">BOT</span> <span id="botModalTitle">Profile</span></span>
+      <button class="profile-modal-close" id="closeBotModal">&times;</button>
+    </div>
+    <div class="profile-modal-avatar">
+      <img src="trolls/7_bot.svg" id="botModalTroll" />
+      <div class="profile-modal-nick" id="botModalNick">@NEWS_BOT</div>
+      <div class="profile-modal-status" id="botModalDesc">—</div>
+      <div class="bot-online" id="botModalUptime"><span class="bot-online-dot"></span><span id="botModalUptimeText">online</span></div>
+    </div>
+    <div class="profile-modal-body">
+      <div class="profile-modal-row">
+        <span class="profile-modal-row-label">Creator</span>
+        <span class="profile-modal-row-value"><a href="#" id="botModalCreator">@—</a></span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="profile-modal-row-label">Model</span>
+        <span class="profile-modal-row-value" id="botModalModel">—</span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="profile-modal-row-label">Messages sent</span>
+        <span class="profile-modal-row-value" id="botModalCount">0</span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="profile-modal-row-label">Commands</span>
+        <span class="profile-modal-row-value" id="botModalCmds">—</span>
+      </div>
+      <div class="bot-code-panel hidden" id="botCodePanel"><pre id="botCodeContent"></pre></div>
+    </div>
+    <div class="profile-modal-actions bot-actions">
+      <button class="profile-modal-btn" id="botViewCodeBtn">VIEW CODE</button>
+      <button class="profile-modal-btn" id="botMixBtn">ADD TO MY MIX</button>
+      <button class="profile-modal-btn" id="botMuteBtn">MUTE BOT</button>
+      <button class="profile-modal-btn danger" id="botReportBtn">REPORT</button>
     </div>
   </div>
 </div>
@@ -2189,7 +2304,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <script>
 const ROOMS = [
   { id:'general', label:'#GENERAL', tag:'', count:3102, ac:'#8CE45A' },
-  { id:'mymix', label:'#MY_MIX', tag:'', count:null, ac:'#7777ff' },
+  { id:'mymix', label:'#MY_MIX', tag:'', count:null, ac:'#8CE45A' },
   { id:'btc', label:'#BTC', tag:'[BITCOIN]', count:267, ac:'#f7931a' },
   { id:'eth', label:'#ETH', tag:'[ETHEREUM]', count:295, ac:'#627eea' },
   { id:'sol', label:'#SOL', tag:'[SOLANA]', count:211, ac:'#9945ff' },
@@ -2461,7 +2576,8 @@ const CHATS = {
     {tag:'$IBIT', author:'pension_fund', bot:false, text:'Wisconsin pension fund bought $160M in IBIT, this is the institutional wave 🌊', time:'10:50am'},
   ],
 };
-['mymix','eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
+['eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
+CHATS.mymix = []; // My Mix is built dynamically from bots the user adds
 
 function rHead(t) {
   return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons"><span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span><span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span></div></div>`;
@@ -2595,7 +2711,7 @@ const PANELS = {
   general: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">DEGENS ONLINE</span><span style="font-size:18px;color:#e0e0e0">3,102 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:'Space Mono',monospace;margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
-    <div class="r-block">${rHead('FACT OF THE HOUR')}<div style="font-size:12px;color:#777;line-height:1.6;border-left:2px solid #1e1e1e;padding-left:8px">Honey never spoils. Archaeologists found 3,000-year-old honey still edible.</div><div style="font-size:11px;color:#333;margin-top:4px">refreshes every 60 min · voted by chat</div></div>
+    <div class="r-block">${rHead('FACT OF THE HOUR')}<div style="font-size:12px;color:#777;line-height:1.6;border-left:2px solid #1e1e1e;padding-left:8px">Honey never spoils. Archaeologists found 3,000-year-old honey still edible.</div><div style="font-size:11px;color:#333;margin-top:4px">refreshes every 60 min</div></div>
     <div class="r-block">${rHead('VIBES CHECK')}<div class="mood-grid"><div class="mood-btn" data-vibe="good">GOOD VIBES</div><div class="mood-btn" data-vibe="meh">MEH</div><div class="mood-btn" data-vibe="chaotic">CHAOTIC</div><div class="mood-btn" data-vibe="ngmi">NGMI</div></div></div>
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Today's summary — a lot of things happened</span><div class="news-time" style="padding-left:9px">5 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">BTC breaks 65k — altcoins follow the pump</span><div class="news-time" style="padding-left:9px">23 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">New troll.box update — custom widgets are live</span><div class="news-time" style="padding-left:9px">1h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">I told my wallet I'd stop spending.<br>We're not on speaking terms anymore.</div></div>`,
@@ -2609,6 +2725,10 @@ function setRoom(id){
   document.body.style.setProperty('--ac',r.ac);
   document.getElementById('center-title').textContent = window.matchMedia('(max-width: 900px)').matches ? r.label : r.label+(r.tag?' '+r.tag:'');
   document.getElementById('chat-input').placeholder=`Type to ${r.label}...`;
+  const btr = document.getElementById('botToggleRow');
+  if (btr) btr.style.display = (id === 'mymix') ? 'none' : '';
+  const ann = document.getElementById('chatAnnounce');
+  if (ann) ann.style.display = (id === 'mymix') ? 'none' : '';
   renderRooms(); renderChat(); renderRight();
 }
 
@@ -2691,9 +2811,11 @@ function openMsgPopup(msgEl, idx, author) {
   closeMsgPopup();
   const reactions = reactionsFor(active);
   const emojis = reactions.map(e => `<div class="msg-popup-emoji" onclick="toggleReaction(${idx},'${e.replace(/'/g,"\\'")}')">${e}</div>`).join('');
+  const isBot = msgEl.dataset.bot === '1';
+  const safeAuthor = author.replace(/'/g, "\\'");
   const popup = document.createElement('div');
   popup.className = 'msg-popup';
-  popup.innerHTML = `<div class="msg-popup-emojis">${emojis}</div><div class="msg-popup-action">Reply <span class="pp-user">@${author.toUpperCase()}</span></div><div class="msg-popup-action">Show <span class="pp-user">@${author.toUpperCase()}</span> profile</div>`;
+  popup.innerHTML = `<div class="msg-popup-emojis">${emojis}</div><div class="msg-popup-action">Reply <span class="pp-user">@${author.toUpperCase()}</span></div><div class="msg-popup-action" onclick="closeMsgPopup();openProfile('${safeAuthor}', ${isBot})">Show <span class="pp-user">@${author.toUpperCase()}</span> profile</div>`;
   popup.addEventListener('click', e => e.stopPropagation());
   msgEl.appendChild(popup);
   msgPopupEl = popup;
@@ -2709,8 +2831,47 @@ function openMsgPopup(msgEl, idx, author) {
 }
 document.addEventListener('click', () => closeMsgPopup());
 
+let hideBots=false;
+const mutedBots = new Set();
+const myMixBots = new Set();
+// Collect every message authored by a bot the user added to My Mix (from all rooms)
+function buildMyMix(){
+  if (myMixBots.size === 0) return [];
+  const out = [];
+  const seen = new Set(); // some rooms alias the same array (eth/sol == btc); avoid duplicates
+  for (const k in CHATS){
+    if (k === 'mymix') continue;
+    const arr = CHATS[k];
+    if (seen.has(arr)) continue;
+    seen.add(arr);
+    const room = ROOMS.find(r => r.id === k);
+    const ac = room ? room.ac : '';      // source-box accent, so each tag is colored by its box
+    for (const m of arr){ if (m.bot && myMixBots.has(m.author)) out.push(Object.assign({}, m, { _srcAc: ac, _srcTag: room ? room.label : m.tag })); }
+  }
+  return out;
+}
+function renderMyMixEmpty(feed){
+  const botNames = (typeof BOT_INFO !== 'undefined') ? Object.keys(BOT_INFO) : [];
+  const chips = botNames.map(n => `<div class="mix-empty-bot" onclick="openBotProfile('${n}')"><img src="${getTroll(n,true).src}" /><span>@${n.toUpperCase()}</span></div>`).join('');
+  feed.innerHTML = `
+    <div class="mix-empty">
+      <div class="mix-empty-title">Your My Mix is empty</div>
+      <div class="mix-empty-text">My Mix is your personal feed of bots. To add one:</div>
+      <ol class="mix-empty-steps">
+        <li>Open a box (e.g. <b>#BTC</b>, <b>#AI</b>, <b>#SPORTS</b>)</li>
+        <li>Inside the box, find a bot and tap its name</li>
+        <li>In the bot card, tap <b>ADD TO MY MIX</b></li>
+      </ol>
+      <div class="mix-empty-hint">Bots you can add — tap to open:</div>
+      <div class="mix-empty-bots">${chips}</div>
+    </div>`;
+}
 function renderChat(){
-  const msgs=CHATS[active]||CHATS.btc;
+  if (active === 'mymix') {
+    const feedEl = document.getElementById('chat-feed');
+    if (myMixBots.size === 0) { renderMyMixEmpty(feedEl); return; }
+  }
+  const msgs = active === 'mymix' ? buildMyMix() : (CHATS[active]||CHATS.btc);
   let html='';
   msgs.forEach((m,i)=>{
     if(i%10===0){
@@ -2721,11 +2882,12 @@ function renderChat(){
       html+=`<div class="sys-msg"><span class="sys-msg-text">${m.text}</span><span class="msg-time">${m.time}</span></div>`;
       return;
     }
+    if(m.bot && (hideBots || mutedBots.has(m.author))) return;
     const showTag = active==='mymix'||active==='general';
     const isLong = (m.text||'').length > 60;
     const reactionsHtml = renderReactionsForMsg(i, isLong);
-    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" style="${showTag?'':'grid-template-columns:1fr'}">
-      ${showTag?`<span class="msg-tag ${m.tag?'active-tag':''}">${m.tag||''}</span>`:''}
+    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
+      ${showTag?`<span class="msg-tag ${(m._srcTag||m.tag)?'active-tag':''}"${m._srcAc?` style="color:${m._srcAc}"`:''}>${m._srcTag||m.tag||''}</span>`:''}
       <div class="msg-body">
         <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
         <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g opacity="0.8"><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="#E0E0E0"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="#E0E0E0"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="#E0E0E0"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
@@ -2741,6 +2903,12 @@ function renderChat(){
       e.stopPropagation();
       const idx = parseInt(el.dataset.idx, 10);
       const author = el.dataset.author;
+      // Click on the nick/avatar opens that user's profile
+      if (e.target.classList.contains('msg-author') || e.target.classList.contains('msg-troll')) {
+        closeMsgPopup();
+        openProfile(author, el.dataset.bot === '1');
+        return;
+      }
       if (msgPopupEl && msgPopupEl.parentElement === el) { closeMsgPopup(); return; }
       openMsgPopup(el, idx, author);
     });
@@ -2757,6 +2925,7 @@ function saveWidgetOrder(roomId, order) {
 }
 
 function renderRight(){
+  if (active === 'mymix') { renderMyMixTerminal(); return; }
   const r=ROOMS.find(r=>r.id===active);
   const panelHtml = getPanel(active)(r.ac);
   // parse r-blocks from panel html
@@ -2772,7 +2941,7 @@ function renderRight(){
   // build final html
   const rightEl = document.getElementById('right-panel');
   const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL ' + r.label : 'TERMINAL';
-  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span><span style="color:#333">&#x2139;</span></div>`;
+  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span></div>`;
   const container = document.createElement('div');
   container.id = 'widgets-container';
   blocks.forEach(b => container.appendChild(b));
@@ -2781,6 +2950,118 @@ function renderRight(){
   updateArrowStates();
   initVibes();
   initSparkHovers();
+}
+
+// ===== MY MIX TERMINAL (custom board of widgets pulled from any box) =====
+function getMyMixWidgets(){
+  try { const o = JSON.parse(localStorage.getItem('tb_mymix_widgets')); if (Array.isArray(o)) return o; } catch(e){}
+  return [];
+}
+function saveMyMixWidgets(a){ try { localStorage.setItem('tb_mymix_widgets', JSON.stringify(a)); } catch(e){} }
+// List a box's widgets with readable titles
+function getBoxWidgets(boxId){
+  const room = ROOMS.find(r => r.id === boxId);
+  if (!room) return [];
+  const tmp = document.createElement('div');
+  tmp.innerHTML = getPanel(boxId)(room.ac);
+  const blocks = Array.from(tmp.querySelectorAll('.r-block'));
+  return blocks.map((b, idx) => {
+    let title = (b.querySelector('.r-title')?.textContent || '').replace(/[\[\]]/g,'').trim();
+    if (!title){
+      const onl = b.querySelector('.online-row span');
+      title = onl ? onl.textContent.trim() : ('WIDGET ' + (idx+1));
+    }
+    return { idx, title };
+  });
+}
+// Build one pinned My Mix widget (fresh clone from source box) with source tag + controls
+function buildMixWidget(w, pos){
+  const room = ROOMS.find(r => r.id === w.box);
+  if (!room) return null;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = getPanel(w.box)(room.ac);
+  const src = tmp.querySelectorAll('.r-block')[w.idx];
+  if (!src) return null;
+  const block = src.cloneNode(true);
+  block.querySelector('.r-icons')?.remove(); // drop the box's own reorder arrows
+  const bar = document.createElement('div');
+  bar.className = 'mix-widget-bar';
+  bar.innerHTML = `<span class="mix-widget-src" style="color:${room.ac};border-color:${room.ac}">${room.label}</span>`
+    + `<span class="mix-widget-ctrls">`
+    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},-1)" title="Move up">&#9650;</span>`
+    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},1)" title="Move down">&#9660;</span>`
+    + `<span class="mix-remove" onclick="removeMyMixWidget(${pos})" title="Remove">&times;</span>`
+    + `</span>`;
+  block.insertBefore(bar, block.firstChild);
+  return block;
+}
+function renderMyMixTerminal(){
+  const rightEl = document.getElementById('right-panel');
+  const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL #MY_MIX' : 'TERMINAL';
+  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span></div>`;
+  const widgets = getMyMixWidgets();
+  if (widgets.length === 0){
+    rightEl.insertAdjacentHTML('beforeend', `<div class="mix-term-empty">Your terminal is empty.<br>Pull widgets from any box below.</div>`);
+  } else {
+    const container = document.createElement('div');
+    container.id = 'widgets-container';
+    widgets.forEach((w, pos) => { const b = buildMixWidget(w, pos); if (b) container.appendChild(b); });
+    rightEl.appendChild(container);
+  }
+  rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="openMixPicker()">ADD WIDGET +</button></div>`);
+  initVibes();
+  initSparkHovers();
+}
+function moveMyMixWidget(pos, dir){
+  const cur = getMyMixWidgets();
+  const n = pos + dir;
+  if (n < 0 || n >= cur.length) return;
+  [cur[pos], cur[n]] = [cur[n], cur[pos]];
+  saveMyMixWidgets(cur);
+  renderRight();
+}
+function removeMyMixWidget(pos){
+  const cur = getMyMixWidgets();
+  cur.splice(pos, 1);
+  saveMyMixWidgets(cur);
+  renderRight();
+}
+// ----- Picker modal -----
+function openMixPicker(){
+  const s = document.getElementById('mixPickerSearch');
+  if (s) s.value = '';
+  renderMixPicker();
+  document.getElementById('mixWidgetModal').classList.remove('hidden');
+}
+function renderMixPicker(){
+  const body = document.getElementById('mixPickerBody');
+  const current = getMyMixWidgets();
+  const isAdded = (box, idx) => current.some(w => w.box === box && w.idx === idx);
+  const q = (document.getElementById('mixPickerSearch')?.value || '').trim().toLowerCase();
+  const html = ROOMS.filter(r => r.id !== 'mymix').map(room => {
+    const boxId = room.id;
+    const ac = room.ac;
+    const label = room.label;
+    const boxMatch = !q || label.toLowerCase().includes(q);
+    const rows = getBoxWidgets(boxId)
+      .filter(w => boxMatch || w.title.toLowerCase().includes(q))
+      .map(w =>
+        `<div class="mix-pick-row ${isAdded(boxId, w.idx) ? 'added' : ''}" onclick="toggleMixWidget('${boxId}',${w.idx})">`
+        + `<span class="mix-pick-title">${w.title}</span>`
+        + `<span class="mix-pick-act">${isAdded(boxId, w.idx) ? '✓ ADDED' : '+ ADD'}</span>`
+        + `</div>`).join('');
+    if (!rows) return '';
+    return `<div class="mix-pick-group"><div class="mix-pick-box" style="color:${ac};border-color:${ac}">${label}</div>${rows}</div>`;
+  }).join('');
+  body.innerHTML = html || `<div class="mix-pick-empty">No widgets match “${q}”.</div>`;
+}
+function toggleMixWidget(box, idx){
+  const cur = getMyMixWidgets();
+  const at = cur.findIndex(w => w.box === box && w.idx === idx);
+  if (at >= 0) cur.splice(at, 1); else cur.push({ box, idx });
+  saveMyMixWidgets(cur);
+  renderMixPicker();
+  if (active === 'mymix') renderRight();
 }
 
 function moveWidget(arrowEl, dir) {
@@ -2951,7 +3232,7 @@ function showOnlineUsers(el) {
 
   const usersHtml = ONLINE_USERS.map(u => {
     const troll = getTroll(u.name, false);
-    return `<div class="users-list-item">
+    return `<div class="users-list-item" style="cursor:pointer" onclick="openUserProfile('${u.name}', false)">
       <img src="${troll.src}" />
       ${u.mod ? '<span class="users-list-mod">👑</span>' : ''}
       <span class="users-list-name" style="color:${troll.color}">${u.name}</span>
@@ -3161,8 +3442,12 @@ document.getElementById('profileAuth').addEventListener('click', (e) => {
   if (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn')) return;
   if (window.matchMedia('(max-width: 900px)').matches) return;
   profileModal.classList.remove('hidden');
-  // Sync nick
+  // Sync own profile: nick, title and restore own-only actions
   document.getElementById('profileModalNick').textContent = document.getElementById('profileDisplayName').textContent;
+  document.getElementById('profileModalNick').style.color = '';
+  document.getElementById('profileModalTroll').src = 'trolls/5.svg';
+  document.getElementById('profileModalTitle').textContent = 'My Profile';
+  document.getElementById('profileModalActions').style.display = '';
 });
 
 closeProfileModal.addEventListener('click', () => profileModal.classList.add('hidden'));
@@ -3170,6 +3455,125 @@ profileModal.addEventListener('click', e => { if (e.target === profileModal) pro
 document.getElementById('profileLogoutBtn').addEventListener('click', () => {
   profileModal.classList.add('hidden');
   setAuthState('anon');
+});
+
+// Open any user's profile (from chat nick, online list, or msg popup)
+function openUserProfile(name, isBot) {
+  if (!name) return;
+  const troll = getTroll(name, !!isBot);
+  const nick = '@' + name.replace(/^@/, '').toUpperCase();
+  const ownNick = (document.getElementById('profileDisplayName').textContent || '').toUpperCase();
+  const isOwn = nick === ownNick;
+  document.getElementById('profileModalTroll').src = troll.src;
+  const nickEl = document.getElementById('profileModalNick');
+  nickEl.textContent = nick;
+  nickEl.style.color = troll.color;
+  document.getElementById('profileModalTitle').textContent = isOwn ? 'My Profile' : 'Profile';
+  // EDIT / LOG OUT only make sense on your own profile
+  document.getElementById('profileModalActions').style.display = isOwn ? '' : 'none';
+  profileModal.classList.remove('hidden');
+}
+
+// === BOT PROFILES ===
+const BOT_INFO = {
+  news_bot:   { creator:'boss_nikitos', model:'GPT-4o-mini', desc:'Posts crypto & market headlines in real time', cmds:'/news · /price',
+    code:`bot "news_bot" {\n  trigger: schedule("*/5 * * * *")\n  source:  rss(["coindesk", "theblock"])\n  format:  llm("gpt-4o-mini", "summarize in 1 line")\n  post_to: "#btc, #eth, #ai"\n}` },
+  jokes_bot:  { creator:'kyoshee', model:'Llama-3-8B', desc:'Drops a joke when the chat goes quiet', cmds:'/joke · /meme',
+    code:`bot "jokes_bot" {\n  trigger: idle(120s)\n  model:   "llama-3-8b"\n  prompt:  "tell one short crypto joke"\n  cooldown: 300s\n}` },
+  trivia_bot: { creator:'myajka', model:'Rule-based', desc:'Runs trivia rounds with the chat', cmds:'/trivia · /score',
+    code:`bot "trivia_bot" {\n  on "/trivia" {\n    q = pick(questions)\n    ask(q.text)\n    award(first_correct, 10)\n  }\n}` },
+  music_bot:  { creator:'kmbjz', model:'Rule-based', desc:'Shares what the box is listening to', cmds:'/play · /np',
+    code:`bot "music_bot" {\n  on "/play <url>" { queue.add(url) }\n  on "/np"        { reply(queue.now_playing()) }\n}` },
+  poll_bot:   { creator:'whalewatch', model:'Rule-based', desc:'Creates quick polls for the chat', cmds:'/poll · /results',
+    code:`bot "poll_bot" {\n  on "/poll <q> <opts...>" {\n    p = poll.create(q, opts)\n    pin(p); collect(60s)\n  }\n}` },
+};
+function botInfoFor(name){
+  return BOT_INFO[name] || { creator:'boss_nikitos', model:'Rule-based', desc:'Automated box assistant', cmds:'—',
+    code:`bot "${name}" {\n  // source not published\n}` };
+}
+function countMessagesByAuthor(name){
+  let n = 0;
+  const seen = new Set(); // skip aliased room arrays (eth/sol == btc)
+  for (const k in CHATS){
+    const arr = CHATS[k];
+    if (seen.has(arr)) continue;
+    seen.add(arr);
+    for (const m of arr){ if (m.author === name) n++; }
+  }
+  return n;
+}
+const botModal = document.getElementById('botModal');
+let currentBotName = null;
+function botUptime(name){ // stable per-bot pseudo uptime
+  let s = 0; for (const c of name) s += c.charCodeAt(0);
+  return (s % 60) + 3 + 'd ' + (s % 24) + 'h';
+}
+function syncBotButtons(){
+  const muteBtn = document.getElementById('botMuteBtn');
+  const muted = mutedBots.has(currentBotName);
+  muteBtn.textContent = muted ? 'UNMUTE BOT' : 'MUTE BOT';
+  muteBtn.classList.toggle('on', muted);
+  const mixBtn = document.getElementById('botMixBtn');
+  const inMix = myMixBots.has(currentBotName);
+  mixBtn.textContent = inMix ? 'IN MY MIX ✓' : 'ADD TO MY MIX';
+  mixBtn.classList.toggle('on', inMix);
+}
+function openBotProfile(name){
+  if (!name) return;
+  currentBotName = name;
+  const info = botInfoFor(name);
+  document.getElementById('botModalUptimeText').textContent = 'online · uptime ' + botUptime(name);
+  document.getElementById('botModalTroll').src = getTroll(name, true).src;
+  document.getElementById('botModalNick').textContent = '@' + name.toUpperCase();
+  document.getElementById('botModalTitle').textContent = name.replace(/_/g,' ').toUpperCase();
+  document.getElementById('botModalDesc').textContent = info.desc;
+  const creatorEl = document.getElementById('botModalCreator');
+  creatorEl.textContent = '@' + info.creator;
+  creatorEl.dataset.creator = info.creator;
+  document.getElementById('botModalModel').textContent = info.model;
+  document.getElementById('botModalCount').textContent = countMessagesByAuthor(name).toLocaleString();
+  document.getElementById('botModalCmds').textContent = info.cmds;
+  document.getElementById('botCodeContent').textContent = info.code;
+  document.getElementById('botCodePanel').classList.add('hidden');
+  document.getElementById('botViewCodeBtn').textContent = 'VIEW CODE';
+  const reportBtn = document.getElementById('botReportBtn');
+  reportBtn.textContent = 'REPORT';
+  reportBtn.disabled = false;
+  syncBotButtons();
+  botModal.classList.remove('hidden');
+}
+// Dispatcher: bots get the bot card, humans the user card
+function openProfile(name, isBot){ if (isBot) openBotProfile(name); else openUserProfile(name, false); }
+document.getElementById('closeBotModal').addEventListener('click', () => botModal.classList.add('hidden'));
+botModal.addEventListener('click', e => { if (e.target === botModal) botModal.classList.add('hidden'); });
+document.getElementById('botViewCodeBtn').addEventListener('click', () => {
+  const panel = document.getElementById('botCodePanel');
+  const hidden = panel.classList.toggle('hidden');
+  document.getElementById('botViewCodeBtn').textContent = hidden ? 'VIEW CODE' : 'HIDE CODE';
+});
+document.getElementById('botModalCreator').addEventListener('click', e => {
+  e.preventDefault();
+  const creator = e.currentTarget.dataset.creator;
+  botModal.classList.add('hidden');
+  openUserProfile(creator, false);
+});
+document.getElementById('botMuteBtn').addEventListener('click', () => {
+  if (!currentBotName) return;
+  if (mutedBots.has(currentBotName)) mutedBots.delete(currentBotName);
+  else mutedBots.add(currentBotName);
+  syncBotButtons();
+  renderChat();
+});
+document.getElementById('botMixBtn').addEventListener('click', () => {
+  if (!currentBotName) return;
+  if (myMixBots.has(currentBotName)) myMixBots.delete(currentBotName);
+  else myMixBots.add(currentBotName);
+  syncBotButtons();
+  if (active === 'mymix') renderChat();
+});
+document.getElementById('botReportBtn').addEventListener('click', e => {
+  e.currentTarget.textContent = 'REPORTED ✓';
+  e.currentTarget.disabled = true;
 });
 
 // Settings modal (desktop)
@@ -3306,29 +3710,54 @@ const searchBox = document.getElementById('searchBox');
 // Widget modal
 const widgetModal = document.getElementById('widgetModal');
 widgetModal.addEventListener('click', e => { if(e.target === widgetModal) widgetModal.classList.add('hidden'); });
+const mixWidgetModal = document.getElementById('mixWidgetModal');
+mixWidgetModal.addEventListener('click', e => { if(e.target === mixWidgetModal) mixWidgetModal.classList.add('hidden'); });
 
 // CRT block cursors (chat + search)
 function setupBlockCursor(input, cursor, fontSize) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.font = fontSize + ' "Space Mono", monospace';
+  // Hidden mirror measures text width with the input's REAL font/letter-spacing
+  // (canvas with a hardcoded font mismeasured non-monospace inputs and let the
+  // block caret overlap the letters). Position tracks the actual caret index.
+  const mirror = document.createElement('span');
+  mirror.setAttribute('aria-hidden', 'true');
+  mirror.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;top:0;left:-9999px;margin:0;padding:0;border:0;';
+  document.body.appendChild(mirror);
   function update() {
     if (document.activeElement !== input) { cursor.style.display = 'none'; return; }
     cursor.style.display = 'block';
-    const textW = ctx.measureText(input.value).width;
+    const cs = getComputedStyle(input);
+    mirror.style.fontFamily = cs.fontFamily;
+    mirror.style.fontSize = cs.fontSize;
+    mirror.style.fontWeight = cs.fontWeight;
+    mirror.style.letterSpacing = cs.letterSpacing;
+    const caretPos = input.selectionStart ?? input.value.length;
+    mirror.textContent = input.value.slice(0, caretPos);
+    const textW = mirror.getBoundingClientRect().width;
     const inputRect = input.getBoundingClientRect();
     const parentRect = cursor.parentElement.getBoundingClientRect();
-    cursor.style.left = (inputRect.left - parentRect.left + parseInt(getComputedStyle(input).paddingLeft) + textW) + 'px';
+    cursor.style.left = (inputRect.left - parentRect.left + parseFloat(cs.paddingLeft) + textW) + 'px';
   }
   input.addEventListener('focus', update);
   input.addEventListener('blur', update);
   input.addEventListener('input', update);
   input.addEventListener('keyup', update);
+  input.addEventListener('click', update);
+  input.addEventListener('select', update);
   return update;
 }
 const chatInput = document.getElementById('chat-input');
 const crtCursor = document.getElementById('crt-cursor');
 const updateChatCursor = setupBlockCursor(chatInput, crtCursor, '14px');
+
+// Show bots / Hide toggle
+const botToggle = document.getElementById('botToggle');
+if(botToggle){
+  botToggle.addEventListener('click', () => {
+    hideBots = !hideBots;
+    botToggle.classList.toggle('on', hideBots);
+    renderChat();
+  });
+}
 
 const searchInput = document.getElementById('searchInput');
 const searchCursor = document.getElementById('searchCursor');
@@ -3395,10 +3824,10 @@ function setMobileView(view) {
         <div class="profile-modal-divider"></div>
         <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
         <div class="profile-modal-badges">
-          <span class="profile-badge active">EARLY ADOPTER</span>
-          <span class="profile-badge active">BOX CREATOR</span>
-          <span class="profile-badge">TOP CHATTER</span>
-          <span class="profile-badge">MODERATOR</span>
+          <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+          <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
+          <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+          <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
         </div>
         <div style="margin-top:16px;">
           <button class="profile-modal-btn" style="width:100%">EDIT PROFILE</button>
