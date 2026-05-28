@@ -3196,9 +3196,12 @@ document.querySelectorAll('.settings-theme').forEach(t => {
 // Restore saved theme
 try {
   const saved = localStorage.getItem('trollbox-theme');
-  if (saved) {
+  // never auto-restore darkglass — it navigates to v2 and would create a redirect loop
+  if (saved && saved !== 'darkglass') {
     const el = document.querySelector('.settings-theme[data-theme="' + saved + '"]');
     if (el) { el.click(); }
+  } else if (saved === 'darkglass') {
+    localStorage.setItem('trollbox-theme', 'retro');
   }
 } catch(e) {}
 
