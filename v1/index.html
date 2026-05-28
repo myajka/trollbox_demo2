@@ -1880,12 +1880,6 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
           </div>
           <div class="settings-theme-name">Aurora</div>
         </div>
-        <div class="settings-theme" data-theme="darkglass" onclick="window.location.href='darkglass/?from=v1'">
-          <div class="settings-theme-preview" style="background:#0e1117;border-radius:6px">
-            <div style="background:#161b22;border-radius:4px"></div><div class="tp-center" style="background:#0d1117;border-radius:4px;color:#7ab3e0">Aa</div><div style="background:#161b22;border-radius:4px"></div>
-          </div>
-          <div class="settings-theme-name">Dark Glass</div>
-        </div>
         <div class="settings-theme" data-theme="snow">
           <div class="settings-theme-preview" style="background:#e8e8e8">
             <div style="background:#ddd"></div><div class="tp-center" style="background:#f0f0f0;color:#555">Aa</div><div style="background:#ddd"></div>
@@ -2203,12 +2197,6 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
               <div style="background:rgba(255,255,255,0.04);border-radius:4px;box-shadow:0 0 12px -2px #FF8A3D"></div><div class="tp-center" style="background:rgba(255,255,255,0.04);border-radius:4px;color:#fff;box-shadow:0 0 12px -2px #60A5FA">Aa</div><div style="background:rgba(255,255,255,0.04);border-radius:4px;box-shadow:0 0 12px -2px #4ADE80"></div>
             </div>
             <div class="settings-theme-name">Aurora</div>
-          </div>
-          <div class="settings-theme" data-theme="darkglass" onclick="window.location.href='darkglass/?from=v1'">
-            <div class="settings-theme-preview" style="background:#0e1117;border-radius:6px">
-              <div style="background:#161b22;border-radius:4px"></div><div class="tp-center" style="background:#0d1117;border-radius:4px;color:#7ab3e0">Aa</div><div style="background:#161b22;border-radius:4px"></div>
-            </div>
-            <div class="settings-theme-name">Dark Glass</div>
           </div>
           <div class="settings-theme" data-theme="snow">
             <div class="settings-theme-preview" style="background:#e8e8e8">
@@ -3749,12 +3737,9 @@ document.querySelectorAll('.settings-theme').forEach(t => {
 // Restore saved theme
 try {
   const saved = localStorage.getItem('trollbox-theme');
-  // never auto-restore darkglass — it navigates to v2 and would create a redirect loop
-  if (saved && saved !== 'darkglass') {
+  if (saved) {
     const el = document.querySelector('.settings-theme[data-theme="' + saved + '"]');
     if (el) { el.click(); }
-  } else if (saved === 'darkglass') {
-    localStorage.setItem('trollbox-theme', 'retro');
   }
 } catch(e) {}
 
