@@ -349,6 +349,26 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-picker-body:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
 .mix-picker-body:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .mix-pick-empty { padding: 20px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #666; }
+/* Social Intel card (BTC) — pixel/stitched style */
+.si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 2px dashed var(--si-ac, var(--ac, #f7931a)); height: 76px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
+.si-card-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
+.si-card-head .r-icons { margin-left: auto; }
+.si-icon { display: block; flex-shrink: 0; }
+.si-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--si-ac, var(--ac, #f7931a)); }
+.si-badge { display: flex; align-items: center; gap: 4px; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: var(--si-ac, var(--ac, #f7931a)); letter-spacing: 0.05em; }
+.si-dot { width: 5px; height: 5px; background: var(--si-ac, var(--ac, #f7931a)); display: inline-block; animation: si-blink 1s step-end infinite; }
+@keyframes si-blink { 50% { opacity: 0.15; } }
+.si-rotate { flex: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; padding-right: 64px; transition: opacity 0.28s ease; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--si-ac, var(--ac, #f7931a)); }
+.si-rotate.si-fade { opacity: 0; }
+.si-rotate b { font-weight: 800; color: var(--si-ac, var(--ac, #f7931a)); }
+.si-msg { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.si-msg:hover { filter: brightness(1.25); }
+.msg.si-highlight { background: rgba(255,255,255,0.06); box-shadow: inset 3px 0 0 var(--ac, #8CE45A); border-radius: 2px; transition: background 0.3s, box-shadow 0.3s; }
+.si-dots { position: absolute; bottom: 8px; right: 10px; display: flex; gap: 3px; }
+.si-pip { width: 6px; height: 6px; background: rgba(255,255,255,0.18); transition: background 0.2s; }
+.si-pip.on { background: var(--si-ac, var(--ac, #f7931a)); }
+.si-story { margin-top: 8px; padding-top: 7px; border-top: 2px dashed rgba(0,0,0,0.4); font-family: 'Roboto', sans-serif; font-size: 11.5px; line-height: 1.45; color: #1a1a1a; }
+.si-story-tag { display: inline-block; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; background: #0a0a0a; color: #f7931a; padding: 1px 5px; margin-right: 5px; letter-spacing: 0.05em; }
 .mix-pick-group { border-bottom: 1px solid #1e1e1e; }
 .mix-pick-box { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 7px 10px; background: #0d0d0d; border-left: 2px solid; position: sticky; top: 0; }
 .mix-pick-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; cursor: pointer; transition: background 0.1s; }
@@ -547,6 +567,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .trend-val { font-size: 14px; }
   .u-name { font-size: 14px !important; }
   .u-dot { width: 8px; height: 8px; }
+  .user-grid { flex-wrap: nowrap; overflow: hidden; }
+  .si-rotate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .create-widget-btn { font-size: 15px; padding: 13px 0; }
   .live-dot { width: 7px; height: 7px; }
 
@@ -2657,62 +2679,187 @@ function spark(data, color, h=56, interactive=false) {
 
 const udots = '<div class="u-dot"></div>'.repeat(36);
 
+// ===== SOCIAL INTEL widget (client-side, no AI) =====
+const SI_STOP = new Set('the a an to of in is it and or but for on at with this that you we they my me so just im its was are be not no yes if as do dont all get got gonna will can about have has had out now like lol the you your our them his her she he what when how why who'.split(' '));
+const SI_POS = new Set('bull bullish pump moon green buy long ath rally gain gains win wins good lfg send breakout higher hot fire wagmi up'.split(' '));
+const SI_NEG = new Set('bear bearish dump red sell short rekt crash loss losses fud scam rug lower nuke ngmi cope down'.split(' '));
+const BOX_STORY = {
+  btc: 'SEC approves options on spot BTC ETFs — volatility expected to spike.',
+  eth: 'ETH staking ratio hits ATH — 32M ETH now locked.',
+  sol: 'Solana posts record daily DEX volume — fees stay flat.',
+  stables: 'MiCA goes live — USDC first major stablecoin to comply.',
+  etf: 'BlackRock IBIT logs $401M daily inflow — biggest since launch.',
+  ai: 'New open model beats GPT-4o on reasoning benchmarks.',
+  gaming: 'Elden Ring DLC confirmed — 40+ hours of new content.',
+  sports: 'Haaland hat-trick puts Man City top of the table.',
+  politics: 'EU AI Act passes — 523 votes in favour.',
+  general: 'troll.box update — custom widgets are now live.',
+};
+function siStory(box){ return BOX_STORY[box] || 'No major story right now — the chat is the story.'; }
+// Theme-specific extra insight per box
+const BOX_EXTRA = {
+  btc: 'Fear &amp; Greed: <b>72</b> · Greed',
+  eth: 'Gas: <b>14 gwei</b> · low',
+  sol: 'Network: <b>3,180 TPS</b> · healthy',
+  etf: 'Net flows today: <b>+$507M</b>',
+  stables: 'Peg watch: <b>USDT $1.000</b> · stable',
+  ai: 'Top model mention: <b>Claude</b>',
+  gaming: 'Most hyped: <b>Elden Ring DLC</b>',
+  sports: 'Top team mention: <b>Man City</b>',
+  politics: 'Chaos meter: <b>73/100</b>',
+  general: 'Crowd vibe: <b>chaotic-good</b>',
+};
+function computeIntelParts(box){
+  const msgs = (CHATS[box] || []).filter(m => !m.sys);
+  const users = new Set(), authorCount = {}, freq = {};
+  let pos = 0, neg = 0;
+  msgs.forEach(m => {
+    if (!m.bot) { users.add(m.author); authorCount[m.author] = (authorCount[m.author]||0)+1; }
+    (m.text||'').toLowerCase().replace(/[^a-z0-9$ ]/g,' ').split(/\s+/).forEach(raw => {
+      const w = raw.replace(/^\$/, '');
+      if (w.length < 3 || SI_STOP.has(w)) return;
+      if (SI_POS.has(w)) pos++;
+      if (SI_NEG.has(w)) neg++;
+      freq[w] = (freq[w]||0)+1;
+    });
+  });
+  const top = Object.keys(freq).sort((a,b)=>freq[b]-freq[a]).slice(0,3);
+  const loud = Object.keys(authorCount).sort((a,b)=>authorCount[b]-authorCount[a])[0];
+  // pick the "top message" (longest non-bot user message) with its ORIGINAL index in the feed
+  const full = CHATS[box] || [];
+  let topMsg = null, topScore = -1;
+  full.forEach((m, i) => {
+    if (m.sys || m.bot) return;
+    const sc = (m.text || '').length;
+    if (sc > topScore) { topScore = sc; topMsg = { idx: i, author: m.author, text: m.text }; }
+  });
+  return { count: msgs.length, users: users.size, top, loud, loudCount: loud?authorCount[loud]:0, mood: (pos+neg)?Math.round(pos/(pos+neg)*100):null, topMsg };
+}
+function siEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function siLines(box){
+  const p = computeIntelParts(box);
+  if (!p.count) return ['Box is quiet — no messages yet.'];
+  const lines = [];
+  if (p.loud) lines.push(`Loudest: <b>@${p.loud.toUpperCase()}</b> · ${p.loudCount} msgs`);
+  if (p.topMsg) lines.push(`Top msg: <span class="si-msg" onclick="highlightChatMsg(${p.topMsg.idx},'${box}')">“${siEsc(p.topMsg.text.slice(0,30))}…”</span>`);
+  if (p.top.length) lines.push('Hot words: ' + p.top.map((w,i)=> i===0?`<b>${w}</b>`:w).join(', '));
+  if (BOX_EXTRA[box]) lines.push(BOX_EXTRA[box]);
+  lines.push(`<b>${p.count}</b> msgs · <b>${p.users}</b> active users`);
+  if (p.mood != null) lines.push(`Mood: <b>${p.mood}% bullish</b> across the chat`);
+  return lines;
+}
+function socialIntelCard(box){
+  const room = ROOMS.find(r => r.id === box);
+  const ac = room ? room.ac : '#f7931a';
+  const lines = siLines(box);
+  const dots = lines.map((_,i)=>`<span class="si-pip${i===0?' on':''}"></span>`).join('');
+  const arrows = `<div class="r-icons">`
+    + `<span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span>`
+    + `<span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span>`
+    + `</div>`;
+  return `<div class="r-block"><div class="si-card" data-box="${box}" style="--si-ac:${ac}">`
+    + `<div class="si-card-head">`
+    + `<svg class="si-icon" width="16" height="16" viewBox="0 0 16 16" fill="${ac}" style="image-rendering:pixelated"><rect x="7" y="1" width="2" height="14"/><rect x="1" y="7" width="14" height="2"/><rect x="3" y="3" width="2" height="2"/><rect x="11" y="3" width="2" height="2"/><rect x="3" y="11" width="2" height="2"/><rect x="11" y="11" width="2" height="2"/></svg>`
+    + `<div class="si-title">SOCIAL INTEL</div>`
+    + `<div class="si-badge"><span class="si-dot"></span>LAST 1H</div>`
+    + arrows
+    + `</div>`
+    + `<div class="si-rotate" data-box="${box}">${lines[0]}</div>`
+    + `<div class="si-dots">${dots}</div>`
+    + `</div></div>`;
+}
+let siTick = 0;
+function rotateSocialIntel(){
+  siTick++;
+  document.querySelectorAll('.si-card').forEach(card => {
+    const lines = siLines(card.dataset.box);
+    if (!lines.length) return;
+    const idx = siTick % lines.length;
+    const rot = card.querySelector('.si-rotate');
+    if (rot){ rot.classList.add('si-fade'); setTimeout(() => { rot.innerHTML = lines[idx]; rot.classList.remove('si-fade'); }, 280); }
+    card.querySelectorAll('.si-pip').forEach((p,i)=> p.classList.toggle('on', i===idx));
+  });
+}
+setInterval(rotateSocialIntel, 10000);
+// Click a Social Intel "top msg" snippet → jump to & flash that message in the chat
+function highlightChatMsg(idx, box){
+  const needSwitch = box && box !== active;
+  if (needSwitch) setRoom(box);
+  setTimeout(() => {
+    const feed = document.getElementById('chat-feed');
+    if (!feed) return;
+    const el = feed.querySelector(`.msg[data-idx="${idx}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('si-highlight');
+    setTimeout(() => el.classList.remove('si-highlight'), 1800);
+  }, needSwitch ? 90 : 0);
+}
+
 const PANELS = {
-  btc: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE USERS</span><span style="font-size:18px;color:#e0e0e0">267 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+  btc: (ac,id)=>`
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE USERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">267 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down">▼ 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
     <div class="r-block">${rHead('COMMUNITY SENTIMENT')}<div class="mood-grid"><div class="mood-btn sel">BULLISH ▲</div><div class="mood-btn">BEARISH ▼</div><div class="mood-btn">HODL</div><div class="mood-btn">NGMI</div></div><div style="margin-top:7px"><div class="poll-row"><span class="poll-lbl">Bullish</span><div class="bar-bg"><div class="bar-fg" style="width:62%"></div></div><span class="bar-pct">62%</span></div><div class="poll-row"><span class="poll-lbl">Bearish</span><div class="bar-bg"><div class="bar-fg" style="width:24%"></div></div><span class="bar-pct">24%</span></div><div class="poll-row"><span class="poll-lbl">Neutral</span><div class="bar-bg"><div class="bar-fg" style="width:14%"></div></div><span class="bar-pct">14%</span></div></div></div>
+    ${socialIntelCard(id||'btc')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Fed holds rates — BTC pumps 1.2%</span><div class="news-time" style="padding-left:9px">3 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH staking hits ATH — 32M ETH locked</span><div class="news-time" style="padding-left:9px">18 min ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Don't burn your savings on the stock market alone; do it under the guidance of an experienced investment advisor!</div></div>
     <div class="r-block">${rHead('BUDGET')}<div class="budget-row"><span>SPENT: $1,400</span><span>LIMIT: $2,000</span></div>${budgetBar(1400,2000,28)}<div class="budget-foot"><div class="budget-msg">You're getting close to your limit. Consider slowing down spending.</div><button class="budget-details">Details</button></div></div>`,
   gaming: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE GAMERS</span><span style="font-size:18px;color:#e0e0e0">1,841 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE GAMERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">1,841 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('LIVE STREAMS NOW')}<div class="trend-row"><span class="trend-name">xQc — Minecraft</span><span class="trend-val">127k &#9654;</span></div><div class="trend-row"><span class="trend-name">shroud — Valorant</span><span class="trend-val">84k &#9654;</span></div><div class="trend-row"><span class="trend-name">pokimane — Chat</span><span class="trend-val">51k &#9654;</span></div></div>
     <div class="r-block">${rHead('TRENDING TODAY')}<div class="trend-row"><span class="trend-name">#1 Elden Ring DLC</span><span class="trend-val">+340%</span></div><div class="trend-row"><span class="trend-name">#2 GTA VI leak</span><span class="trend-val">+210%</span></div><div class="trend-row"><span class="trend-name">#3 Valorant patch</span><span class="trend-val">+88%</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — GOAT?')}<div class="poll-row"><span class="poll-lbl">MrBeast</span><div class="bar-bg"><div class="bar-fg" style="width:44%"></div></div><span class="bar-pct">44%</span></div><div class="poll-row"><span class="poll-lbl">PewDiePie</span><div class="bar-bg"><div class="bar-fg" style="width:38%"></div></div><span class="bar-pct">38%</span></div><div class="poll-row"><span class="poll-lbl">Ninja</span><div class="bar-bg"><div class="bar-fg" style="width:18%"></div></div><span class="bar-pct">18%</span></div></div>
+    ${socialIntelCard('gaming')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Elden Ring DLC confirmed — 40+ hours</span><div class="news-time" style="padding-left:9px">1h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Valorant patch 8.11 — Jett nerf incoming</span><div class="news-time" style="padding-left:9px">3h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Why did the gamer fail school?<br>He thought F was a killstreak.</div></div>`,
   sports: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">FANS ONLINE</span><span style="font-size:18px;color:#e0e0e0">4,217 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">FANS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">4,217 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('LIVE SCORES')}<div class="score-row"><span>MAN CITY</span><span class="score-val">3—1 <span class="live-badge">67'</span></span><span>ARSENAL</span></div><div class="score-row"><span>LAKERS</span><span class="score-val">88—91 <span class="live-badge">Q3</span></span><span>CELTICS</span></div><div class="score-row"><span>DJOKOVIC</span><span class="score-val">6-3 4-2</span><span>ALCARAZ</span></div></div>
     <div class="r-block">${rHead('UPCOMING TODAY')}<div class="trend-row"><span class="trend-name">20:45 Bayern vs PSG</span><span style="color:#444">UCL</span></div><div class="trend-row"><span class="trend-name">22:00 Warriors vs Heat</span><span style="color:#444">NBA</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — WINNER?')}<div class="poll-row"><span class="poll-lbl">MAN CITY</span><div class="bar-bg"><div class="bar-fg" style="width:58%"></div></div><span class="bar-pct">58%</span></div><div class="poll-row"><span class="poll-lbl">ARSENAL</span><div class="bar-bg"><div class="bar-fg" style="width:29%"></div></div><span class="bar-pct">29%</span></div><div class="poll-row"><span class="poll-lbl">DRAW</span><div class="bar-bg"><div class="bar-fg" style="width:13%"></div></div><span class="bar-pct">13%</span></div></div>
+    ${socialIntelCard('sports')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Haaland hat-trick — 3 goals in 20 min</span><div class="news-time" style="padding-left:9px">live</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">LeBron 28pts in Q3 — Lakers lead by 5</span><div class="news-time" style="padding-left:9px">live</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Arsenal fans checking the offside line frame by frame at 2am.</div></div>`,
   politics: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE</span><span style="font-size:18px;color:#e0e0e0">932 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">932 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('CHAOS-O-METER')}<div style="margin-top:2px;background:#161616;border-radius:1px;height:12px;overflow:hidden;border:1px solid #333"><div style="width:73%;height:100%;background:linear-gradient(to right,#3ddc84,#f7dc6f,#ff5555)"></div></div><div style="display:flex;justify-content:space-between;margin-top:3px;font-size:11px;color:#333"><span>CALM</span><span style="color:#ff5555">73/100</span><span>CHAOS</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — EU AI ACT?')}<div style="font-size:11px;color:#444;margin-bottom:6px">Do you support it?</div><div class="poll-row"><span class="poll-lbl">YES</span><div class="bar-bg"><div class="bar-fg" style="width:41%"></div></div><span class="bar-pct">41%</span></div><div class="poll-row"><span class="poll-lbl">NO</span><div class="bar-bg"><div class="bar-fg" style="width:44%"></div></div><span class="bar-pct">44%</span></div><div class="poll-row"><span class="poll-lbl">UNSURE</span><div class="bar-bg"><div class="bar-fg" style="width:15%"></div></div><span class="bar-pct">15%</span></div></div>
+    ${socialIntelCard('politics')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">EU AI Act passes — 523 votes in favor</span><div class="news-time" style="padding-left:9px">just now</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">G7 summit Tokyo — climate deal on table</span><div class="news-time" style="padding-left:9px">12 min ago</div></div></div>
     <div class="r-block">${rHead('HOT TOPICS')}<div style="margin-top:2px"><span class="tag-pill">#AIAct</span><span class="tag-pill">#G7Tokyo</span><span class="tag-pill">#USElection</span><span class="tag-pill">#Tariffs</span></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Finally something that can lie faster than politicians — AI.</div></div>`,
   ai: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">NERDS ONLINE</span><span style="font-size:18px;color:#e0e0e0">578 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">NERDS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">578 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('AI STOCK INDEX')}<div class="big-num">$842.5</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up">▲ 2.4%</span></div>${stockChart(3)}<div style="margin-top:8px"><div class="trend-row"><span class="trend-name">NVDA</span><span class="trend-val small-change up">▲ 3.8%</span></div><div class="trend-row"><span class="trend-name">MSFT</span><span class="trend-val small-change up">▲ 1.6%</span></div><div class="trend-row"><span class="trend-name">GOOGL</span><span class="trend-val small-change up">▲ 2.1%</span></div><div class="trend-row"><span class="trend-name">META</span><span class="trend-val small-change down">▼ 0.4%</span></div></div></div>
     <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val">★18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val">★11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val">★9k</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
+    ${socialIntelCard('ai')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">ChatGPT, Gemini and Claude walk into a bar.<br>They hallucinate the bartender.</div></div>
     <div class="r-block">${rHead('TOP MODELS 24H')}${bracketStat('API calls','4.2M')}${bracketStat('Models','130')}${bracketStat('Active users','15k')}${bracketStat('Avg latency','7ms')}<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-family:'CHNOPixelCodePro',monospace;font-size:11px;color:#999;letter-spacing:0.04em"><span style="color:#e0e0e0">USAGE BY HOUR</span><span style="color:#888">1 day · all models</span></div>${resourceChart(2)}</div>`,
   stables: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">STABLE DEGENS</span><span style="font-size:18px;color:#e0e0e0">189 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">STABLE DEGENS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">189 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
     <div class="r-block">${rHead('PEG TRACKER')}<div class="trend-row"><span class="trend-name">USDT</span><span class="trend-val" style="color:${ac}">$1.0001</span></div><div class="trend-row"><span class="trend-name">USDC</span><span class="trend-val" style="color:${ac}">$0.9999</span></div><div class="trend-row"><span class="trend-name">DAI</span><span class="trend-val" style="color:${ac}">$1.0002</span></div><div class="trend-row"><span class="trend-name">PYUSD</span><span class="trend-val" style="color:${ac}">$0.9998</span></div></div>
     <div class="r-block">${rHead('DOMINANCE')}<div class="poll-row"><span class="poll-lbl">USDT</span><div class="bar-bg"><div class="bar-fg" style="width:68%"></div></div><span class="bar-pct">68%</span></div><div class="poll-row"><span class="poll-lbl">USDC</span><div class="bar-bg"><div class="bar-fg" style="width:21%"></div></div><span class="bar-pct">21%</span></div><div class="poll-row"><span class="poll-lbl">DAI</span><div class="bar-bg"><div class="bar-fg" style="width:6%"></div></div><span class="bar-pct">6%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:5%"></div></div><span class="bar-pct">5%</span></div></div>
+    ${socialIntelCard('stables')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">MiCA regulation live — USDC first compliant</span><div class="news-time" style="padding-left:9px">2h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">500M USDT minted on Tron — whale activity</span><div class="news-time" style="padding-left:9px">4h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">My portfolio is 100% stablecoins.<br>I sleep great while yall get rekt.</div></div>`,
   etf: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">TRADERS ONLINE</span><span style="font-size:18px;color:#e0e0e0">412 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">TRADERS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">412 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('BTC ETF TOTAL AUM')}<div class="big-num">$62.8B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 1.8%</span></div>${spark([20,22,25,28,30,33,35,38,40,42,45,50,55,58,62],ac)}</div>
     <div class="r-block">${rHead('DAILY FLOWS')}<div class="trend-row"><span class="trend-name">IBIT (BlackRock)</span><span class="trend-val" style="color:#3ddc84">+$401M</span></div><div class="trend-row"><span class="trend-name">FBTC (Fidelity)</span><span class="trend-val" style="color:#3ddc84">+$120M</span></div><div class="trend-row"><span class="trend-name">GBTC (Grayscale)</span><span class="trend-val" style="color:#ff5555">-$52M</span></div><div class="trend-row"><span class="trend-name">ARKB (Ark/21)</span><span class="trend-val" style="color:#3ddc84">+$38M</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST ETF?')}<div class="poll-row"><span class="poll-lbl">IBIT</span><div class="bar-bg"><div class="bar-fg" style="width:52%"></div></div><span class="bar-pct">52%</span></div><div class="poll-row"><span class="poll-lbl">FBTC</span><div class="bar-bg"><div class="bar-fg" style="width:28%"></div></div><span class="bar-pct">28%</span></div><div class="poll-row"><span class="poll-lbl">GBTC</span><div class="bar-bg"><div class="bar-fg" style="width:12%"></div></div><span class="bar-pct">12%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:8%"></div></div><span class="bar-pct">8%</span></div></div>
+    ${socialIntelCard('etf')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">SEC approves options on spot BTC ETFs</span><div class="news-time" style="padding-left:9px">1h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH spot ETF — 75% approval chance Q3</span><div class="news-time" style="padding-left:9px">3h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Boomers discovering BTC through ETFs:<br>"Honey, I invested in digital gold!"</div></div>`,
   general: ac=>`
-    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">DEGENS ONLINE</span><span style="font-size:18px;color:#e0e0e0">3,102 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">DEGENS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">3,102 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:'Space Mono',monospace;margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
     <div class="r-block">${rHead('FACT OF THE HOUR')}<div style="font-size:12px;color:#777;line-height:1.6;border-left:2px solid #1e1e1e;padding-left:8px">Honey never spoils. Archaeologists found 3,000-year-old honey still edible.</div><div style="font-size:11px;color:#333;margin-top:4px">refreshes every 60 min</div></div>
     <div class="r-block">${rHead('VIBES CHECK')}<div class="mood-grid"><div class="mood-btn" data-vibe="good">GOOD VIBES</div><div class="mood-btn" data-vibe="meh">MEH</div><div class="mood-btn" data-vibe="chaotic">CHAOTIC</div><div class="mood-btn" data-vibe="ngmi">NGMI</div></div></div>
+    ${socialIntelCard('general')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Today's summary — a lot of things happened</span><div class="news-time" style="padding-left:9px">5 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">BTC breaks 65k — altcoins follow the pump</span><div class="news-time" style="padding-left:9px">23 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">New troll.box update — custom widgets are live</span><div class="news-time" style="padding-left:9px">1h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">I told my wallet I'd stop spending.<br>We're not on speaking terms anymore.</div></div>`,
 };
@@ -2927,7 +3074,7 @@ function saveWidgetOrder(roomId, order) {
 function renderRight(){
   if (active === 'mymix') { renderMyMixTerminal(); return; }
   const r=ROOMS.find(r=>r.id===active);
-  const panelHtml = getPanel(active)(r.ac);
+  const panelHtml = getPanel(active)(r.ac, active);
   // parse r-blocks from panel html
   const tmp = document.createElement('div');
   tmp.innerHTML = panelHtml;
@@ -2963,13 +3110,14 @@ function getBoxWidgets(boxId){
   const room = ROOMS.find(r => r.id === boxId);
   if (!room) return [];
   const tmp = document.createElement('div');
-  tmp.innerHTML = getPanel(boxId)(room.ac);
+  tmp.innerHTML = getPanel(boxId)(room.ac, boxId);
   const blocks = Array.from(tmp.querySelectorAll('.r-block'));
   return blocks.map((b, idx) => {
     let title = (b.querySelector('.r-title')?.textContent || '').replace(/[\[\]]/g,'').trim();
     if (!title){
+      const si = b.querySelector('.si-title');
       const onl = b.querySelector('.online-row span');
-      title = onl ? onl.textContent.trim() : ('WIDGET ' + (idx+1));
+      title = si ? si.textContent.trim() : (onl ? onl.textContent.trim() : ('WIDGET ' + (idx+1)));
     }
     return { idx, title };
   });
@@ -2979,7 +3127,7 @@ function buildMixWidget(w, pos){
   const room = ROOMS.find(r => r.id === w.box);
   if (!room) return null;
   const tmp = document.createElement('div');
-  tmp.innerHTML = getPanel(w.box)(room.ac);
+  tmp.innerHTML = getPanel(w.box)(room.ac, w.box);
   const src = tmp.querySelectorAll('.r-block')[w.idx];
   if (!src) return null;
   const block = src.cloneNode(true);
@@ -3077,15 +3225,16 @@ function moveWidget(arrowEl, dir) {
   else container.insertBefore(blocks[newIdx], block);
   // save order by matching original indices
   const r = ROOMS.find(r=>r.id===active);
-  const origHtml = getPanel(active)(r.ac);
+  const origHtml = getPanel(active)(r.ac, active);
   const origTmp = document.createElement('div');
   origTmp.innerHTML = origHtml;
   const origBlocks = Array.from(origTmp.querySelectorAll('.r-block'));
   const curBlocks = Array.from(container.querySelectorAll('.r-block'));
   const order = curBlocks.map(cb => {
     const title = cb.querySelector('.r-title');
-    if(!title) return 0;
-    return origBlocks.findIndex(ob => { const ot = ob.querySelector('.r-title'); return ot && ot.textContent === title.textContent; });
+    if(title) return origBlocks.findIndex(ob => { const ot = ob.querySelector('.r-title'); return ot && ot.textContent === title.textContent; });
+    if(cb.querySelector('.si-card')) return origBlocks.findIndex(ob => ob.querySelector('.si-card'));
+    return 0;
   });
   saveWidgetOrder(active, order);
   updateArrowStates();
@@ -3778,6 +3927,11 @@ function setMobileView(view) {
   mobileView = view;
   if (!isMobile()) return;
 
+  // Tapping the navbar should collapse any open settings view / modal
+  const sv = document.getElementById('mobileSettingsView');
+  if (sv) sv.style.display = 'none';
+  document.querySelectorAll('.modal-wrap').forEach(m => m.classList.add('hidden'));
+
   [leftPanel, centerPanel, rightPanel, mobileProfileView].forEach(el => el.classList.remove('mobile-active'));
   mobileBack.style.display = 'none';
   document.querySelector('.mobile-nav').style.display = 'flex';
@@ -3791,7 +3945,6 @@ function setMobileView(view) {
   } else if (view === 'chat') {
     centerPanel.classList.add('mobile-active');
     mobileBack.style.display = 'block';
-    document.querySelector('.mobile-nav').style.display = 'none';
     setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'terminal') {
     rightPanel.classList.add('mobile-active');
