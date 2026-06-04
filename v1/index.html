@@ -38,11 +38,44 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-item { padding: 12px 12px; border-bottom: 1px solid #2a2a2a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #fff; }
 .room-item:hover { background: #121212; color: #fff; }
 .room-item.active { background: linear-gradient(to right, #161616, transparent); color: #fff; border-left: 2px solid var(--ac, #8CE45A); padding-left: 10px; }
+.room-main { min-width: 0; flex: 1; }
 .room-name { font-size: 13px; letter-spacing: 0.03em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Live last-message preview (mobile boxes screen only) */
+.room-preview { display: none; font-family: 'Roboto', sans-serif; font-size: 12.5px; color: #6a6a6a; opacity: 0.92; white-space: nowrap; overflow: hidden; max-width: 100%; height: 16px; line-height: 16px; -webkit-mask-image: linear-gradient(to right, #000 70%, transparent); mask-image: linear-gradient(to right, #000 70%, transparent); }
+.room-preview .rp-nick { font-weight: 700; color: #7c7c7c; opacity: 0.8; }
+.room-preview.typing .rp-text::after { content: ''; display: inline-block; width: 5px; height: 9px; background: #8a8a8a; margin-left: 2px; vertical-align: -1px; animation: previewBlink 0.6s steps(1) infinite; }
+@keyframes previewBlink { 50% { opacity: 0; } }
+/* App version tag in the sidebar header — mobile only */
+.app-version { display: none; font-family: 'Space Mono', monospace; font-size: 11px; color: #555; letter-spacing: 0.05em; }
 .room-tag { font-size: 11px; color: #888; }
 .room-user-icon { fill: #555; }
 .room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
 .room-item.active .room-count { color: #777; }
+/* My Box — distinct pinned button at the top of the sidebar (desktop) */
+.mybox-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 24px); box-sizing: border-box; margin: 10px 12px; padding: 12px; background: transparent; border: 1px solid #3a3a3a; color: #e0e0e0; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.mybox-btn-icon { fill: #888; flex-shrink: 0; transition: fill .15s; }
+.mybox-btn span { position: relative; top: -2px; } /* pixel-font glyphs sit low in the line box — lift to optical-center with the icon */
+.mybox-btn:hover, .mybox-btn.active { border-color: #8CE45A; background: rgba(140,228,90,0.12); color: #8CE45A; }
+.mybox-btn:hover .mybox-btn-icon, .mybox-btn.active .mybox-btn-icon { fill: #8CE45A; }
+/* Separate the channel list from the My Box button — top border on the first channel (GENERAL) */
+.rooms-pinned + .room-item { border-top: 1px solid #2a2a2a; }
+
+/* Connection status — pixel dot (shared colours/states; placement differs per surface) */
+.conn-dot { line-height: 0; pointer-events: none; color: #f7c948; }
+.conn-dot svg { display: block; image-rendering: pixelated; filter: drop-shadow(0 0 1.5px rgba(0,0,0,0.95)); }
+.conn-dot.live { color: #8CE45A; }
+.conn-dot.connecting { color: #f7c948; animation: connPulse 1s ease-in-out infinite; }
+.conn-dot.offline { color: #ff5e5e; }
+@keyframes connPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+/* Desktop: dot pinned to the top-right corner of the profile troll */
+.left-profile .avatar { position: relative; display: inline-block; line-height: 0; }
+.left-profile .avatar .conn-dot { position: absolute; top: -2px; right: -3px; }
+/* Mobile: dot lives in the chat header (hidden on desktop); profile dot hidden on mobile */
+.conn-dot.conn-head { display: none; }
+@media (max-width: 900px) {
+  .conn-dot.conn-head { display: inline-block; margin-left: 8px; flex-shrink: 0; position: relative; left: -13px; top: -6px; opacity: 0.6; } /* small semi-transparent badge at the title's top-right */
+  .left-profile .avatar .conn-dot { display: none; }
+}
 .left-profile { border-top: 1px solid #333; padding: 12px; flex-shrink: 0; cursor: pointer; transition: background 0.15s; }
 .left-profile:hover { background: #151515; }
 .profile-label { font-size: 12px; color: #eee; margin-bottom: 8px; letter-spacing: 0.1em; font-family: 'CHNOPixelCodePro', monospace; }
@@ -53,7 +86,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-btns { display: flex; gap: 6px; margin-top: 10px; }
 .pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Space Mono', monospace; cursor: pointer; text-align: center; }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
-.section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
+.section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 44px; box-sizing: border-box; flex-shrink: 0; }
 .search-create-row { display: flex; gap: 6px; padding: 7px 10px; border-top: 1px solid #333; flex-shrink: 0; align-items: stretch; }
 .search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; position: relative; }
 .search-cursor { display: none; position: absolute; width: 9px; height: 14px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
@@ -63,9 +96,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 /* CENTER */
 .center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; }
-.center-head { padding: 10px 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; min-height: 40px; box-sizing: border-box; flex-shrink: 0; }
+.center-head { padding: 10px 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; min-height: 44px; box-sizing: border-box; flex-shrink: 0; }
 .center-title { color: #e0e0e0; font-size: 15px; letter-spacing: 0.06em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .toggle-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #777; font-family: 'Roboto', sans-serif; }
+/* Box(chat) / Terminal switcher — shown inside a box on mobile only */
+.box-view-toggle { display: none; }
+#mobileTermMount { display: none; } /* mobile-only: box terminal widgets mount here */
 .toggle { width: 24px; height: 12px; background: #1e1e1e; border-radius: 6px; position: relative; cursor: pointer; }
 .toggle-dot { width: 8px; height: 8px; background: #444; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: left 0.15s, background 0.15s; }
 .toggle.on { background: var(--ac, #8CE45A); }
@@ -315,6 +351,88 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-actions.bot-actions { flex-wrap: wrap; }
 .profile-modal-actions.bot-actions .profile-modal-btn { flex: 1 1 calc(50% - 4px); }
 .profile-modal-btn.on { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+
+/* PROFILE EDIT MODAL */
+.pe-modal { width: 380px; }
+.pe-head-actions { display: flex; align-items: center; gap: 14px; }
+.pe-icon-btn { background: none; border: none; color: #888; cursor: pointer; padding: 0; line-height: 1; display: flex; align-items: center; }
+.pe-icon-btn:hover { color: #fff; }
+.pe-icon-btn.close { font-size: 26px; color: #777; }
+.pe-icon-btn.close:hover { color: #fff; }
+.pe-body { padding: 18px 20px 4px; }
+.pe-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #5c8aff; letter-spacing: 0.04em; margin: 0 0 12px; }
+.pe-body .pe-label:not(:first-child) { margin-top: 22px; }
+.pe-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.pe-swatch { width: 44px; height: 44px; border: 2px solid transparent; border-radius: 3px; cursor: pointer; padding: 0; box-sizing: border-box; }
+.pe-swatch.active { border-color: #fff; box-shadow: inset 0 0 0 4px #111; }
+.pe-shades { display: flex; gap: 12px; margin-top: 14px; }
+.pe-shade { flex: 1; padding: 12px 0; background: transparent; border: 1px solid #3a3a3a; color: #ccc; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; cursor: pointer; }
+.pe-shade:hover { border-color: #666; color: #fff; }
+.pe-shade.active { background: #2b2b2b; border-color: #555; color: #fff; }
+.pe-name-wrap { position: relative; }
+.pe-name-input { width: 100%; box-sizing: border-box; background: transparent; border: 1px solid #3a3a3a; color: #fff; font-family: 'CHNOPixelCodePro', monospace; font-size: 16px; padding: 14px 56px 14px 14px; letter-spacing: 0.02em; }
+.pe-name-input:focus { outline: none; border-color: #5c8aff; }
+.pe-name-count { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #666; }
+.pe-helper { font-family: 'Roboto', sans-serif; font-size: 13px; color: #777; line-height: 1.45; margin-top: 14px; }
+.pe-badge-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 22px; padding-bottom: 6px; }
+.pe-badge-row .pe-label { margin: 0; }
+.pe-switch { position: relative; width: 42px; height: 22px; border-radius: 11px; background: #333; border: none; cursor: pointer; transition: background .15s; flex-shrink: 0; }
+.pe-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #888; transition: left .15s, background .15s; }
+.pe-switch.on { background: #5c8aff; }
+.pe-switch.on::after { left: 23px; background: #fff; }
+
+/* ONBOARDING TOUR */
+#tour { position: fixed; inset: 0; z-index: 12000; display: none; font-family: 'Space Mono', monospace; }
+#tour.show { display: block; }
+.tour-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.74); }
+.tour-spot { position: absolute; border-radius: 6px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.74); outline: 2px solid var(--ac, #8CE45A); outline-offset: 3px; transition: top .25s ease, left .25s ease, width .25s ease, height .25s ease; pointer-events: none; }
+.tour-card { position: absolute; width: 300px; max-width: calc(100vw - 32px); background: #111; border: 1px solid #444; padding: 18px 18px 16px; box-shadow: 0 14px 44px rgba(0,0,0,0.6); }
+.tour-card-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 15px; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 9px; padding-right: 18px; }
+.tour-card-text { font-family: 'Roboto', sans-serif; font-size: 13.5px; color: #b8b8b8; line-height: 1.5; }
+.tour-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
+.tour-dots { display: flex; gap: 7px; }
+.tour-dot { width: 7px; height: 7px; border-radius: 50%; background: #3a3a3a; transition: background .2s; }
+.tour-dot.active { background: var(--ac, #8CE45A); }
+.tour-actions { display: flex; gap: 12px; align-items: center; }
+.tour-skip { background: none; border: none; color: #777; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; padding: 0; }
+.tour-skip:hover { color: #fff; }
+.tour-next { background: var(--ac, #8CE45A); color: #0a0a0a; border: none; padding: 9px 18px; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; }
+.tour-next:hover { filter: brightness(1.1); }
+.tour-x { position: absolute; top: 12px; right: 13px; background: none; border: none; color: #777; font-size: 20px; cursor: pointer; line-height: 1; padding: 0; }
+.tour-x:hover { color: #fff; }
+
+/* Mobile swipe-slide variant */
+.tour-mobile { position: absolute; inset: 0; background: #0a0a0a; display: flex; flex-direction: column; }
+.tour-m-top { display: flex; justify-content: flex-end; padding: 16px 18px 0; }
+.tour-m-illus { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+.tour-m-illus img { width: 150px; height: 150px; image-rendering: pixelated; filter: drop-shadow(0 0 22px rgba(140,228,90,0.18)); }
+.tour-m-body { padding: 0 28px; text-align: center; }
+.tour-m-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 21px; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 12px; }
+.tour-m-text { font-family: 'Roboto', sans-serif; font-size: 15px; color: #b8b8b8; line-height: 1.55; }
+.tour-m-dots { display: flex; gap: 8px; justify-content: center; margin: 24px 0; }
+.tour-m-foot { display: flex; gap: 12px; padding: 8px 24px 32px; }
+.tour-m-prev { width: 52px; flex-shrink: 0; background: transparent; border: 1px solid #3a3a3a; color: #ccc; font-size: 18px; cursor: pointer; }
+.tour-m-prev:disabled { opacity: 0.3; cursor: default; }
+.tour-m-next { flex: 1; background: var(--ac, #8CE45A); color: #0a0a0a; border: none; padding: 14px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* REPLY — chip above input */
+.reply-chip { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-top: 1px solid #2a2a2a; background: #121212; font-family: 'Roboto', sans-serif; font-size: 13px; }
+.reply-chip.hidden { display: none; }
+.reply-chip-label { color: #888; white-space: nowrap; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; text-transform: lowercase; letter-spacing: 0.02em; }
+.reply-chip-user { font-weight: 700; }
+.reply-chip-prev { color: #cfcfcf; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reply-chip-x { margin-left: auto; background: none; border: none; color: #888; font-size: 19px; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+.reply-chip-x:hover { color: #fff; }
+
+/* REPLY — quote above a reply message in the feed */
+.msg-reply { grid-column: 1 / -1; display: flex; align-items: flex-end; gap: 7px; margin: 2px 0 1px; padding-left: 30px; cursor: pointer; }
+.msg.has-tag .msg-reply { padding-left: 4px; }
+.msg-reply-corner { width: 16px; height: 11px; border-left: 2px solid var(--rc, #888); border-top: 2px solid var(--rc, #888); border-top-left-radius: 6px; flex-shrink: 0; }
+.msg-reply-quote { font-size: 12.5px; line-height: 1.2; color: #6c6c6c; font-family: 'Roboto', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.msg-reply-author { font-weight: 700; }
+.msg-reply:hover .msg-reply-quote { color: #8c8c8c; }
+.msg-reply.deleted { cursor: default; }
+.msg-reply.deleted .msg-reply-prev { font-style: italic; color: #5a5a5a; }
 .mix-empty { max-width: 360px; margin: 0 auto; padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .mix-empty-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 15px; color: #e0e0e0; letter-spacing: 0.04em; text-transform: uppercase; }
 .mix-empty-text { font-family: 'Roboto', sans-serif; font-size: 13px; color: #888; line-height: 1.6; }
@@ -350,7 +468,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-picker-body:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .mix-pick-empty { padding: 20px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #666; }
 /* Social Intel card (BTC) — pixel/stitched style */
-.si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 2px dashed var(--si-ac, var(--ac, #f7931a)); height: 76px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
+.si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 1px dashed var(--si-ac, var(--ac, #f7931a)); height: 76px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
 .si-card-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
 .si-card-head .r-icons { margin-left: auto; }
 .si-icon { display: block; flex-shrink: 0; }
@@ -497,10 +615,17 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .welcome-overlay { height: 100vh; padding: 0 22px; }
   .welcome-overlay img { max-width: 100%; height: auto; }
 
-  /* Mobile: boxes list */
-  .left .section-head { margin: 0 16px; padding: 10px 0; border-bottom: 1px solid #333; }
-  .left-rooms { padding: 0 16px; }
-  .room-item { padding: 16px 0; }
+  /* Mobile: boxes list — full-width rows like desktop; content inset on the left */
+  .left .section-head { margin: 0; padding: 10px 16px; border-bottom: 1px solid #333; }
+  .app-version { display: inline-block; }     /* show version tag in header on mobile */
+  .left-rooms { padding: 0; }                 /* no side padding → row borders span full width */
+  .room-item { padding: 15px 16px; gap: 10px; } /* content inset; border-bottom now full-width */
+  .room-item.active { padding-left: 16px; }
+  .rooms-pinned { display: none; } /* My Box is the bottom-nav tab on mobile, not a list item */
+  .rooms-pinned + .room-item { border-top: none; } /* desktop-only separator; not needed on mobile */
+  .room-main { display: flex; flex-direction: column; gap: 5px; }
+  .room-item .room-preview { display: block; } /* live last-message preview */
+  .room-item .room-count { align-self: center; }
   .room-item:hover { background: transparent; color: inherit; box-shadow: none; }
   .room-name { font-size: 16px; }
   .room-count { font-size: 14px; }
@@ -513,6 +638,22 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   /* Mobile: chat */
   .center-head { justify-content: flex-start; gap: 8px; align-items: center; min-height: 48px; padding: 0 12px; }
   .center-head .toggle-row { margin-left: auto; }
+
+  /* Box(chat) / Terminal switcher — segmented bar under the head, inside a box */
+  .box-view-toggle { display: flex; align-items: stretch; border-bottom: 1px solid #333; flex-shrink: 0; }
+  .bvt-seg { flex: 1; background: transparent; border: none; border-right: 1px solid #222; color: #777; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; padding: 11px 0; cursor: pointer; }
+  .bvt-seg:last-child { border-right: none; }
+  .bvt-seg.active { color: var(--ac, #8CE45A); box-shadow: inset 0 -2px 0 var(--ac, #8CE45A); }
+  /* My Box: drop the redundant title headers so the switcher stays pinned to the top (no jump) */
+  .center-head.mybox-head { display: none; }
+  #right-panel.mybox-term .section-head { display: none; }
+  /* Terminal sub-view: keep header + switcher, swap only the content below them */
+  .center.show-terminal #chatAnnounce,
+  .center.show-terminal #chat-feed,
+  .center.show-terminal #replyChip,
+  .center.show-terminal #chatInputAuth,
+  .center.show-terminal #chatInputAnon { display: none !important; }
+  .center.show-terminal #mobileTermMount { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
   .msg-author { font-size: 15px; }
   .msg-text { font-size: 16px; line-height: 1.4; }
   .msg-translate .tr-text { font-size: 16px; line-height: 1.4; }
@@ -1781,7 +1922,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 <!-- LEFT -->
 <div class="left">
-  <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/></div>
+  <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/><span class="app-version">v0.1</span></div>
   <div class="left-rooms" id="rooms-list"></div>
   <div class="search-create-row">
     <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor" id="searchCursor"></span></div>
@@ -1792,7 +1933,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <div class="left-profile hidden" id="profileAuth">
     <div class="profile-label">PROFILE</div>
     <div class="profile-row">
-      <div class="avatar"><img src="trolls/5.svg" style="width:36px;height:36px;image-rendering:pixelated;" /></div>
+      <div class="avatar"><img class="my-troll" src="trolls/5.svg" style="width:36px;height:36px;image-rendering:pixelated;" /><span class="conn-dot connecting" id="connDot" title="Connecting…"><svg viewBox="0 0 8 8" width="11" height="11"><g fill="currentColor"><rect x="2" y="0" width="4" height="1"/><rect x="1" y="1" width="6" height="1"/><rect x="0" y="2" width="8" height="4"/><rect x="1" y="6" width="6" height="1"/><rect x="2" y="7" width="4" height="1"/></g></svg></span></div>
       <div>
         <div class="profile-name" id="profileDisplayName">@BOSS_NIKITOS</div>
         <div class="profile-status">Invest in a troll.box guys</div>
@@ -1821,10 +1962,20 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <div class="center-head">
     <button class="mobile-back" id="mobileBack">&#8592;</button>
     <span class="center-title" id="center-title">#BTC [BITCOIN]</span>
+    <span class="conn-dot conn-head connecting" title="Connecting…"><svg viewBox="0 0 8 8" width="6" height="6" fill="currentColor"><path d="M6 1H7V2H8V6H7V7H6V8H2V7H1V6H0V2H1V1H2V0H6V1Z"/></svg></span>
     <div class="toggle-row" id="botToggleRow">Show bots <div class="toggle" id="botToggle"><div class="toggle-dot"></div></div> Hide</div>
+  </div>
+  <div class="box-view-toggle" id="boxViewToggle">
+    <button class="bvt-seg active" id="bvtBoxSeg" onclick="setMobileView('chat')">Box</button>
+    <button class="bvt-seg" id="bvtTermSeg" onclick="setMobileView('terminal')">Terminal</button>
   </div>
   <div class="announce" id="chatAnnounce"><span style="color:#333">&#9873;</span> Any long message about the airdrop or other announcements? Everything's here.</div>
   <div class="chat-feed" id="chat-feed"></div>
+  <!-- Mobile: box's terminal widgets mount here (below the persistent header + switcher) -->
+  <div id="mobileTermMount"></div>
+
+  <!-- Reply chip (shown above input while composing a reply) -->
+  <div class="reply-chip hidden" id="replyChip"></div>
 
   <!-- Chat input: authorized -->
   <div class="chat-input-row hidden" id="chatInputAuth">
@@ -1997,12 +2148,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-item active" data-view="boxes">
-    <span class="mobile-nav-icon">&#9776;</span>
+    <span class="mobile-nav-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5"/><rect x="8" y="1" width="5" height="5"/><rect x="1" y="8" width="5" height="5"/><rect x="8" y="8" width="5" height="5"/></svg></span>
     <span>Boxes</span>
   </div>
-  <div class="mobile-nav-item" data-view="terminal">
-    <span class="mobile-nav-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3 2 L12 7 L3 12 Z"/></svg></span>
-    <span>Terminal</span>
+  <div class="mobile-nav-item" data-view="mybox">
+    <span class="mobile-nav-icon"><svg width="15" height="15" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="3" width="12" height="1"/><rect x="1" y="12" width="12" height="1"/><rect x="1" y="3" width="1" height="10"/><rect x="12" y="3" width="1" height="10"/><rect x="1" y="6" width="12" height="1"/><rect x="6" y="3" width="2" height="3"/></svg></span>
+    <span>My Box</span>
   </div>
   <div class="mobile-nav-item" data-view="profile">
     <span class="mobile-nav-icon"><svg width="14" height="14" viewBox="0 0 146 145" fill="currentColor" style="image-rendering:pixelated"><path d="M59.3311 145.007H26.375V131.824H59.3311V145.007ZM118.645 145.007H85.6885V131.824H118.645V145.007ZM19.7812 19.7734H19.7842V13.1816H26.376V19.7734H32.9697V6.5918H112.064V19.7734H118.65V13.1816H125.241V59.3203H118.652V72.5029H112.064V79.0947H105.464V125.232H105.462V131.823H85.6885V125.232H59.3252V131.823H39.5518V98.8682H26.377V118.642H6.60449V98.8682H13.1855V92.2764H26.3682V98.8682H26.375V85.6855H39.5518V79.0947H32.9697V72.5029H26.375V59.3203H19.7842V39.5469H19.7812V52.7305H13.1895V6.5918H19.7812V19.7734ZM118.65 98.8682H118.657V92.2764H131.839V98.8682H138.421V118.642H118.648V98.8682H105.468V85.6855H118.65V98.8682ZM59.3369 65.9121V72.5029H85.7012V65.9121H59.3369ZM46.1465 46.1387V59.3203H59.3291V46.1387H46.1465ZM85.6885 46.1387V59.3203H98.8711V46.1387H85.6885ZM131.836 52.7305H125.245V6.5918H131.836V52.7305ZM13.1855 46.1387H6.59473V6.5918H13.1855V46.1387ZM145.013 39.5469H138.431V46.1387H131.839V6.5918H138.421V0H145.013V39.5469ZM6.59082 39.5469H0V0H6.59082V39.5469ZM98.876 6.59082H46.1465V0H98.876V6.59082Z"/></svg></span>
@@ -2029,7 +2180,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       <option>PUBLIC</option>
       <option>PRIVATE (invite only)</option>
     </select>
-    <div class="modal-hint">box will be visible in #MY_MIX</div>
+    <div class="modal-hint">box will be visible in #MY_BOX</div>
     <div class="modal-row">
       <button class="modal-btn cancel" id="cancelBox">CANCEL</button>
       <button class="modal-btn confirm" id="confirmBox">CREATE &#8594;</button>
@@ -2069,7 +2220,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- MY MIX WIDGET PICKER -->
 <div class="modal-wrap hidden" id="mixWidgetModal">
   <div class="modal mix-picker">
-    <p class="modal-title"># add widget to my mix</p>
+    <p class="modal-title"># add widget to my box</p>
     <div class="modal-rules">Pull any widget from any box into your personal terminal.</div>
     <input class="mix-picker-search" id="mixPickerSearch" type="text" placeholder="Search widgets or boxes — e.g. sol, news, score" oninput="renderMixPicker()" />
     <div class="mix-picker-body" id="mixPickerBody"></div>
@@ -2087,7 +2238,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       <button class="profile-modal-close" id="closeProfileModal">&times;</button>
     </div>
     <div class="profile-modal-avatar">
-      <img src="trolls/5.svg" id="profileModalTroll" />
+      <img src="trolls/5.svg" id="profileModalTroll" class="my-troll-modal" />
       <div class="profile-modal-nick" id="profileModalNick">@BOSS_NIKITOS</div>
       <div class="profile-modal-status">Invest in a troll.box guys</div>
     </div>
@@ -2105,18 +2256,52 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
         <span class="profile-modal-row-label">Link</span>
         <span class="profile-modal-row-value"><a href="#">troll.box/boss_nikitos</a><button class="copy-btn" title="Copy">&#x2398;</button></span>
       </div>
-      <div class="profile-modal-divider"></div>
-      <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
-      <div class="profile-modal-badges">
-        <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
-        <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
-        <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
-        <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+      <div class="profile-badges-wrap" id="profileBadgesWrap">
+        <div class="profile-modal-divider"></div>
+        <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
+        <div class="profile-modal-badges">
+          <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+          <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
+          <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+          <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+        </div>
       </div>
     </div>
     <div class="profile-modal-actions" id="profileModalActions">
-      <button class="profile-modal-btn">EDIT PROFILE</button>
+      <button class="profile-modal-btn" id="peEditFromModal">EDIT PROFILE</button>
       <button class="profile-modal-btn danger" id="profileLogoutBtn">LOG OUT</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE EDIT MODAL -->
+<div class="modal-wrap hidden" id="profileEditModal">
+  <div class="profile-modal pe-modal">
+    <div class="profile-modal-head">
+      <span>PROFILE</span>
+      <div class="pe-head-actions">
+        <button class="pe-icon-btn" id="peSaveBtn" title="Save"><svg width="19" height="19" viewBox="0 0 20 20" fill="currentColor"><path d="M2 2h13l3 3v13H2V2zm3 1v6h9V3h-2v4H7V3H5zm-1 9v5h12v-5H4z"/></svg></button>
+        <button class="pe-icon-btn close" id="peCloseBtn" title="Close">&times;</button>
+      </div>
+    </div>
+    <div class="pe-body">
+      <div class="pe-label">Choose color</div>
+      <div class="pe-swatches" id="peSwatches"></div>
+      <div class="pe-shades" id="peShades">
+        <button class="pe-shade" data-shade="lighter">Lighter</button>
+        <button class="pe-shade active" data-shade="default">Default</button>
+        <button class="pe-shade" data-shade="darker">Darker</button>
+      </div>
+      <div class="pe-label">Display name</div>
+      <div class="pe-name-wrap">
+        <input class="pe-name-input" id="peName" maxlength="16" autocomplete="off" spellcheck="false" />
+        <span class="pe-name-count" id="peNameCount">0/16</span>
+      </div>
+      <div class="pe-helper">This the name people will know you by on troll.box. You can always change it later.</div>
+      <div class="pe-badge-row">
+        <span class="pe-label">Show badges in profile</span>
+        <button class="pe-switch on" id="peBadgeSwitch" role="switch" aria-checked="true"></button>
+      </div>
     </div>
   </div>
 </div>
@@ -2155,7 +2340,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
     </div>
     <div class="profile-modal-actions bot-actions">
       <button class="profile-modal-btn" id="botViewCodeBtn">VIEW CODE</button>
-      <button class="profile-modal-btn" id="botMixBtn">ADD TO MY MIX</button>
+      <button class="profile-modal-btn" id="botMixBtn">ADD TO MY BOX</button>
       <button class="profile-modal-btn" id="botMuteBtn">MUTE BOT</button>
       <button class="profile-modal-btn danger" id="botReportBtn">REPORT</button>
     </div>
@@ -2314,11 +2499,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <script>
 const ROOMS = [
   { id:'general', label:'#GENERAL', tag:'', count:3102, ac:'#8CE45A' },
-  { id:'mymix', label:'#MY_MIX', tag:'', count:null, ac:'#8CE45A' },
+  { id:'mymix', label:'#MY_BOX', tag:'', count:null, ac:'#8CE45A' },
   { id:'btc', label:'#BTC', tag:'[BITCOIN]', count:267, ac:'#f7931a' },
   { id:'eth', label:'#ETH', tag:'[ETHEREUM]', count:295, ac:'#627eea' },
   { id:'sol', label:'#SOL', tag:'[SOLANA]', count:211, ac:'#9945ff' },
-  { id:'stables', label:'#STABLECOINS', tag:'[STABLE]', count:189, ac:'#26a17b' },
+  { id:'stables', label:'#STABLE', tag:'[STABLECOINS]', count:189, ac:'#26a17b' },
   { id:'etf', label:'#ETF', tag:'[FINANCE]', count:412, ac:'#d4a843' },
   { id:'gaming', label:'#GAMING', tag:'', count:1841, ac:'#9b59f7' },
   { id:'sports', label:'#SPORTS', tag:'', count:4217, ac:'#3ddc84' },
@@ -2327,6 +2512,7 @@ const ROOMS = [
 ];
 
 let active = 'btc';
+let replyState = null; // { idx, author, preview, color, box } while composing a reply
 
 const CHATS = {
   btc: [
@@ -2854,6 +3040,7 @@ const PANELS = {
 function getPanel(id){ return PANELS[id] || PANELS.btc; }
 
 function setRoom(id){
+  if (typeof cancelReply === 'function') cancelReply(); // dropping an in-progress reply on room change
   active=id;
   const r=ROOMS.find(r=>r.id===id);
   document.getElementById('root').style.setProperty('--ac',r.ac);
@@ -2864,15 +3051,86 @@ function setRoom(id){
   if (btr) btr.style.display = (id === 'mymix') ? 'none' : '';
   const ann = document.getElementById('chatAnnounce');
   if (ann) ann.style.display = (id === 'mymix') ? 'none' : '';
+  // My Box uses the switcher itself as its header → label it "My Box" and drop the title bar (mobile)
+  const bvtSeg = document.getElementById('bvtBoxSeg');
+  if (bvtSeg) bvtSeg.textContent = (id === 'mymix') ? 'My Box' : 'Box';
+  const ch = document.querySelector('.center-head');
+  if (ch) ch.classList.toggle('mybox-head', id === 'mymix');
   renderRooms(); renderChat(); renderRight();
 }
 
-function renderRooms(){
-  document.getElementById('rooms-list').innerHTML=ROOMS.map(r=>`
+function roomItemHtml(r){
+  return `
     <div class="room-item ${r.id===active?'active':''}" onclick="setRoom('${r.id}')">
-      <span class="room-name">${r.label}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+      <div class="room-main">
+        <span class="room-name"><span class="room-hash" style="color:${r.ac}">#</span>${r.label.replace(/^#/, '')}${r.tag?' <span class="room-tag">'+r.tag+'</span>':''}</span>
+        <div class="room-preview" data-room="${r.id}"></div>
+      </div>
       ${r.count?`<span class="room-count">${r.count} <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" class="room-user-icon"/><circle cx="10" cy="3" r="2" class="room-user-icon"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" class="room-user-icon"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" class="room-user-icon"/></svg></span>`:''}
-    </div>`).join('');
+    </div>`;
+}
+function renderRooms(){
+  // My Box is a distinct pinned button at the top (desktop), separated from the channel list.
+  // On mobile it lives as a bottom-nav tab instead, so the pinned block is hidden there (CSS).
+  const rest = ROOMS.filter(r => r.id !== 'mymix');
+  const myboxBtn = `<div class="rooms-pinned"><button class="mybox-btn${active==='mymix'?' active':''}" onclick="setRoom('mymix')">`
+    + `<svg class="mybox-btn-icon" width="15" height="15" viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="1"/><rect x="1" y="12" width="12" height="1"/><rect x="1" y="3" width="1" height="10"/><rect x="12" y="3" width="1" height="10"/><rect x="1" y="6" width="12" height="1"/><rect x="6" y="3" width="2" height="3"/></svg>`
+    + `<span>MY BOX</span></button></div>`;
+  document.getElementById('rooms-list').innerHTML = myboxBtn + rest.map(roomItemHtml).join('');
+  fillRoomPreviews();
+}
+
+// === Live last-message preview under each box (mobile boxes screen) ===
+function latestRoomMsg(roomId){
+  const arr = CHATS[roomId] || [];
+  for (let i = arr.length - 1; i >= 0; i--){
+    const m = arr[i];
+    if (m && !m.sys && m.author && m.text) return m;
+  }
+  return null;
+}
+function roomPreviewParts(roomId){
+  const m = latestRoomMsg(roomId);
+  if (!m) return null;
+  let text = m.text || '';
+  if (text.length > 26) text = text.slice(0, 26); // short; the edge-fade softens the cut (no ellipsis)
+  return { author: (m.author || '').toUpperCase(), text };
+}
+function previewShell(el, p){
+  el.innerHTML = `<span class="rp-nick">${escapeReply(p.author)}:</span> <span class="rp-text"></span>`;
+  return el.querySelector('.rp-text');
+}
+function fillRoomPreviews(){
+  document.querySelectorAll('#rooms-list .room-preview').forEach(el => {
+    if (el._typeTimer) return; // don't clobber an in-progress typewriter
+    const p = roomPreviewParts(el.dataset.room);
+    if (!p){ el.innerHTML = ''; return; }
+    previewShell(el, p).textContent = p.text;
+  });
+}
+function typeRoomPreview(el){
+  if (!el) return;
+  if (el._typeTimer){ clearInterval(el._typeTimer); el._typeTimer = null; }
+  const p = roomPreviewParts(el.dataset.room);
+  if (!p){ el.innerHTML = ''; return; }
+  const txt = previewShell(el, p);          // nick shown instantly, message types in
+  const chars = Array.from(p.text);
+  let i = 0;
+  el.classList.add('typing');
+  el._typeTimer = setInterval(() => {
+    i++;
+    txt.textContent = chars.slice(0, i).join('');
+    if (i >= chars.length){ clearInterval(el._typeTimer); el._typeTimer = null; el.classList.remove('typing'); }
+  }, 18);
+}
+function animateRoomPreviews(){
+  if (typeof isMobile === 'function' && !isMobile()) return;
+  Array.from(document.querySelectorAll('#rooms-list .room-preview')).forEach((el, idx) => {
+    const p = roomPreviewParts(el.dataset.room);
+    if (!p){ el.innerHTML = ''; return; }
+    previewShell(el, p);                              // frame + nick appear instantly in place
+    setTimeout(() => typeRoomPreview(el), idx * 110); // then only the message types in
+  });
 }
 
 // Troll avatars + nick colors — consistent per author
@@ -2913,25 +3171,37 @@ const REACTIONS_PER_ROOM = {
   mymix: ['🚀','💀','😂','💎','❤️'],
 };
 function reactionsFor(roomId) { return REACTIONS_PER_ROOM[roomId] || REACTIONS_PER_ROOM.btc; }
-const msgReactions = {};
-try { Object.assign(msgReactions, JSON.parse(localStorage.getItem('msgReactions')||'{}')); } catch(e) {}
-function saveReactions() { try { localStorage.setItem('msgReactions', JSON.stringify(msgReactions)); } catch(e){} }
-function getReactions(idx) { return msgReactions[active+':'+idx] || {}; }
-function toggleReaction(idx, emoji) {
-  const key = active+':'+idx;
-  if (!msgReactions[key]) msgReactions[key] = {};
-  const r = msgReactions[key];
-  if (r[emoji] && r[emoji].mine) {
-    r[emoji].count--;
-    r[emoji].mine = false;
-    if (r[emoji].count <= 0) delete r[emoji];
-  } else {
-    if (!r[emoji]) r[emoji] = { count: 0, mine: false };
-    r[emoji].count++;
-    r[emoji].mine = true;
+// ── Reactions — synced via Firebase so everyone sees them ──
+// Stored at /rooms/{room}/reactions/{idx}/{emoji}/{clientId} = true
+// count = number of clients; "mine" = whether my clientId is present.
+const myClientId = (() => {
+  let v = null; try { v = localStorage.getItem('tb_client_id'); } catch(e){}
+  if (!v) { v = 'c' + Math.random().toString(36).slice(2, 10); try { localStorage.setItem('tb_client_id', v); } catch(e){} }
+  return v;
+})();
+const reactions = {}; // reactions[room][idx][emoji] = { clientId: true, ... }
+function getReactions(idx) {
+  const node = (reactions[active] || {})[idx] || {};
+  const out = {};
+  for (const emoji in node) {
+    const count = Object.keys(node[emoji] || {}).length;
+    if (count > 0) out[emoji] = { count, mine: !!node[emoji][myClientId] };
   }
-  saveReactions();
+  return out;
+}
+function toggleReaction(idx, emoji) {
+  reactions[active] = reactions[active] || {};
+  reactions[active][idx] = reactions[active][idx] || {};
+  const node = reactions[active][idx];
+  node[emoji] = node[emoji] || {};
+  const mine = !!node[emoji][myClientId];
+  if (mine) delete node[emoji][myClientId]; else node[emoji][myClientId] = true; // optimistic
   renderChat();
+  try {
+    const url = `${FB_URL}/rooms/${active}/reactions/${idx}/${encodeURIComponent(emoji)}/${myClientId}.json`;
+    if (mine) fetch(url, { method: 'DELETE' }).catch(()=>{});
+    else fetch(url, { method: 'PUT', body: 'true', headers: {'Content-Type':'application/json'} }).catch(()=>{});
+  } catch(e) {}
 }
 function renderReactionsForMsg(idx, isLong) {
   const r = getReactions(idx);
@@ -2950,7 +3220,7 @@ function openMsgPopup(msgEl, idx, author) {
   const safeAuthor = author.replace(/'/g, "\\'");
   const popup = document.createElement('div');
   popup.className = 'msg-popup';
-  popup.innerHTML = `<div class="msg-popup-emojis">${emojis}</div><div class="msg-popup-action">Reply <span class="pp-user">@${author.toUpperCase()}</span></div><div class="msg-popup-action" onclick="closeMsgPopup();openProfile('${safeAuthor}', ${isBot})">Show <span class="pp-user">@${author.toUpperCase()}</span> profile</div>`;
+  popup.innerHTML = `<div class="msg-popup-emojis">${emojis}</div><div class="msg-popup-action" onclick="startReply(${idx})">Reply <span class="pp-user">@${author.toUpperCase()}</span></div><div class="msg-popup-action" onclick="closeMsgPopup();openProfile('${safeAuthor}', ${isBot})">Show <span class="pp-user">@${author.toUpperCase()}</span> profile</div>`;
   popup.addEventListener('click', e => e.stopPropagation());
   msgEl.appendChild(popup);
   msgPopupEl = popup;
@@ -2965,6 +3235,57 @@ function openMsgPopup(msgEl, idx, author) {
   });
 }
 document.addEventListener('click', () => closeMsgPopup());
+
+// === REPLY ===
+function escapeReply(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function renderReplyQuote(m){
+  const rt = m && m.replyTo;
+  if (!rt) return '';
+  const orig = (CHATS[active]||[])[rt.idx];
+  const deleted = !orig || orig.author !== rt.author;
+  const col = getTroll(rt.author, !!(orig && orig.bot)).color;
+  const p = rt.preview || '';
+  const prev = deleted ? '(deleted)' : (escapeReply(p.slice(0,24)) + (p.length > 24 ? '…' : ''));
+  const click = deleted ? '' : ` onclick="event.stopPropagation();highlightChatMsg(${rt.idx},'${active}')"`;
+  return `<div class="msg-reply${deleted?' deleted':''}" style="--rc:${col}"${click}>`
+    + `<span class="msg-reply-corner"></span>`
+    + `<span class="msg-reply-quote"><span class="msg-reply-author" style="color:${col}">@${escapeReply((rt.author||'').toUpperCase())}</span>: <span class="msg-reply-prev">${prev}</span></span>`
+    + `</div>`;
+}
+
+function startReply(idx){
+  closeMsgPopup();
+  let box = active, srcIdx = idx, m;
+  if (active === 'mymix'){
+    const mix = buildMyMix(); m = mix[idx];
+    if (!m) return;
+    box = m._srcRoom; srcIdx = m._srcIdx;
+    setRoom(box); // switch to the source box, then continue the reply there
+  } else {
+    m = (CHATS[active]||[])[idx];
+  }
+  if (!m || m.sys || !m.author) return;
+  replyState = { idx: srcIdx, author: m.author, preview: (m.text||'').slice(0,80), color: getTroll(m.author, !!m.bot).color, box };
+  showReplyChip();
+  const inp = document.getElementById('chat-input'); if (inp) inp.focus();
+}
+function showReplyChip(){
+  const chip = document.getElementById('replyChip');
+  if (!chip || !replyState) return;
+  const p = replyState.preview;
+  const prev = escapeReply(p.slice(0,24)) + (p.length > 24 ? '…' : '');
+  chip.innerHTML = `<span class="reply-chip-label">reply to <span class="reply-chip-user" style="color:${replyState.color}">${escapeReply(replyState.author.toUpperCase())}</span>:</span>`
+    + `<span class="reply-chip-prev">${prev}</span>`
+    + `<button class="reply-chip-x" title="Cancel reply" onclick="cancelReply()">&times;</button>`;
+  chip.classList.remove('hidden');
+}
+function cancelReply(){
+  replyState = null;
+  const chip = document.getElementById('replyChip');
+  if (chip){ chip.classList.add('hidden'); chip.innerHTML = ''; }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && replyState) cancelReply(); });
 
 let hideBots=false;
 const mutedBots = new Set();
@@ -2981,7 +3302,7 @@ function buildMyMix(){
     seen.add(arr);
     const room = ROOMS.find(r => r.id === k);
     const ac = room ? room.ac : '';      // source-box accent, so each tag is colored by its box
-    for (const m of arr){ if (m.bot && myMixBots.has(m.author)) out.push(Object.assign({}, m, { _srcAc: ac, _srcTag: room ? room.label : m.tag })); }
+    arr.forEach((m, srcIdx) => { if (m.bot && myMixBots.has(m.author)) out.push(Object.assign({}, m, { _srcAc: ac, _srcTag: room ? room.label : m.tag, _srcRoom: k, _srcIdx: srcIdx })); });
   }
   return out;
 }
@@ -2990,12 +3311,12 @@ function renderMyMixEmpty(feed){
   const chips = botNames.map(n => `<div class="mix-empty-bot" onclick="openBotProfile('${n}')"><img src="${getTroll(n,true).src}" /><span>@${n.toUpperCase()}</span></div>`).join('');
   feed.innerHTML = `
     <div class="mix-empty">
-      <div class="mix-empty-title">Your My Mix is empty</div>
-      <div class="mix-empty-text">My Mix is your personal feed of bots. To add one:</div>
+      <div class="mix-empty-title">Your My Box is empty</div>
+      <div class="mix-empty-text">My Box is your personal feed of bots. To add one:</div>
       <ol class="mix-empty-steps">
         <li>Open a box (e.g. <b>#BTC</b>, <b>#AI</b>, <b>#SPORTS</b>)</li>
         <li>Inside the box, find a bot and tap its name</li>
-        <li>In the bot card, tap <b>ADD TO MY MIX</b></li>
+        <li>In the bot card, tap <b>ADD TO MY BOX</b></li>
       </ol>
       <div class="mix-empty-hint">Bots you can add — tap to open:</div>
       <div class="mix-empty-bots">${chips}</div>
@@ -3021,7 +3342,9 @@ function renderChat(){
     const showTag = active==='mymix'||active==='general';
     const isLong = (m.text||'').length > 60;
     const reactionsHtml = renderReactionsForMsg(i, isLong);
+    const replyHtml = renderReplyQuote(m);
     html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
+      ${replyHtml}
       ${showTag?`<span class="msg-tag ${(m._srcTag||m.tag)?'active-tag':''}"${m._srcAc?` style="color:${m._srcAc}"`:''}>${m._srcTag||m.tag||''}</span>`:''}
       <div class="msg-body">
         <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
@@ -3073,10 +3396,14 @@ function renderRight(){
     const reordered = saved.map(i => blocks[i]).filter(Boolean);
     if(reordered.length === blocks.length) blocks.splice(0, blocks.length, ...reordered);
   }
+  // Social Intel sits at the very bottom of every terminal (TODO tomorrow: redesign it)
+  const siPos = blocks.findIndex(b => b.querySelector('.si-card'));
+  if (siPos >= 0) blocks.push(blocks.splice(siPos, 1)[0]);
   // build final html
   const rightEl = document.getElementById('right-panel');
+  rightEl.classList.remove('mybox-term'); // regular boxes keep their TERMINAL header
   const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL ' + r.label : 'TERMINAL';
-  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span></div>`;
+  rightEl.innerHTML = `<div class="box-view-toggle"><button class="bvt-seg" onclick="setMobileView('chat')">Box</button><button class="bvt-seg active" onclick="setMobileView('terminal')">Terminal</button></div><div class="section-head"><span>${termLabel}</span></div>`;
   const container = document.createElement('div');
   container.id = 'widgets-container';
   blocks.forEach(b => container.appendChild(b));
@@ -3133,8 +3460,8 @@ function buildMixWidget(w, pos){
 }
 function renderMyMixTerminal(){
   const rightEl = document.getElementById('right-panel');
-  const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL #MY_MIX' : 'TERMINAL';
-  rightEl.innerHTML = `<div class="section-head"><span>${termLabel}</span></div>`;
+  rightEl.classList.add('mybox-term'); // hides the redundant section-head on mobile (CSS)
+  rightEl.innerHTML = `<div class="box-view-toggle"><button class="bvt-seg" onclick="setMobileView('chat')">My Box</button><button class="bvt-seg active" onclick="setMobileView('terminal')">Terminal</button></div><div class="section-head"><span>TERMINAL</span></div>`;
   const widgets = getMyMixWidgets();
   if (widgets.length === 0){
     rightEl.insertAdjacentHTML('beforeend', `<div class="mix-term-empty">Your terminal is empty.<br>Pull widgets from any box below.</div>`);
@@ -3471,6 +3798,9 @@ function setAuthState(state) {
     chatInputAnon.classList.remove('hidden');
     createBoxBtn.classList.add('hidden');
   }
+
+  // First time entering the app (anon or auth) → kick off the onboarding tour
+  if ((state === 'anon' || state === 'auth') && typeof startTour === 'function') startTour(false);
 }
 
 // Welcome → Anon
@@ -3488,13 +3818,19 @@ function sendChatMessage() {
   const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
   const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
   if (!CHATS[active]) CHATS[active] = [];
+  // Attach reply context if composing a reply in this box
+  const replyTo = (replyState && replyState.box === active)
+    ? { idx: replyState.idx, author: replyState.author, preview: replyState.preview }
+    : null;
   const msg = { tag, author: 'ANONYMOUS', bot: false, text, time, _ts: Date.now() };
+  if (replyTo) msg.replyTo = replyTo;
   CHATS[active].push(msg);
   inp.value = '';
+  cancelReply();
   renderChat();
   // best-effort sync to Firebase (won't block UI)
   try {
-    fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify({ author: 'ANONYMOUS', text, time, tag, ts: msg._ts }), headers: {'Content-Type':'application/json'} }).catch(()=>{});
+    fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify({ author: 'ANONYMOUS', text, time, tag, ts: msg._ts, replyTo }), headers: {'Content-Type':'application/json'} }).catch(()=>{});
   } catch(e) {}
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
 }
@@ -3505,10 +3841,42 @@ function sendChatMessage() {
   if (btn) btn.addEventListener('click', sendChatMessage);
 })();
 
+// === CONNECTION INDICATOR (online dot on the profile troll) ===
+// Derives live / connecting / offline from the SSE streams + navigator.onLine.
+const esRegistry = [];
+let connState = '';
+function connSet(state){
+  if (state === connState) return;
+  connState = state;
+  const title = state === 'live' ? 'Connected — live'
+    : (state === 'offline' ? 'Offline — no server connection' : 'Connecting…');
+  document.querySelectorAll('.conn-dot').forEach(el => {
+    el.classList.remove('live','connecting','offline');
+    el.classList.add(state);
+    el.title = title;
+  });
+}
+function connEvaluate(){
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) { connSet('offline'); return; }
+  let anyOpen = false, anyConnecting = false;
+  esRegistry.forEach(es => {
+    if (!es) return;
+    if (es.readyState === 1) anyOpen = true;            // OPEN
+    else if (es.readyState === 0) anyConnecting = true; // CONNECTING
+  });
+  connSet(anyOpen ? 'live' : (anyConnecting ? 'connecting' : 'offline'));
+}
+window.addEventListener('online', connEvaluate);
+window.addEventListener('offline', connEvaluate);
+setInterval(connEvaluate, 4000); // safety net for silent drops/recoveries
+setTimeout(connEvaluate, 800);   // first readout once streams spin up
+
 // Subscribe to incoming messages from Firebase (won't break if it fails)
 ['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(roomId => {
   try {
     const es = new EventSource(`${FB_URL}/rooms/${roomId}/messages.json`);
+    esRegistry.push(es);
+    es.onopen = connEvaluate;
     function handle(path, data) {
       if (!data) return;
       if (path === '/' && typeof data === 'object') {
@@ -3519,7 +3887,34 @@ function sendChatMessage() {
     }
     es.addEventListener('put', e => { try { const p = JSON.parse(e.data); handle(p.path, p.data); } catch(err) {} });
     es.addEventListener('patch', e => { try { const p = JSON.parse(e.data); handle(p.path, p.data); } catch(err) {} });
-    es.onerror = () => {};
+    es.onerror = connEvaluate;
+  } catch(e) {}
+});
+
+// Subscribe to reactions from Firebase (live across all users)
+function setReactionPath(root, segs, val) {
+  if (!segs.length) return;
+  let o = root;
+  for (let i = 0; i < segs.length - 1; i++) { const k = segs[i]; if (typeof o[k] !== 'object' || o[k] === null) o[k] = {}; o = o[k]; }
+  const last = segs[segs.length - 1];
+  if (val === null || val === undefined) delete o[last]; else o[last] = val;
+}
+function applyReactionUpdate(roomId, path, data) {
+  reactions[roomId] = reactions[roomId] || {};
+  const segs = (path || '/').split('/').filter(Boolean);
+  if (!segs.length) { reactions[roomId] = (data && typeof data === 'object') ? data : {}; }
+  else { setReactionPath(reactions[roomId], segs, data); }
+  if (active === roomId) renderChat();
+}
+['btc','eth','sol','etf','stables','ai','gaming','sports','politics','general','mymix'].forEach(roomId => {
+  try {
+    const es = new EventSource(`${FB_URL}/rooms/${roomId}/reactions.json`);
+    esRegistry.push(es);
+    es.onopen = connEvaluate;
+    const h = e => { try { const p = JSON.parse(e.data); applyReactionUpdate(roomId, p.path, p.data); } catch(err) {} };
+    es.addEventListener('put', h);
+    es.addEventListener('patch', h);
+    es.onerror = connEvaluate;
   } catch(e) {}
 });
 
@@ -3532,8 +3927,15 @@ function ingestFbMsg(roomId, id, data) {
   // dedup: skip if we already have a message with same ts+text+author (our own optimistic push)
   const dup = CHATS[roomId].some(m => m._ts === data.ts && m.author === data.author && m.text === data.text);
   if (dup) return;
-  CHATS[roomId].push({ tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0 });
+  const incoming = { tag: data.tag||'', author: data.author, bot: false, text: data.text, time: data.time, _ts: data.ts||0 };
+  if (data.replyTo && typeof data.replyTo === 'object') incoming.replyTo = data.replyTo;
+  CHATS[roomId].push(incoming);
   if (active === roomId) renderChat();
+  // Live-type the new message into this box's preview on the boxes list
+  if (typeof isMobile === 'function' && isMobile()){
+    const pv = document.querySelector(`#rooms-list .room-preview[data-room="${roomId}"]`);
+    if (pv) typeRoomPreview(pv);
+  }
 }
 
 // Login
@@ -3578,13 +3980,17 @@ const closeProfileModal = document.getElementById('closeProfileModal');
 document.getElementById('profileAuth').addEventListener('click', (e) => {
   if (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn')) return;
   if (window.matchMedia('(max-width: 900px)').matches) return;
-  profileModal.classList.remove('hidden');
   // Sync own profile: nick, title and restore own-only actions
-  document.getElementById('profileModalNick').textContent = document.getElementById('profileDisplayName').textContent;
-  document.getElementById('profileModalNick').style.color = '';
-  document.getElementById('profileModalTroll').src = 'trolls/5.svg';
   document.getElementById('profileModalTitle').textContent = 'My Profile';
+  document.getElementById('profileModalNick').textContent = document.getElementById('profileDisplayName').textContent;
+  document.getElementById('profileModalNick').style.color = peColor(myProfile.color);
+  const pmt = document.getElementById('profileModalTroll');
+  pmt.src = 'trolls/5.svg';
+  pmt.style.filter = trollFilter(myProfile);
   document.getElementById('profileModalActions').style.display = '';
+  const bw = document.getElementById('profileBadgesWrap');
+  if (bw) bw.style.display = myProfile.showBadges ? '' : 'none';
+  profileModal.classList.remove('hidden');
 });
 
 closeProfileModal.addEventListener('click', () => profileModal.classList.add('hidden'));
@@ -3608,8 +4014,262 @@ function openUserProfile(name, isBot) {
   document.getElementById('profileModalTitle').textContent = isOwn ? 'My Profile' : 'Profile';
   // EDIT / LOG OUT only make sense on your own profile
   document.getElementById('profileModalActions').style.display = isOwn ? '' : 'none';
+  // Own profile reflects the chosen color/shade; others use their own troll as-is
+  const pmTroll = document.getElementById('profileModalTroll');
+  if (isOwn) { pmTroll.src = 'trolls/5.svg'; pmTroll.style.filter = trollFilter(myProfile); nickEl.style.color = peColor(myProfile.color); }
+  else { pmTroll.style.filter = ''; }
+  const bw = document.getElementById('profileBadgesWrap');
+  if (bw) bw.style.display = (isOwn && !myProfile.showBadges) ? 'none' : '';
   profileModal.classList.remove('hidden');
 }
+
+// === PROFILE EDIT (color / nick / badges) ===
+const PE_COLORS = [
+  { key:'red',    css:'#F44336', rot:142 },
+  { key:'orange', css:'#FF7A3D', rot:160 },
+  { key:'yellow', css:'#F5C518', rot:188 },
+  { key:'green',  css:'#54D6A6', rot:296 },
+  { key:'cyan',   css:'#33C6E0', rot:328 },
+  { key:'blue',   css:'#5C8AFF', rot:0   },
+  { key:'purple', css:'#B56FD4', rot:63  }
+];
+function peColor(key){ return (PE_COLORS.find(c => c.key === key) || PE_COLORS[5]).css; }
+function trollFilter(p){
+  const c = PE_COLORS.find(x => x.key === p.color) || PE_COLORS[5];
+  const b = p.shade === 'lighter' ? 1.28 : (p.shade === 'darker' ? 0.78 : 1);
+  return `hue-rotate(${c.rot}deg) brightness(${b})`;
+}
+
+let myProfile = { color:'blue', shade:'default', name:'BOSS_NIKITOS', showBadges:true };
+function loadMyProfile(){
+  try { const o = JSON.parse(localStorage.getItem('tb_profile')); if (o && typeof o === 'object') myProfile = Object.assign(myProfile, o); } catch(e){}
+  if (!myProfile.name) {
+    const t = (document.getElementById('profileDisplayName').textContent || '').replace(/^@/, '');
+    if (t) myProfile.name = t;
+  }
+}
+function saveMyProfile(){ try { localStorage.setItem('tb_profile', JSON.stringify(myProfile)); } catch(e){} }
+
+// Push a profile state onto every visible "my" surface (used live + on save + on revert)
+function applyMyProfile(p){
+  const filter = trollFilter(p);
+  document.querySelectorAll('img.my-troll').forEach(img => { img.style.filter = filter; });
+  const nickText = '@' + (p.name || '').toUpperCase();
+  const col = peColor(p.color);
+  const dn = document.getElementById('profileDisplayName');
+  if (dn) { dn.textContent = nickText; dn.style.color = col; }
+  const mn = document.getElementById('mobileProfileNick');
+  if (mn) { mn.textContent = nickText; mn.style.color = col; }
+  // Profile card troll/nick when the modal currently shows my own profile
+  const title = document.getElementById('profileModalTitle');
+  if (title && title.textContent === 'My Profile') {
+    const pmTroll = document.getElementById('profileModalTroll'); if (pmTroll) pmTroll.style.filter = filter;
+    const pmNick = document.getElementById('profileModalNick'); if (pmNick) { pmNick.textContent = nickText; pmNick.style.color = col; }
+  }
+  // Badges visibility (own surfaces)
+  document.querySelectorAll('.my-badges-wrap, #profileBadgesWrap').forEach(w => { w.style.display = p.showBadges ? '' : 'none'; });
+}
+
+const profileEditModal = document.getElementById('profileEditModal');
+let peDraft = null;
+
+function renderProfileEdit(){
+  const sw = document.getElementById('peSwatches');
+  sw.querySelectorAll('.pe-swatch').forEach(b => b.classList.toggle('active', b.dataset.color === peDraft.color));
+  document.querySelectorAll('#peShades .pe-shade').forEach(b => b.classList.toggle('active', b.dataset.shade === peDraft.shade));
+  const name = document.getElementById('peName');
+  name.value = peDraft.name || '';
+  document.getElementById('peNameCount').textContent = (peDraft.name || '').length + '/16';
+  document.getElementById('peBadgeSwitch').classList.toggle('on', !!peDraft.showBadges);
+}
+
+function openProfileEdit(){
+  peDraft = Object.assign({}, myProfile);
+  renderProfileEdit();
+  profileModal.classList.add('hidden');
+  profileEditModal.classList.remove('hidden');
+}
+function closeProfileEdit(revert){
+  if (revert) applyMyProfile(myProfile); // discard draft preview
+  profileEditModal.classList.add('hidden');
+}
+
+// Build swatches once
+document.getElementById('peSwatches').innerHTML =
+  PE_COLORS.map(c => `<button class="pe-swatch" data-color="${c.key}" style="background:${c.css}" title="${c.key}"></button>`).join('');
+document.querySelectorAll('#peSwatches .pe-swatch').forEach(btn => {
+  btn.addEventListener('click', () => { peDraft.color = btn.dataset.color; renderProfileEdit(); applyMyProfile(peDraft); });
+});
+document.querySelectorAll('#peShades .pe-shade').forEach(btn => {
+  btn.addEventListener('click', () => { peDraft.shade = btn.dataset.shade; renderProfileEdit(); applyMyProfile(peDraft); });
+});
+document.getElementById('peName').addEventListener('input', e => {
+  peDraft.name = e.target.value.slice(0, 16);
+  document.getElementById('peNameCount').textContent = peDraft.name.length + '/16';
+  applyMyProfile(peDraft);
+});
+document.getElementById('peBadgeSwitch').addEventListener('click', () => {
+  peDraft.showBadges = !peDraft.showBadges;
+  document.getElementById('peBadgeSwitch').classList.toggle('on', peDraft.showBadges);
+  applyMyProfile(peDraft);
+});
+document.getElementById('peSaveBtn').addEventListener('click', () => {
+  myProfile = Object.assign({}, peDraft);
+  saveMyProfile();
+  applyMyProfile(myProfile);
+  profileEditModal.classList.add('hidden');
+});
+document.getElementById('peCloseBtn').addEventListener('click', () => closeProfileEdit(true));
+profileEditModal.addEventListener('click', e => { if (e.target === profileEditModal) closeProfileEdit(true); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !profileEditModal.classList.contains('hidden')) closeProfileEdit(true); });
+
+// EDIT PROFILE button inside the (desktop) profile card
+document.getElementById('peEditFromModal').addEventListener('click', openProfileEdit);
+
+// Init
+loadMyProfile();
+applyMyProfile(myProfile);
+
+// === ONBOARDING TOUR ===
+const TOUR = [
+  { title:'Welcome to troll.box',
+    text:'An anonymous chat terrarium where everyone is a troll. Jump into boxes, chat, customize your troll and build your own widget terminal.',
+    img:'trolls/3.svg', target:null },
+  { title:'Boxes',
+    text:'Topic channels live in the left sidebar. Switch between them or spin up your own.',
+    img:'trolls/2.svg', target:['.left'], side:'right' },
+  { title:'Chat & Terminal',
+    text:'Chat like usual, or run commands in the terminal for quick actions (/help lists them). Every box has its own terminal of widgets — and you can build your own widget, then collect a personal mix of them in My Box.',
+    img:'trolls/8.svg', target:['.center','.right'], side:'center' },
+  { title:'Your Troll',
+    text:'Change your troll color, nickname and settings anytime from PROFILE.',
+    img:'trolls/4.svg', target:['#profileAuth'], side:'right' }
+];
+let tourIdx = 0, tourTimer = null, tourTouchX = null;
+const tourEl = document.createElement('div');
+tourEl.id = 'tour';
+document.body.appendChild(tourEl);
+
+function tourMobile(){ return window.matchMedia('(max-width: 900px)').matches; }
+function tourUnionRect(sels){
+  const rs = sels.map(s => document.querySelector(s)).filter(Boolean)
+    .map(e => e.getBoundingClientRect()).filter(r => r.width && r.height);
+  if (!rs.length) return null;
+  const top = Math.min(...rs.map(r=>r.top)), left = Math.min(...rs.map(r=>r.left));
+  const right = Math.max(...rs.map(r=>r.right)), bottom = Math.max(...rs.map(r=>r.bottom));
+  return { top, left, right, bottom, width: right-left, height: bottom-top };
+}
+function tourStop(){
+  clearTimeout(tourTimer); tourTimer = null;
+  tourEl.classList.remove('show'); tourEl.innerHTML = '';
+  window.removeEventListener('resize', tourReflow);
+}
+function tourFinish(){ try { localStorage.setItem('onboarded','true'); } catch(e){} tourStop(); }
+function tourGo(i){
+  tourIdx = i;
+  renderTour();
+  clearTimeout(tourTimer); tourTimer = null;
+  if (tourIdx < TOUR.length - 1) tourTimer = setTimeout(() => tourGo(tourIdx + 1), 8000);
+}
+function tourNext(){ if (tourIdx < TOUR.length - 1) tourGo(tourIdx + 1); else tourFinish(); }
+function tourPrev(){ if (tourIdx > 0) tourGo(tourIdx - 1); }
+function tourReflow(){ if (tourEl.classList.contains('show')) renderTour(); }
+
+function renderTour(){
+  const step = TOUR[tourIdx];
+  const last = tourIdx === TOUR.length - 1;
+  const dots = TOUR.map((_, i) => `<span class="tour-dot ${i===tourIdx?'active':''}"></span>`).join('');
+  if (tourMobile()){
+    tourEl.innerHTML = `
+      <div class="tour-mobile">
+        <div class="tour-m-top"><button class="tour-skip" data-act="skip">Skip</button></div>
+        <div class="tour-m-illus"><img src="${step.img}" alt=""></div>
+        <div class="tour-m-body">
+          <div class="tour-m-title">${step.title}</div>
+          <div class="tour-m-text">${step.text}</div>
+          <div class="tour-m-dots">${dots}</div>
+        </div>
+        <div class="tour-m-foot">
+          <button class="tour-m-prev" data-act="prev" ${tourIdx===0?'disabled':''}>&larr;</button>
+          <button class="tour-m-next" data-act="next">${last?'Got it':'Continue'}</button>
+        </div>
+      </div>`;
+  } else {
+    const rect = step.target ? tourUnionRect(step.target) : null;
+    const spot = rect
+      ? `<div class="tour-spot" style="top:${rect.top-3}px;left:${rect.left-3}px;width:${rect.width+6}px;height:${rect.height+6}px"></div>`
+      : `<div class="tour-dim"></div>`;
+    tourEl.innerHTML = spot + `
+      <div class="tour-card" id="tourCard">
+        <button class="tour-x" data-act="skip">&times;</button>
+        <div class="tour-card-title">${step.title}</div>
+        <div class="tour-card-text">${step.text}</div>
+        <div class="tour-foot">
+          <div class="tour-dots">${dots}</div>
+          <div class="tour-actions">
+            <button class="tour-skip" data-act="skip">Skip</button>
+            <button class="tour-next" data-act="next">${last?'Got it':'Next'}</button>
+          </div>
+        </div>
+      </div>`;
+    tourPositionCard(document.getElementById('tourCard'), rect, step.side);
+  }
+  tourEl.classList.add('show');
+}
+function tourPositionCard(card, rect, side){
+  const pad = 18, vw = window.innerWidth, vh = window.innerHeight;
+  const cw = card.offsetWidth, ch = card.offsetHeight;
+  let left, top;
+  if (!rect){ left = (vw-cw)/2; top = (vh-ch)/2; }
+  else if (side === 'center'){ left = rect.left + (rect.width-cw)/2; top = rect.top + (rect.height-ch)/2; }
+  else if (side === 'right'){ left = rect.right + pad; top = rect.top; }
+  else if (side === 'left'){ left = rect.left - cw - pad; top = rect.top; }
+  else if (side === 'top'){ left = rect.left; top = rect.top - ch - pad; }
+  else { left = rect.left; top = rect.bottom + pad; }
+  card.style.left = Math.max(pad, Math.min(left, vw - cw - pad)) + 'px';
+  card.style.top  = Math.max(pad, Math.min(top,  vh - ch - pad)) + 'px';
+}
+tourEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'skip') tourFinish();
+  else if (a === 'next') tourNext();
+  else if (a === 'prev') tourPrev();
+});
+tourEl.addEventListener('touchstart', e => { tourTouchX = e.touches[0].clientX; }, { passive:true });
+tourEl.addEventListener('touchend', e => {
+  if (tourTouchX == null || !tourMobile()) return;
+  const dx = e.changedTouches[0].clientX - tourTouchX; tourTouchX = null;
+  if (dx < -45) tourNext(); else if (dx > 45) tourPrev();
+});
+function startTour(force){
+  if (tourEl.classList.contains('show')) return;
+  if (!force){ try { if (localStorage.getItem('onboarded') === 'true') return; } catch(e){} }
+  tourIdx = 0;
+  window.addEventListener('resize', tourReflow);
+  setTimeout(() => tourGo(0), 350); // let layout settle after entering the app
+}
+
+// "Show tour again" row in both settings surfaces
+function tourAddSettingsRow(container, closeFn){
+  if (!container) return;
+  const sec = document.createElement('div');
+  sec.className = 'settings-section';
+  sec.innerHTML = `<div class="settings-section-title">Help</div>
+    <div class="settings-row">
+      <div class="settings-row-left">
+        <span class="settings-row-label">Show tour again</span>
+        <span class="settings-row-hint">Replay the welcome walkthrough</span>
+      </div>
+      <button class="settings-btn">Show</button>
+    </div>`;
+  sec.querySelector('button').addEventListener('click', () => { if (closeFn) closeFn(); startTour(true); });
+  container.appendChild(sec);
+}
+tourAddSettingsRow(document.querySelector('#settingsModal .settings-modal-body'),
+  () => document.getElementById('settingsModal').classList.add('hidden'));
+tourAddSettingsRow(document.querySelector('#mobileSettingsView .mobile-settings-content'),
+  () => { document.getElementById('mobileSettingsView').style.display = 'none'; });
 
 // === BOT PROFILES ===
 const BOT_INFO = {
@@ -3652,7 +4312,7 @@ function syncBotButtons(){
   muteBtn.classList.toggle('on', muted);
   const mixBtn = document.getElementById('botMixBtn');
   const inMix = myMixBots.has(currentBotName);
-  mixBtn.textContent = inMix ? 'IN MY MIX ✓' : 'ADD TO MY MIX';
+  mixBtn.textContent = inMix ? 'IN MY BOX ✓' : 'ADD TO MY BOX';
   mixBtn.classList.toggle('on', inMix);
 }
 function openBotProfile(name){
@@ -3906,7 +4566,26 @@ const centerPanel = document.querySelector('.center');
 const rightPanel = document.getElementById('right-panel');
 const mobileProfileView = document.getElementById('mobileProfileView');
 const mobileBack = document.getElementById('mobileBack');
-let mobileView = 'boxes'; // boxes | chat | terminal | profile
+let mobileView = 'boxes'; // boxes | chat | terminal (box widgets, in-box) | mybox (personal terminal) | profile
+
+// Mobile: move the active box's widgets into the center panel (below the persistent header
+// + Box/Terminal switcher), so flipping the switcher swaps only the content, not the header.
+function mountBoxTerminal(){
+  renderRight(); // build fresh widgets into #right-panel for the active box
+  const mount = document.getElementById('mobileTermMount');
+  if (!mount) return;
+  mount.innerHTML = '';
+  Array.from(rightPanel.children).forEach(ch => {
+    if (ch.classList.contains('box-view-toggle') || ch.classList.contains('section-head')) return;
+    mount.appendChild(ch); // move widgets-container / create-widget / empty-state under the header
+  });
+  mount.scrollTop = 0;
+}
+function unmountBoxTerminal(){
+  const mount = document.getElementById('mobileTermMount');
+  if (mount) mount.innerHTML = '';
+  renderRight(); // restore widgets back into #right-panel
+}
 
 function setMobileView(view) {
   mobileView = view;
@@ -3918,21 +4597,50 @@ function setMobileView(view) {
   document.querySelectorAll('.modal-wrap').forEach(m => m.classList.add('hidden'));
 
   [leftPanel, centerPanel, rightPanel, mobileProfileView].forEach(el => el.classList.remove('mobile-active'));
+  centerPanel.classList.remove('show-terminal');
   mobileBack.style.display = 'none';
   document.querySelector('.mobile-nav').style.display = 'flex';
 
+  // Sync the Box/Terminal switcher's active segment to the current sub-view
+  const bvtBox = document.getElementById('bvtBoxSeg'), bvtTerm = document.getElementById('bvtTermSeg');
+  if (bvtBox && bvtTerm){ bvtBox.classList.toggle('active', view !== 'terminal'); bvtTerm.classList.toggle('active', view === 'terminal'); }
+
   document.querySelectorAll('.mobile-nav-item').forEach(item => {
-    item.classList.toggle('active', item.dataset.view === view || (view === 'chat' && item.dataset.view === 'boxes'));
+    const dv = item.dataset.view;
+    let on;
+    if (view === 'profile') on = (dv === 'profile');
+    else if (view === 'boxes') on = (dv === 'boxes');
+    else {
+      // chat / terminal / mybox are sub-views of a box context →
+      // highlight My Box when the active room is the personal box, otherwise Boxes
+      on = (active === 'mymix') ? (dv === 'mybox') : (dv === 'boxes');
+    }
+    item.classList.toggle('active', on);
   });
 
   if (view === 'boxes') {
     leftPanel.classList.add('mobile-active');
+    animateRoomPreviews(); // type in the live message previews on entry
   } else if (view === 'chat') {
+    unmountBoxTerminal();
     centerPanel.classList.add('mobile-active');
-    mobileBack.style.display = 'block';
+    // My Box is a root tab (no back-to-list); regular boxes show the back arrow
+    if (active !== 'mymix') mobileBack.style.display = 'block';
     setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'terminal') {
-    rightPanel.classList.add('mobile-active');
+    // Keep the box header + Box/Terminal switcher visible; swap only the content
+    // below them to the box's widgets (mounted into the center panel).
+    centerPanel.classList.add('mobile-active');
+    centerPanel.classList.add('show-terminal');
+    if (active !== 'mymix') mobileBack.style.display = 'block';
+    mountBoxTerminal();
+  } else if (view === 'mybox') {
+    // My Box — personal box. Defaults to its chat (feed of bots you added);
+    // the Box/Terminal switcher lets you flip to its widget terminal.
+    origSetRoom('mymix');
+    unmountBoxTerminal();
+    centerPanel.classList.add('mobile-active');
+    setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'profile') {
     mobileProfileView.classList.add('mobile-active');
     const curRoom = ROOMS.find(r => r.id === active);
@@ -3942,8 +4650,8 @@ function setMobileView(view) {
     if (authState === 'auth' || authState === 'anon') {
       mpc.innerHTML = `
         <div class="profile-modal-avatar">
-          <img src="trolls/5.svg" style="width:80px;height:80px;image-rendering:pixelated;" />
-          <div class="profile-modal-nick">${nick}</div>
+          <img class="my-troll" src="trolls/5.svg" style="width:80px;height:80px;image-rendering:pixelated;" />
+          <div class="profile-modal-nick" id="mobileProfileNick">${nick}</div>
           <div class="profile-modal-status">Invest in a troll.box guys</div>
         </div>
         <div class="profile-modal-stats">
@@ -3959,20 +4667,23 @@ function setMobileView(view) {
           <span class="profile-modal-row-label">Link</span>
           <span class="profile-modal-row-value"><a href="#">troll.box/boss_nikitos</a></span>
         </div>
-        <div class="profile-modal-divider"></div>
-        <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
-        <div class="profile-modal-badges">
-          <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
-          <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
-          <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
-          <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+        <div class="my-badges-wrap">
+          <div class="profile-modal-divider"></div>
+          <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
+          <div class="profile-modal-badges">
+            <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+            <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
+            <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+            <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+          </div>
         </div>
         <div style="margin-top:16px;">
-          <button class="profile-modal-btn" style="width:100%">EDIT PROFILE</button>
+          <button class="profile-modal-btn" style="width:100%" onclick="openProfileEdit()">EDIT PROFILE</button>
         </div>
         <button class="profile-modal-btn" style="width:100%;margin-top:8px;" onclick="openMobileSettings()">SETTINGS</button>
         <button class="profile-modal-btn danger" style="width:100%;margin-top:8px;" onclick="setAuthState('welcome')">LOG OUT</button>
       `;
+      applyMyProfile(myProfile); // sync freshly-rendered avatar/nick/badges to saved profile
     } else {
       const ab = document.getElementById('authBlock');
       mpc.innerHTML = ab.innerHTML;
