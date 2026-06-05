@@ -302,6 +302,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .modal-btn.confirm:hover { filter: brightness(1.2); color: #000; }
 .modal-hint { font-size: 11px; color: #555; margin-top: -8px; margin-bottom: 12px; font-family: 'Roboto', sans-serif; }
 .modal-wrap.hidden { display: none !important; }
+/* Profile & settings are not tied to a box — pin their accent to the theme's,
+   not the last-visited box colour that setRoom() writes onto #root/body. */
+#profileModal, #profileEditModal, #settingsModal, #mobileSettingsView, #mobileProfileView { --ac: #8CE45A; }
+[data-crt-theme="amber"] #profileModal, [data-crt-theme="amber"] #profileEditModal, [data-crt-theme="amber"] #settingsModal, [data-crt-theme="amber"] #mobileSettingsView, [data-crt-theme="amber"] #mobileProfileView { --ac: #ffb347; }
+[data-crt-theme="hacker"] #profileModal, [data-crt-theme="hacker"] #profileEditModal, [data-crt-theme="hacker"] #settingsModal, [data-crt-theme="hacker"] #mobileSettingsView, [data-crt-theme="hacker"] #mobileProfileView { --ac: #00ff41; }
+[data-crt-theme="aurora"] #profileModal, [data-crt-theme="aurora"] #profileEditModal, [data-crt-theme="aurora"] #settingsModal, [data-crt-theme="aurora"] #mobileSettingsView, [data-crt-theme="aurora"] #mobileProfileView { --ac: #FCD34D; }
 
 /* PROFILE MODAL (desktop) */
 .profile-modal { background: #111; border: 1px solid #444; width: 340px; font-family: 'Space Mono', monospace; display: flex; flex-direction: column; }
@@ -353,33 +359,61 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-btn.on { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 
 /* PROFILE EDIT MODAL */
-.pe-modal { width: 380px; }
+.pe-modal { width: 380px; position: relative; }
+.pe-modal::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.13) 0px, rgba(0,0,0,0.13) 1px, transparent 1px, transparent 3px); }
 .pe-head-actions { display: flex; align-items: center; gap: 14px; }
 .pe-icon-btn { background: none; border: none; color: #888; cursor: pointer; padding: 0; line-height: 1; display: flex; align-items: center; }
 .pe-icon-btn:hover { color: #fff; }
-.pe-icon-btn.close { font-size: 26px; color: #777; }
+.pe-icon-btn.close { font-size: 36px; color: #777; }
 .pe-icon-btn.close:hover { color: #fff; }
-.pe-body { padding: 18px 20px 4px; }
-.pe-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #5c8aff; letter-spacing: 0.04em; margin: 0 0 12px; }
+.pe-preview { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 20px 22px; border-bottom: 1px solid #333; }
+.pe-preview-troll { width: 150px; height: 150px; image-rendering: pixelated; }
+.pe-preview-nick { font-family: 'CHNOPixelCodePro', monospace; font-size: 21px; letter-spacing: 0.04em; color: #B56FD4; }
+.pe-body { padding: 18px 20px 22px; }
+.pe-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
 .pe-body .pe-label:not(:first-child) { margin-top: 22px; }
-.pe-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
-.pe-swatch { width: 44px; height: 44px; border: 2px solid transparent; border-radius: 3px; cursor: pointer; padding: 0; box-sizing: border-box; }
+.pe-swatches { display: flex; gap: 8px; flex-wrap: nowrap; }
+.pe-swatch { flex: 1 1 0; min-width: 0; aspect-ratio: 1 / 1; border: 2px solid transparent; border-radius: 0; cursor: pointer; padding: 0; box-sizing: border-box; }
 .pe-swatch.active { border-color: #fff; box-shadow: inset 0 0 0 4px #111; }
 .pe-shades { display: flex; gap: 12px; margin-top: 14px; }
-.pe-shade { flex: 1; padding: 12px 0; background: transparent; border: 1px solid #3a3a3a; color: #ccc; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; cursor: pointer; }
+.pe-shade { flex: 1; padding: 12px 0; background: transparent; border: 1px solid #3a3a3a; color: #ccc; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; }
 .pe-shade:hover { border-color: #666; color: #fff; }
 .pe-shade.active { background: #2b2b2b; border-color: #555; color: #fff; }
 .pe-name-wrap { position: relative; }
 .pe-name-input { width: 100%; box-sizing: border-box; background: transparent; border: 1px solid #3a3a3a; color: #fff; font-family: 'CHNOPixelCodePro', monospace; font-size: 16px; padding: 14px 56px 14px 14px; letter-spacing: 0.02em; }
-.pe-name-input:focus { outline: none; border-color: #5c8aff; }
+.pe-name-input:focus { outline: none; border-color: var(--ac, #8CE45A); }
 .pe-name-count { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #666; }
-.pe-helper { font-family: 'Roboto', sans-serif; font-size: 13px; color: #777; line-height: 1.45; margin-top: 14px; }
+.pe-helper { font-family: 'Roboto', sans-serif; font-size: 14px; color: #777; line-height: 1.45; margin-top: 14px; }
 .pe-badge-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 22px; padding-bottom: 6px; }
-.pe-badge-row .pe-label { margin: 0; }
-.pe-switch { position: relative; width: 42px; height: 22px; border-radius: 11px; background: #333; border: none; cursor: pointer; transition: background .15s; flex-shrink: 0; }
-.pe-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #888; transition: left .15s, background .15s; }
-.pe-switch.on { background: #5c8aff; }
-.pe-switch.on::after { left: 23px; background: #fff; }
+.pe-badge-row .pe-label { margin: 0; color: #e0e0e0; }
+.pe-switch { position: relative; width: 36px; height: 18px; border-radius: 0; background: #333; border: none; cursor: pointer; transition: background .2s; flex-shrink: 0; padding: 0; }
+.pe-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 0; background: #111; transition: transform .2s; }
+.pe-switch.on { background: var(--ac, #5c8aff); }
+.pe-switch.on::after { transform: translateX(18px); }
+/* Mobile-only edit-profile page chrome (hidden on desktop) */
+.pe-back { display: none; }
+.pe-title-mobile { display: none; }
+.pe-save-mobile { display: none; }
+@media (max-width: 900px) {
+  /* Edit profile becomes a full-screen page like mobile Settings */
+  /* Edit profile is a focused sub-flow (own Back + SAVE) → hide the bottom nav and
+     show it as a full framed card, instead of a tab-level page. */
+  body.pe-editing .mobile-nav { display: none !important; }
+  #profileEditModal { align-items: stretch; justify-content: stretch; top: 8px; left: 8px; right: 8px; bottom: 8px; background: #0a0a0a; border: 1px solid #333; }
+  .mobile-nav-item[data-view="profile"] .mobile-nav-icon { transform: translateX(-1px); }
+  #profileEditModal .pe-modal { width: 100%; height: 100%; max-height: 100%; border: none; background: #0a0a0a; }
+  #profileEditModal .profile-modal-head { flex-shrink: 0; justify-content: flex-start; gap: 10px; }
+  .pe-title-desktop { display: none; }
+  .pe-title-mobile { display: inline; }
+  #profileEditModal .pe-title-mobile { color: #e0e0e0; } /* match SETTINGS/PROFILE header brightness */
+  .pe-back { display: flex; align-items: center; background: none; border: none; color: var(--ac, #8CE45A); font-size: 22px; line-height: 1; padding: 0; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; }
+  #profileEditModal .pe-head-actions { display: none; }
+  #profileEditModal .pe-preview { flex-shrink: 0; }
+  #profileEditModal .pe-body { flex: 1; overflow-y: auto; }
+  .pe-save-mobile { display: block; flex-shrink: 0; box-sizing: border-box; margin: 12px 16px; width: calc(100% - 32px); padding: 14px 0; background: transparent; color: #ccc; border: 1px solid #444; font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; text-align: center; cursor: pointer; }
+  .pe-save-mobile:hover { border-color: #666; color: #fff; }
+  .pe-save-mobile:active { background: #151515; }
+}
 
 /* ONBOARDING TOUR */
 #tour { position: fixed; inset: 0; z-index: 12000; display: none; font-family: 'Space Mono', monospace; }
@@ -468,23 +502,23 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-picker-body:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .mix-pick-empty { padding: 20px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #666; }
 /* Social Intel card (BTC) — pixel/stitched style */
-.si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 1px dashed var(--si-ac, var(--ac, #f7931a)); height: 76px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
-.si-card-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
-.si-card-head .r-icons { margin-left: auto; }
+.si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 1px dashed var(--si-ac, var(--ac, #f7931a)); box-sizing: border-box; display: flex; flex-direction: column; }
+.si-card-head { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; flex-shrink: 0; }
+.si-card-head .r-icons { margin-left: 6px; }
 .si-icon { display: block; flex-shrink: 0; }
-.si-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--si-ac, var(--ac, #f7931a)); }
-.si-badge { display: flex; align-items: center; gap: 4px; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: var(--si-ac, var(--ac, #f7931a)); letter-spacing: 0.05em; }
-.si-dot { width: 5px; height: 5px; background: var(--si-ac, var(--ac, #f7931a)); display: inline-block; animation: si-blink 1s step-end infinite; }
-@keyframes si-blink { 50% { opacity: 0.15; } }
-.si-rotate { flex: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; padding-right: 64px; transition: opacity 0.28s ease; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--si-ac, var(--ac, #f7931a)); }
-.si-rotate.si-fade { opacity: 0; }
-.si-rotate b { font-weight: 800; color: var(--si-ac, var(--ac, #f7931a)); }
+.si-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--si-ac, var(--ac, #f7931a)); white-space: nowrap; }
+.si-badge { display: flex; align-items: center; gap: 4px; margin-left: auto; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #888; letter-spacing: 0.04em; white-space: nowrap; }
+.si-refresh { color: var(--si-ac, var(--ac, #f7931a)); font-size: 11px; line-height: 1; }
+.si-rows { display: flex; flex-direction: column; gap: 5px; flex: 1; min-height: 0; }
+.si-row { display: flex; gap: 8px; align-items: baseline; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 500; line-height: 1.3; }
+.si-label { flex-shrink: 0; width: 64px; font-family: 'CHNOPixelCodePro', monospace; font-size: 9.5px; letter-spacing: 0.04em; color: #888; padding-top: 1px; white-space: nowrap; }
+.si-val { flex: 1; min-width: 0; color: #cfcfcf; }
+.si-val b { font-weight: 800; color: var(--si-ac, var(--ac, #f7931a)); }
+.si-val.si-top { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.si-quiet { color: #888; font-style: italic; }
 .si-msg { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .si-msg:hover { filter: brightness(1.25); }
 .msg.si-highlight { background: rgba(255,255,255,0.06); box-shadow: inset 3px 0 0 var(--ac, #8CE45A); border-radius: 2px; transition: background 0.3s, box-shadow 0.3s; }
-.si-dots { position: absolute; bottom: 8px; right: 10px; display: flex; gap: 3px; }
-.si-pip { width: 6px; height: 6px; background: rgba(255,255,255,0.18); transition: background 0.2s; }
-.si-pip.on { background: var(--si-ac, var(--ac, #f7931a)); }
 .si-story { margin-top: 8px; padding-top: 7px; border-top: 2px dashed rgba(0,0,0,0.4); font-family: 'Roboto', sans-serif; font-size: 11.5px; line-height: 1.45; color: #1a1a1a; }
 .si-story-tag { display: inline-block; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; background: #0a0a0a; color: #f7931a; padding: 1px 5px; margin-right: 5px; letter-spacing: 0.05em; }
 .mix-pick-group { border-bottom: 1px solid #1e1e1e; }
@@ -503,7 +537,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .settings-modal-body { padding: 16px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #2a2a2a #111; }
 .settings-section { margin-bottom: 20px; }
 .settings-section:last-child { margin-bottom: 0; }
-.settings-section-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.settings-section-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 .settings-themes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .settings-theme { border: 1px solid #333; padding: 10px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 6px; }
 .settings-theme:hover { border-color: #666; }
@@ -516,8 +550,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
 .settings-row:last-child { border-bottom: none; }
 .settings-row-left { display: flex; flex-direction: column; gap: 2px; }
-.settings-row-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: #e0e0e0; text-transform: uppercase; padding-left: 1px; }
-.settings-row-hint { font-size: 13px; color: #555; font-family: 'Roboto', sans-serif; font-weight: 300; }
+.settings-row-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #e0e0e0; text-transform: uppercase; padding-left: 1px; }
+.settings-row-hint { font-size: 14px; color: #555; font-family: 'Roboto', sans-serif; font-weight: 300; }
 .settings-toggle { width: 36px; height: 18px; background: #333; border-radius: 0; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
 .settings-toggle.on { background: var(--ac, #8CE45A); }
 .settings-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #111; transition: transform 0.2s; }
@@ -576,6 +610,37 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .auth-btn.secondary:hover { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 .auth-or { text-align: center; font-size: 11px; color: #444; margin: 4px 0; font-family: 'Roboto', sans-serif; }
 .auth-footer { font-size: 11px; color: #555; margin-top: 8px; font-family: 'Roboto', sans-serif; text-align: center; }
+
+/* ─── BIG CTA BUTTONS — retro double-frame + flanking arrows on hover ─── */
+:root { --cta-arrow: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='8'%20height='14'%20viewBox='0%200%208%2014'%3E%3Cpath%20d='M2%202H4V4H6V6H8V8H6V10H4V12H2V14H0V0H2V2Z'%20fill='black'/%3E%3C/svg%3E"); }
+.auth-btn, .welcome-auth-btn, .create-widget-btn, .modal-btn.confirm, .pe-save-mobile, .tour-next, .tour-m-next {
+  position: relative; text-align: center;
+  transition: background .15s, color .15s, box-shadow .15s, border-color .15s;
+}
+.auth-btn::before, .auth-btn::after,
+.welcome-auth-btn::before, .welcome-auth-btn::after,
+.create-widget-btn::before, .create-widget-btn::after,
+.pe-save-mobile::before, .pe-save-mobile::after,
+.tour-next::before, .tour-next::after,
+.tour-m-next::before, .tour-m-next::after {
+  content: ''; display: inline-block; vertical-align: middle;
+  width: 0; height: 12px; opacity: 0;
+  background-color: var(--ac, #8CE45A);
+  -webkit-mask: var(--cta-arrow) no-repeat center / 7px 12px;
+          mask: var(--cta-arrow) no-repeat center / 7px 12px;
+  transform: translateY(-2.5px);
+  transition: width .15s, margin .15s, opacity .15s;
+}
+.auth-btn::after, .welcome-auth-btn::after, .create-widget-btn::after, .pe-save-mobile::after, .tour-next::after, .tour-m-next::after { transform: translateY(-2.5px) scaleX(-1); }
+.auth-btn:where(:hover, :active), .welcome-auth-btn:where(:hover, :active), .create-widget-btn:where(:hover, :active), .modal-btn.confirm:where(:hover, :active), .pe-save-mobile:where(:hover, :active), .tour-next:where(:hover, :active), .tour-m-next:where(:hover, :active) {
+  background: color-mix(in srgb, var(--ac, #8CE45A) 20%, #0a0a0a) !important;
+  color: var(--ac, #8CE45A) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px var(--ac, #8CE45A), inset 0 0 0 4px #141414, inset 0 0 0 5px var(--ac, #8CE45A) !important;
+  filter: none !important;
+}
+.auth-btn:where(:hover, :active)::before, .welcome-auth-btn:where(:hover, :active)::before, .create-widget-btn:where(:hover, :active)::before, .pe-save-mobile:where(:hover, :active)::before, .tour-next:where(:hover, :active)::before, .tour-m-next:where(:hover, :active)::before { width: 7px; margin-right: 12px; opacity: 1; }
+.auth-btn:where(:hover, :active)::after, .welcome-auth-btn:where(:hover, :active)::after, .create-widget-btn:where(:hover, :active)::after, .pe-save-mobile:where(:hover, :active)::after, .tour-next:where(:hover, :active)::after, .tour-m-next:where(:hover, :active)::after { width: 7px; margin-left: 12px; opacity: 1; }
 .auth-footer a { color: var(--ac, #8CE45A); text-decoration: none; cursor: pointer; }
 .auth-footer a:hover { text-decoration: underline; }
 
@@ -601,7 +666,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .left, .center, .right { display: none !important; }
   .app .mobile-active { display: flex !important; flex-direction: column; min-height: 0; overflow: hidden; }
 
-  .mobile-nav { display: flex; width: 100%; height: 56px; min-height: 56px; background: #0a0a0a; border-top: 1px solid #333; z-index: 9997; align-items: center; justify-content: space-around; flex-shrink: 0; }
+  .mobile-nav { display: flex; width: 100%; height: 56px; min-height: 56px; background: #0a0a0a; border-top: 1px solid #333; z-index: 9997; align-items: center; justify-content: space-around; flex-shrink: 0; --ac: #8CE45A; }
+  [data-crt-theme="amber"] .mobile-nav { --ac: #ffb347; }
+  [data-crt-theme="hacker"] .mobile-nav { --ac: #00ff41; }
+  [data-crt-theme="aurora"] .mobile-nav { --ac: #FCD34D; }
   .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 8px 16px; color: #555; font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
   .mobile-nav-item:hover { color: #999; }
   .mobile-nav-item.active { color: var(--ac, #8CE45A); }
@@ -709,7 +777,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .u-name { font-size: 14px !important; }
   .u-dot { width: 8px; height: 8px; }
   .user-grid { flex-wrap: nowrap; overflow: hidden; }
-  .si-rotate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .si-row { font-size: 13px; }
+  .si-label { font-size: 10px; width: 60px; }
   .create-widget-btn { font-size: 15px; padding: 13px 0; }
   .live-dot { width: 7px; height: 7px; }
 
@@ -724,7 +793,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .mobile-back { display: none; background: none; border: none; color: var(--ac, #8CE45A); font-family: 'CHNOPixelCodePro', monospace; font-size: 28px; line-height: 1; cursor: pointer; padding: 0 12px 0 0; }
 
   /* Mobile profile view */
-  .mobile-profile-view { display: none; flex-direction: column; background: transparent; height: 100%; border: 1px solid #333; border-bottom: none; }
+  .mobile-profile-view { display: none; flex-direction: column; background: #0a0a0a; height: 100%; border: 1px solid #333; border-bottom: none; }
   .mobile-profile-view .section-head { flex-shrink: 0; }
   .mobile-profile-content { flex: 1; padding: 16px; overflow-y: auto; }
   .mobile-profile-content .profile-row { margin-bottom: 16px; }
@@ -732,7 +801,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .mobile-profile-content .profile-btns { margin-top: 16px; }
   .mobile-profile-content .auth-block { border-top: none; padding: 0; }
   .mobile-profile-content .auth-label { margin-bottom: 12px; font-size: 14px; }
-  .mobile-settings-view { display: none; flex-direction: column; background: #0a0a0a; height: 100%; position: absolute; inset: 0; z-index: 100; border: 1px solid #333; }
+  .mobile-settings-view { display: none; flex-direction: column; background: #0a0a0a; position: absolute; inset: 8px; z-index: 9998; border: 1px solid #333; }
+  body.settings-open .mobile-nav { display: none !important; }
   .mobile-settings-view .section-head { flex-shrink: 0; display: flex; align-items: center; gap: 10px; justify-content: flex-start; }
   .mobile-settings-content { flex: 1; padding: 16px; overflow-y: auto; }
   .mobile-settings-view .settings-themes { grid-template-columns: 1fr 1fr; }
@@ -1936,7 +2006,6 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       <div class="avatar"><img class="my-troll" src="trolls/5.svg" style="width:36px;height:36px;image-rendering:pixelated;" /><span class="conn-dot connecting" id="connDot" title="Connecting…"><svg viewBox="0 0 8 8" width="11" height="11"><g fill="currentColor"><rect x="2" y="0" width="4" height="1"/><rect x="1" y="1" width="6" height="1"/><rect x="0" y="2" width="8" height="4"/><rect x="1" y="6" width="6" height="1"/><rect x="2" y="7" width="4" height="1"/></g></svg></span></div>
       <div>
         <div class="profile-name" id="profileDisplayName">@BOSS_NIKITOS</div>
-        <div class="profile-status">Invest in a troll.box guys</div>
       </div>
     </div>
     <div class="profile-btns">
@@ -1981,7 +2050,24 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   <div class="chat-input-row hidden" id="chatInputAuth">
     <span class="crt-cursor" id="crt-cursor"></span>
     <input class="chat-input" placeholder="Type to #btc, we will translate" id="chat-input" />
-    <button class="send-btn">&#9658;</button>
+    <button class="send-btn" aria-label="Send"><svg class="send-icon" width="22" height="22" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="10" width="2" height="2" fill="currentColor"/>
+      <rect x="4" y="8" width="2" height="2" fill="currentColor"/>
+      <rect x="4" y="6" width="8" height="2" fill="currentColor"/>
+      <rect x="12" y="8" width="5" height="2" fill="currentColor"/>
+      <rect x="17" y="10" width="4" height="2" fill="currentColor"/>
+      <rect x="21" y="12" width="5" height="2" fill="currentColor"/>
+      <rect width="8" height="2" transform="matrix(1 0 0 -1 4 24)" fill="currentColor"/>
+      <rect width="5" height="2" transform="matrix(1 0 0 -1 12 22)" fill="currentColor"/>
+      <rect width="4" height="2" transform="matrix(1 0 0 -1 17 20)" fill="currentColor"/>
+      <rect width="5" height="2" transform="matrix(1 0 0 -1 21 18)" fill="currentColor"/>
+      <rect width="3" height="2" transform="matrix(1 0 0 -1 26 16)" fill="currentColor"/>
+      <rect x="4" y="20" width="2" height="2" fill="currentColor"/>
+      <rect x="8" y="12" width="2" height="2" fill="currentColor"/>
+      <rect x="10.25" y="14" width="7" height="2" fill="currentColor"/>
+      <rect x="8" y="16" width="2" height="2" fill="currentColor"/>
+      <rect x="6" y="18" width="2" height="2" fill="currentColor"/>
+    </svg></button>
   </div>
 
   <!-- Chat input: anonymous -->
@@ -2157,7 +2243,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   </div>
   <div class="mobile-nav-item" data-view="profile">
     <span class="mobile-nav-icon"><svg width="14" height="14" viewBox="0 0 146 145" fill="currentColor" style="image-rendering:pixelated"><path d="M59.3311 145.007H26.375V131.824H59.3311V145.007ZM118.645 145.007H85.6885V131.824H118.645V145.007ZM19.7812 19.7734H19.7842V13.1816H26.376V19.7734H32.9697V6.5918H112.064V19.7734H118.65V13.1816H125.241V59.3203H118.652V72.5029H112.064V79.0947H105.464V125.232H105.462V131.823H85.6885V125.232H59.3252V131.823H39.5518V98.8682H26.377V118.642H6.60449V98.8682H13.1855V92.2764H26.3682V98.8682H26.375V85.6855H39.5518V79.0947H32.9697V72.5029H26.375V59.3203H19.7842V39.5469H19.7812V52.7305H13.1895V6.5918H19.7812V19.7734ZM118.65 98.8682H118.657V92.2764H131.839V98.8682H138.421V118.642H118.648V98.8682H105.468V85.6855H118.65V98.8682ZM59.3369 65.9121V72.5029H85.7012V65.9121H59.3369ZM46.1465 46.1387V59.3203H59.3291V46.1387H46.1465ZM85.6885 46.1387V59.3203H98.8711V46.1387H85.6885ZM131.836 52.7305H125.245V6.5918H131.836V52.7305ZM13.1855 46.1387H6.59473V6.5918H13.1855V46.1387ZM145.013 39.5469H138.431V46.1387H131.839V6.5918H138.421V0H145.013V39.5469ZM6.59082 39.5469H0V0H6.59082V39.5469ZM98.876 6.59082H46.1465V0H98.876V6.59082Z"/></svg></span>
-    <span>You</span>
+    <span>Me</span>
   </div>
 </div>
 
@@ -2240,7 +2326,6 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
     <div class="profile-modal-avatar">
       <img src="trolls/5.svg" id="profileModalTroll" class="my-troll-modal" />
       <div class="profile-modal-nick" id="profileModalNick">@BOSS_NIKITOS</div>
-      <div class="profile-modal-status">Invest in a troll.box guys</div>
     </div>
     <div class="profile-modal-body">
       <div class="profile-modal-stats">
@@ -2278,11 +2363,17 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <div class="modal-wrap hidden" id="profileEditModal">
   <div class="profile-modal pe-modal">
     <div class="profile-modal-head">
-      <span>PROFILE</span>
+      <button class="pe-back" id="peBackBtn" title="Back">&larr;</button>
+      <span class="pe-title-desktop">PROFILE</span>
+      <span class="pe-title-mobile">EDIT PROFILE</span>
       <div class="pe-head-actions">
-        <button class="pe-icon-btn" id="peSaveBtn" title="Save"><svg width="19" height="19" viewBox="0 0 20 20" fill="currentColor"><path d="M2 2h13l3 3v13H2V2zm3 1v6h9V3h-2v4H7V3H5zm-1 9v5h12v-5H4z"/></svg></button>
+        <button class="pe-icon-btn" id="peSaveBtn" title="Save"><svg width="26" height="26" viewBox="0 0 20 20" fill="currentColor"><path d="M2 2h13l3 3v13H2V2zm3 1v6h9V3h-2v4H7V3H5zm-1 9v5h12v-5H4z"/></svg></button>
         <button class="pe-icon-btn close" id="peCloseBtn" title="Close">&times;</button>
       </div>
+    </div>
+    <div class="pe-preview" id="pePreview">
+      <img src="trolls/5.svg" class="my-troll pe-preview-troll" id="pePreviewTroll" alt="" />
+      <div class="pe-preview-nick" id="pePreviewNick">@BOSS_NIKITOS</div>
     </div>
     <div class="pe-body">
       <div class="pe-label">Choose color</div>
@@ -2303,6 +2394,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
         <button class="pe-switch on" id="peBadgeSwitch" role="switch" aria-checked="true"></button>
       </div>
     </div>
+    <button class="pe-save-mobile" id="peSaveMobile">SAVE</button>
   </div>
 </div>
 
@@ -2870,19 +2962,6 @@ const BOX_STORY = {
   general: 'troll.box update — custom widgets are now live.',
 };
 function siStory(box){ return BOX_STORY[box] || 'No major story right now — the chat is the story.'; }
-// Theme-specific extra insight per box
-const BOX_EXTRA = {
-  btc: 'Fear &amp; Greed: <b>72</b> · Greed',
-  eth: 'Gas: <b>14 gwei</b> · low',
-  sol: 'Network: <b>3,180 TPS</b> · healthy',
-  etf: 'Net flows today: <b>+$507M</b>',
-  stables: 'Peg watch: <b>USDT $1.000</b> · stable',
-  ai: 'Top model mention: <b>Claude</b>',
-  gaming: 'Most hyped: <b>Elden Ring DLC</b>',
-  sports: 'Top team mention: <b>Man City</b>',
-  politics: 'Chaos meter: <b>73/100</b>',
-  general: 'Crowd vibe: <b>chaotic-good</b>',
-};
 function computeIntelParts(box){
   const msgs = (CHATS[box] || []).filter(m => !m.sys);
   const users = new Set(), authorCount = {}, freq = {};
@@ -2910,51 +2989,58 @@ function computeIntelParts(box){
   return { count: msgs.length, users: users.size, top, loud, loudCount: loud?authorCount[loud]:0, mood: (pos+neg)?Math.round(pos/(pos+neg)*100):null, topMsg };
 }
 function siEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function siLines(box){
+// Stable mini-dashboard rows: LOUDEST / HOT / TOP MSG (no auto-rotation).
+// Mood & activity intentionally omitted — they duplicate the Sentiment & Online Users widgets.
+function buildSiRows(box){
   const p = computeIntelParts(box);
-  if (!p.count) return ['Box is quiet — no messages yet.'];
-  const lines = [];
-  if (p.loud) lines.push(`Loudest: <b>@${p.loud.toUpperCase()}</b> · ${p.loudCount} msgs`);
-  if (p.topMsg) lines.push(`Top msg: <span class="si-msg" onclick="highlightChatMsg(${p.topMsg.idx},'${box}')">“${siEsc(p.topMsg.text.slice(0,30))}…”</span>`);
-  if (p.top.length) lines.push('Hot words: ' + p.top.map((w,i)=> i===0?`<b>${w}</b>`:w).join(', '));
-  if (BOX_EXTRA[box]) lines.push(BOX_EXTRA[box]);
-  lines.push(`<b>${p.count}</b> msgs · <b>${p.users}</b> active users`);
-  if (p.mood != null) lines.push(`Mood: <b>${p.mood}% bullish</b> across the chat`);
-  return lines;
+  if (!p.count) return `<div class="si-row si-quiet">Box is quiet — no messages yet.</div>`;
+  let html = '';
+  if (p.loud) html += `<div class="si-row"><span class="si-label">LOUDEST</span><span class="si-val"><b>@${p.loud.toUpperCase()}</b> · ${p.loudCount} msgs</span></div>`;
+  if (p.top.length) html += `<div class="si-row"><span class="si-label">HOT</span><span class="si-val">${p.top.map((w,i)=> i===0?`<b>${w}</b>`:w).join(' · ')}</span></div>`;
+  if (p.topMsg) html += `<div class="si-row"><span class="si-label">TOP MSG</span><span class="si-val si-top si-msg" onclick="highlightChatMsg(${p.topMsg.idx},'${box}')" title="${siEsc(p.topMsg.text)}">“${siEsc(p.topMsg.text.slice(0,40))}…”</span></div>`;
+  return html;
 }
 function socialIntelCard(box){
   const room = ROOMS.find(r => r.id === box);
   const ac = room ? room.ac : '#f7931a';
-  const lines = siLines(box);
-  const dots = lines.map((_,i)=>`<span class="si-pip${i===0?' on':''}"></span>`).join('');
   const arrows = `<div class="r-icons">`
     + `<span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span>`
     + `<span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span>`
     + `</div>`;
-  return `<div class="r-block"><div class="si-card" data-box="${box}" style="--si-ac:${ac}">`
+  return `<div class="r-block"><div class="si-card" data-box="${box}" data-ts="${Date.now()}" style="--si-ac:${ac}">`
     + `<div class="si-card-head">`
     + `<svg class="si-icon" width="16" height="16" viewBox="0 0 16 16" fill="${ac}" style="image-rendering:pixelated"><rect x="7" y="1" width="2" height="14"/><rect x="1" y="7" width="14" height="2"/><rect x="3" y="3" width="2" height="2"/><rect x="11" y="3" width="2" height="2"/><rect x="3" y="11" width="2" height="2"/><rect x="11" y="11" width="2" height="2"/></svg>`
     + `<div class="si-title">SOCIAL INTEL</div>`
-    + `<div class="si-badge"><span class="si-dot"></span>LAST 1H</div>`
+    + `<div class="si-badge"><span class="si-refresh">⟳</span><span class="si-age">now</span></div>`
     + arrows
     + `</div>`
-    + `<div class="si-rotate" data-box="${box}">${lines[0]}</div>`
-    + `<div class="si-dots">${dots}</div>`
+    + `<div class="si-rows">${buildSiRows(box)}</div>`
     + `</div></div>`;
 }
-let siTick = 0;
-function rotateSocialIntel(){
-  siTick++;
+// Relative "updated Nm ago" — refresh the label text only (cheap, every 30s).
+function siRelTime(ts){
+  const m = Math.floor((Date.now() - ts) / 60000);
+  return m < 1 ? 'now' : `${m}m ago`;
+}
+function tickSiAge(){
   document.querySelectorAll('.si-card').forEach(card => {
-    const lines = siLines(card.dataset.box);
-    if (!lines.length) return;
-    const idx = siTick % lines.length;
-    const rot = card.querySelector('.si-rotate');
-    if (rot){ rot.classList.add('si-fade'); setTimeout(() => { rot.innerHTML = lines[idx]; rot.classList.remove('si-fade'); }, 280); }
-    card.querySelectorAll('.si-pip').forEach((p,i)=> p.classList.toggle('on', i===idx));
+    const age = card.querySelector('.si-age');
+    if (age) age.textContent = siRelTime(+card.dataset.ts || Date.now());
   });
 }
-setInterval(rotateSocialIntel, 10000);
+setInterval(tickSiAge, 30000);
+// Recompute the snapshot occasionally so live boxes stay fresh, then reset the timestamp.
+function refreshSocialIntel(){
+  document.querySelectorAll('.si-card').forEach(card => {
+    const rows = card.querySelector('.si-rows');
+    if (!rows) return;
+    rows.innerHTML = buildSiRows(card.dataset.box);
+    card.dataset.ts = Date.now();
+    const age = card.querySelector('.si-age');
+    if (age) age.textContent = 'now';
+  });
+}
+setInterval(refreshSocialIntel, 120000);
 // Click a Social Intel "top msg" snippet → jump to & flash that message in the chat
 function highlightChatMsg(idx, box){
   const needSwitch = box && box !== active;
@@ -3979,6 +4065,7 @@ const closeProfileModal = document.getElementById('closeProfileModal');
 // Desktop: click on profile block opens modal
 document.getElementById('profileAuth').addEventListener('click', (e) => {
   if (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn')) return;
+  if (e.target.id === 'settingsBtn' || e.target.closest('#settingsBtn')) return;
   if (window.matchMedia('(max-width: 900px)').matches) return;
   // Sync own profile: nick, title and restore own-only actions
   document.getElementById('profileModalTitle').textContent = 'My Profile';
@@ -4060,6 +4147,9 @@ function applyMyProfile(p){
   if (dn) { dn.textContent = nickText; dn.style.color = col; }
   const mn = document.getElementById('mobileProfileNick');
   if (mn) { mn.textContent = nickText; mn.style.color = col; }
+  // Profile edit modal live preview (troll filter handled by .my-troll loop above)
+  const pn = document.getElementById('pePreviewNick');
+  if (pn) { pn.textContent = nickText; pn.style.color = col; }
   // Profile card troll/nick when the modal currently shows my own profile
   const title = document.getElementById('profileModalTitle');
   if (title && title.textContent === 'My Profile') {
@@ -4088,10 +4178,12 @@ function openProfileEdit(){
   renderProfileEdit();
   profileModal.classList.add('hidden');
   profileEditModal.classList.remove('hidden');
+  document.body.classList.add('pe-editing'); // mobile: hide bottom nav during the focused edit
 }
 function closeProfileEdit(revert){
   if (revert) applyMyProfile(myProfile); // discard draft preview
   profileEditModal.classList.add('hidden');
+  document.body.classList.remove('pe-editing');
 }
 
 // Build swatches once
@@ -4118,8 +4210,11 @@ document.getElementById('peSaveBtn').addEventListener('click', () => {
   saveMyProfile();
   applyMyProfile(myProfile);
   profileEditModal.classList.add('hidden');
+  document.body.classList.remove('pe-editing');
 });
 document.getElementById('peCloseBtn').addEventListener('click', () => closeProfileEdit(true));
+document.getElementById('peBackBtn').addEventListener('click', () => closeProfileEdit(true));
+document.getElementById('peSaveMobile').addEventListener('click', () => document.getElementById('peSaveBtn').click());
 profileEditModal.addEventListener('click', e => { if (e.target === profileEditModal) closeProfileEdit(true); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !profileEditModal.classList.contains('hidden')) closeProfileEdit(true); });
 
@@ -4407,9 +4502,11 @@ try {
 function openMobileSettings() {
   const sv = document.getElementById('mobileSettingsView');
   sv.style.display = 'flex';
+  document.body.classList.add('settings-open'); // mobile: open over the bottom nav (focused page)
 }
 document.getElementById('mobileSettingsBack').addEventListener('click', () => {
   document.getElementById('mobileSettingsView').style.display = 'none';
+  document.body.classList.remove('settings-open');
 });
 
 // === WELCOME TROLL GRID ANIMATION ===
@@ -4643,8 +4740,6 @@ function setMobileView(view) {
     setTimeout(() => { const f = document.getElementById('chat-feed'); if (f) f.scrollTop = f.scrollHeight; }, 50);
   } else if (view === 'profile') {
     mobileProfileView.classList.add('mobile-active');
-    const curRoom = ROOMS.find(r => r.id === active);
-    if (curRoom) mobileProfileView.style.setProperty('--ac', curRoom.ac);
     const mpc = document.getElementById('mobileProfileContent');
     const nick = document.getElementById('profileDisplayName').textContent;
     if (authState === 'auth' || authState === 'anon') {
@@ -4652,7 +4747,6 @@ function setMobileView(view) {
         <div class="profile-modal-avatar">
           <img class="my-troll" src="trolls/5.svg" style="width:80px;height:80px;image-rendering:pixelated;" />
           <div class="profile-modal-nick" id="mobileProfileNick">${nick}</div>
-          <div class="profile-modal-status">Invest in a troll.box guys</div>
         </div>
         <div class="profile-modal-stats">
           <div class="profile-stat"><div class="profile-stat-num">142</div><div class="profile-stat-label">Messages</div></div>
