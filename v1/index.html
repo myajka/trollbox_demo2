@@ -578,7 +578,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-empty-bot span { font-family: 'Roboto', sans-serif; font-size: 11px; color: #aaa; text-transform: uppercase; }
 .mix-empty-hint { font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; margin-top: 4px; }
 /* My Box onboarding (empty) — single CTA + quick-add chips */
-.mix-empty-troll { width: 64px; height: 64px; image-rendering: pixelated; opacity: 0.9; margin-bottom: 2px; }
+.mix-empty-troll { width: auto; height: 88px; image-rendering: pixelated; opacity: 0.95; margin-bottom: 2px; }
 .mix-empty-cta { margin-top: 8px; background: transparent; border: 1px solid var(--ac, #8CE45A); color: var(--ac, #8CE45A); font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; padding: 11px 22px; cursor: pointer; }
 .mix-empty-cta:hover { background: color-mix(in srgb, var(--ac, #8CE45A) 14%, transparent); }
 .mix-empty-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
@@ -601,6 +601,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mybox-targets .mbt-label { font-family: 'Roboto', sans-serif; font-size: 11px; color: #666; flex-shrink: 0; }
 .mybox-targets .mbt-chip { background: transparent; border: 1px solid #333; color: #aaa; font-family: 'Roboto', sans-serif; font-size: 12px; padding: 4px 10px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 .mybox-targets .mbt-chip.active { border-color: var(--c, #8CE45A); color: var(--c, #8CE45A); background: color-mix(in srgb, var(--c, #8CE45A) 12%, transparent); }
+/* Empty My Box (no sources): hide the composer entirely until something is added */
+.center.mybox-empty #chatInputAuth,
+.center.mybox-empty #chatInputAnon,
+.center.mybox-empty #myboxTargets,
+.center.mybox-empty #replyChip { display: none !important; }
 /* My Mix terminal */
 .mix-term-empty { padding: 24px 16px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #777; line-height: 1.7; }
 .mix-widget-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -2459,12 +2464,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- MY MIX WIDGET PICKER -->
 <div class="modal-wrap hidden" id="mixWidgetModal">
   <div class="modal mix-picker">
-    <p class="modal-title">add to my box</p>
-    <div class="modal-rules">Pull widgets from any box, or add a bot to your personal feed.</div>
-    <div class="mix-tabs">
-      <button class="mix-tab active" id="mixTabWidgets" onclick="setMixTab('widgets')">Widgets</button>
-      <button class="mix-tab" id="mixTabBots" onclick="setMixTab('bots')">Bots</button>
-    </div>
+    <p class="modal-title">add widget</p>
+    <div class="modal-rules">Pull any widget from any box into your personal terminal.</div>
     <input class="mix-picker-search" id="mixPickerSearch" type="text" placeholder="Search widgets or boxes — e.g. sol, news, score" oninput="renderMixPicker()" />
     <div class="mix-picker-body" id="mixPickerBody"></div>
     <div class="modal-row">
@@ -2477,8 +2478,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <div class="modal-wrap hidden" id="sourcesModal">
   <div class="modal mix-picker">
     <p class="modal-title">add to my box</p>
-    <div class="modal-rules">Follow a channel's chat, or pick individual bots — mix them into one feed.</div>
-    <input class="mix-picker-search" id="sourcesSearch" type="text" placeholder="Search channels or bots — e.g. btc, news" oninput="renderSourcesPicker()" />
+    <div class="modal-rules">Follow chat boxes and bots — mixed into one feed.</div>
+    <div class="mix-tabs">
+      <button class="mix-tab active" id="srcTabChats" onclick="setSourcesTab('chats')">Chat boxes</button>
+      <button class="mix-tab" id="srcTabBots" onclick="setSourcesTab('bots')">Bots</button>
+    </div>
+    <input class="mix-picker-search" id="sourcesSearch" type="text" placeholder="Search chat boxes — e.g. btc, eth" oninput="renderSourcesPicker()" />
     <div class="mix-picker-body" id="sourcesBody"></div>
     <div class="modal-row">
       <button class="modal-btn confirm" onclick="closeSourcesPicker()">DONE</button>
@@ -3481,6 +3486,45 @@ function getTroll(author, isBot) {
   return trollMap[author];
 }
 
+// ── Bot accent tinting: bots take the accent colour of their box ──
+// Bot SVG inlined so it can be recoloured per-accent (works on file://, no fetch).
+// Body = #8CE45A, body-shade = #489919, eyes/detail = #060606 (kept).
+const BOT_SVG_TEMPLATE = `<svg width="20" height="27" viewBox="0 0 20 27" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="8" width="14.0005" height="8.00031" fill="#8CE45A"/><rect x="4" y="16" width="12.0005" height="1.00004" fill="#8CE45A"/><rect x="4" y="6.99805" width="12.0005" height="1.00004" fill="#8CE45A"/><rect x="5" y="6.00195" width="10.0004" height="1.00004" fill="#8CE45A"/><rect x="5" y="17" width="10.0004" height="1.00004" fill="#8CE45A"/><rect x="5" y="18.002" width="10.0004" height="6.00023" fill="#8CE45A"/><rect x="6.00098" y="20.002" width="8.00031" height="3.00012" fill="#060606"/><rect x="5" y="9" width="10.0004" height="7.00027" fill="#060606"/><rect x="15" y="10" width="1.00004" height="5.0002" fill="#060606"/><rect x="6.00098" y="16" width="8.00031" height="1.00004" fill="#060606"/><rect x="4" y="10" width="1.00004" height="5.0002" fill="#060606"/><rect x="5" y="18.002" width="10.0004" height="1.00004" fill="#489919"/><rect x="6.00098" y="12.002" width="2.00008" height="2.00008" fill="#8CE45A"/><rect x="8" y="15.002" width="4.00016" height="1.00004" fill="#8CE45A"/><rect x="12" y="12.002" width="2.00008" height="2.00008" fill="#8CE45A"/><rect x="3" y="18.002" width="2.00008" height="2.00008" fill="#8CE45A"/><rect y="20.002" width="3.00012" height="3.00012" fill="#8CE45A"/><rect x="1.99902" y="21.002" width="1.00004" height="1.00004" fill="#489919"/><rect x="1" y="19" width="2.00008" height="1.00004" fill="#8CE45A"/><rect width="2.00008" height="2.00008" transform="matrix(-1 0 0 1 17 18.002)" fill="#8CE45A"/><rect width="3.00012" height="3.00012" transform="matrix(-1 0 0 1 20 20.002)" fill="#8CE45A"/><rect width="1.00004" height="1.00004" transform="matrix(-1 0 0 1 18.001 21.002)" fill="#489919"/><rect width="2.00008" height="1.00004" transform="matrix(-1 0 0 1 19 19)" fill="#8CE45A"/><rect x="5" y="24.002" width="3.00012" height="1.00004" fill="#8CE45A"/><rect x="3" y="25" width="6.00023" height="2.00008" fill="#8CE45A"/><rect x="12" y="24.002" width="3.00012" height="1.00004" fill="#8CE45A"/><rect x="10.999" y="25" width="6.00023" height="2.00008" fill="#8CE45A"/><rect width="1.00004" height="6.00023" transform="matrix(-1 0 0 1 3 6.99805)" fill="#8CE45A"/><rect x="1" y="4" width="2.00008" height="7.00027" fill="#8CE45A"/><rect x="17" y="6.99805" width="1.00004" height="6.00023" fill="#8CE45A"/><rect width="2.00008" height="7.00027" transform="matrix(-1 0 0 1 19 4)" fill="#8CE45A"/><rect x="10.999" y="24.002" width="4.00016" height="2.00008" fill="#489919"/><rect x="5" y="24.002" width="4.00016" height="2.00008" fill="#489919"/><rect x="9" y="3.00195" width="2.00008" height="4.00016" fill="#8CE45A"/><rect x="8" width="4.00016" height="4.00016" fill="#8CE45A"/><rect x="9" y="1" width="2.00008" height="2.00008" fill="#060606"/></svg>`;
+function _darken(hex, f){
+  hex = (hex || '').replace('#',''); if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const n = parseInt(hex, 16); if (isNaN(n)) return '#489919';
+  let r = Math.round(((n>>16)&255)*f), g = Math.round(((n>>8)&255)*f), b = Math.round((n&255)*f);
+  return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+const _botAvatarCache = {};
+function botAvatar(accent){
+  accent = accent || TROLL_COLORS[7];
+  if (_botAvatarCache[accent]) return _botAvatarCache[accent];
+  const svg = BOT_SVG_TEMPLATE.split('#8CE45A').join(accent).split('#489919').join(_darken(accent, 0.6));
+  return (_botAvatarCache[accent] = 'data:image/svg+xml,' + encodeURIComponent(svg));
+}
+// Accent of a bot's "home" box (first box it posts in) — for flat bot lists/cards
+const _botHomeCache = {};
+function botHomeAccent(name){
+  if (_botHomeCache[name]) return _botHomeCache[name];
+  let ac = TROLL_COLORS[7]; const seen = new Set();
+  for (const k in CHATS){ if (k === 'mymix') continue; const arr = CHATS[k]; if (seen.has(arr)) continue; seen.add(arr);
+    if (arr.some(m => m.bot && m.author === name)){ const r = ROOMS.find(x => x.id === k); if (r){ ac = r.ac; break; } } }
+  return (_botHomeCache[name] = ac);
+}
+// Accent for a bot message in the current render context.
+// Regular box → the box you're viewing (data may be aliased, so ignore the tag).
+// Mixed feed (My Box / General) → the message's own source box.
+function msgBotAccent(m){
+  const ar = ROOMS.find(x => x.id === active); const activeAc = ar ? ar.ac : TROLL_COLORS[7];
+  if (active !== 'mymix' && active !== 'general') return activeAc;
+  if (m._srcAc) return m._srcAc;
+  if (m.tag){ const t = m.tag.replace(/^[#$]/,'').toUpperCase();
+    const r = ROOMS.find(x => x.label.replace(/^#/,'').toUpperCase() === t || x.id.toUpperCase() === t);
+    if (r) return r.ac; }
+  return activeAc;
+}
+
 const DATE_LABELS = ['May 5, 2026','May 4, 2026','May 3, 2026','May 2, 2026'];
 // ─── REACTIONS ───
 const REACTIONS_PER_ROOM = {
@@ -3673,11 +3717,11 @@ function renderMyMixEmpty(feed){
   const botNames = (typeof BOT_INFO !== 'undefined') ? Object.keys(BOT_INFO) : [];
   const chans = ROOMS.filter(r => r.id !== 'mymix' && r.id !== 'general').slice(0, 4);
   const chanChips = chans.map(r => `<button class="mix-empty-chip" onclick="addMyBoxChat('${r.id}')"><span class="ch-hash" style="color:${r.ac}">#</span>${r.label.replace(/^#/,'')}</button>`).join('');
-  const botChips = botNames.slice(0, 5).map(n => `<button class="mix-empty-chip" onclick="addMyBoxBot('${n}')"><img src="${getTroll(n,true).src}" />@${n.toUpperCase()}</button>`).join('');
+  const botChips = botNames.slice(0, 5).map(n => `<button class="mix-empty-chip" onclick="addMyBoxBot('${n}')"><img src="${botAvatar(botHomeAccent(n))}" />@${n.toUpperCase()}</button>`).join('');
   feed.innerHTML = `
     <div class="mix-empty">
-      <img class="mix-empty-troll" src="trolls/5.svg" />
-      <div class="mix-empty-title">Build your My Box feed</div>
+      <img class="mix-empty-troll" src="trolls/my_box.png" alt="" />
+      <div class="mix-empty-title">Build your feed</div>
       <div class="mix-empty-text">One feed = the channel chats you follow + the bots you pick.</div>
       <button class="mix-empty-cta" onclick="openSourcesPicker()">&#65291; Add sources</button>
       <div class="mix-empty-hint">Quick add</div>
@@ -3722,34 +3766,55 @@ function toggleMyBoxChat(id){ if (myMixChats.has(id)){ myMixChats.delete(id); if
 function toggleMyBoxBot(n){ if (myMixBots.has(n)) myMixBots.delete(n); else myMixBots.add(n); refreshMyBox(); }
 function addMyBoxChat(id){ myMixChats.add(id); refreshMyBox(); }
 function addMyBoxBot(n){ myMixBots.add(n); refreshMyBox(); }
+// All unique bots across channels (for the Bots tab)
+function allBots(){
+  const set = new Set();
+  for (const k in CHATS){ if (k === 'mymix') continue; (CHATS[k] || []).forEach(m => { if (m.bot && m.author) set.add(m.author); }); }
+  return [...set];
+}
+let sourcesTab = 'chats'; // 'chats' | 'bots'
+function setSourcesTab(t){
+  sourcesTab = (t === 'bots') ? 'bots' : 'chats';
+  const tc = document.getElementById('srcTabChats'), tb = document.getElementById('srcTabBots');
+  if (tc) tc.classList.toggle('active', sourcesTab === 'chats');
+  if (tb) tb.classList.toggle('active', sourcesTab === 'bots');
+  const s = document.getElementById('sourcesSearch');
+  if (s) s.placeholder = sourcesTab === 'bots' ? 'Search bots — e.g. news, jokes' : 'Search chat boxes — e.g. btc, eth';
+  renderSourcesPicker();
+}
 function openSourcesPicker(){
   const s = document.getElementById('sourcesSearch'); if (s) s.value = '';
-  renderSourcesPicker();
+  setSourcesTab('chats'); // default to Chat boxes, also renders
   document.getElementById('sourcesModal').classList.remove('hidden');
 }
 function closeSourcesPicker(){ document.getElementById('sourcesModal').classList.add('hidden'); }
 function renderSourcesPicker(){
+  if (sourcesTab === 'bots') return renderSourcesBots();
+  return renderSourcesChats();
+}
+function renderSourcesChats(){
   const body = document.getElementById('sourcesBody');
   if (!body) return;
   const q = (document.getElementById('sourcesSearch')?.value || '').trim().toLowerCase();
-  const html = ROOMS.filter(r => r.id !== 'mymix').map(room => {
-    const id = room.id, ac = room.ac, label = room.label;
-    const labelMatch = !q || label.toLowerCase().includes(q);
-    let rows = '';
-    if (labelMatch || 'channel chat'.includes(q)){
-      const on = myMixChats.has(id);
-      rows += `<div class="mix-pick-row ${on ? 'added' : ''}" onclick="toggleMyBoxChat('${id}')"><span class="mix-pick-title">&#128172; Channel chat</span><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
-    }
-    getChannelBots(id).filter(n => labelMatch || n.toLowerCase().includes(q)).forEach(n => {
-      const on = myMixBots.has(n);
-      rows += `<div class="mix-pick-bot ${on ? 'added' : ''}" onclick="toggleMyBoxBot('${n}')"><img src="${getTroll(n,true).src}" /><div class="mix-pick-bot-main"><div class="mix-pick-bot-name">@${n.toUpperCase()}</div></div><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
-    });
-    if (!rows) return '';
-    return `<div class="mix-pick-group"><div class="mix-pick-box" style="color:${ac};border-color:${ac}">${label}</div>${rows}</div>`;
+  const html = ROOMS.filter(r => r.id !== 'mymix').filter(r => !q || r.label.toLowerCase().includes(q)).map(r => {
+    const on = myMixChats.has(r.id);
+    return `<div class="mix-pick-row ${on ? 'added' : ''}" onclick="toggleMyBoxChat('${r.id}')"><span class="mix-pick-title"><span style="color:${r.ac}">#</span>${r.label.replace(/^#/,'')}</span><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
   }).join('');
-  body.innerHTML = html || `<div class="mix-pick-empty">No channels or bots match “${q}”.</div>`;
+  body.innerHTML = html || `<div class="mix-pick-empty">No chat boxes match “${q}”.</div>`;
+}
+function renderSourcesBots(){
+  const body = document.getElementById('sourcesBody');
+  if (!body) return;
+  const q = (document.getElementById('sourcesSearch')?.value || '').trim().toLowerCase();
+  const html = allBots().filter(n => !q || n.toLowerCase().includes(q) || (botInfoFor(n).desc || '').toLowerCase().includes(q)).map(n => {
+    const on = myMixBots.has(n); const info = botInfoFor(n); const ac = botHomeAccent(n);
+    return `<div class="mix-pick-bot ${on ? 'added' : ''}" onclick="toggleMyBoxBot('${n}')"><img src="${botAvatar(ac)}" /><div class="mix-pick-bot-main"><div class="mix-pick-bot-name" style="color:${ac}">@${n.toUpperCase()}</div><div class="mix-pick-bot-desc">${info.desc}</div></div><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
+  }).join('');
+  body.innerHTML = html || `<div class="mix-pick-empty">No bots match “${q}”.</div>`;
 }
 function renderChat(){
+  const _center = document.querySelector('.center');
+  if (_center) _center.classList.toggle('mybox-empty', active === 'mymix' && myBoxEmpty()); // hide composer on empty My Box
   renderMyBoxBar();      // self-hide unless active My Box with sources
   renderMyBoxTargets();
   if (active === 'mymix') {
@@ -3772,12 +3837,17 @@ function renderChat(){
     const isLong = (m.text||'').length > 60;
     const reactionsHtml = renderReactionsForMsg(i, isLong);
     const replyHtml = renderReplyQuote(m);
+    // Bots take their box's accent: tinted avatar + accent nick + lightly-tinted (readable) text
+    const botAc = m.bot ? msgBotAccent(m) : null;
+    const trollSrc = m.bot ? botAvatar(botAc) : getTroll(m.author, m.bot).src;
+    const nickColor = m.bot ? botAc : getTroll(m.author, m.bot).color;
+    const botTextStyle = m.bot ? ` style="color:color-mix(in srgb, ${botAc} 45%, #c8c8c8)"` : '';
     html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
       ${replyHtml}
       ${showTag?msgSrcTag(m):''}
       <div class="msg-body">
-        <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
-        <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="currentColor"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="currentColor"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="currentColor"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
+        <img class="msg-troll" src="${trollSrc}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${nickColor}">${m.author}:</span>
+        <span class="msg-text${m.bot?' bot-text':''}"${botTextStyle}> ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="currentColor"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="currentColor"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="currentColor"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
         <span class="msg-time">${m.time}</span>${reactionsHtml}</div>
       </div>
     </div>`;
@@ -3926,27 +3996,14 @@ function removeMyMixWidget(pos){
   saveMyMixWidgets(cur);
   renderRight();
 }
-// ----- Picker modal (two tabs: widgets + bots) -----
-let mixPickerTab = 'widgets';
-function setMixTab(tab){
-  mixPickerTab = (tab === 'bots') ? 'bots' : 'widgets';
-  const tw = document.getElementById('mixTabWidgets'), tb = document.getElementById('mixTabBots');
-  if (tw) tw.classList.toggle('active', mixPickerTab === 'widgets');
-  if (tb) tb.classList.toggle('active', mixPickerTab === 'bots');
-  const s = document.getElementById('mixPickerSearch');
-  if (s) s.placeholder = mixPickerTab === 'bots'
-    ? 'Search bots — e.g. news, jokes, trivia'
-    : 'Search widgets or boxes — e.g. sol, news, score';
-  renderMixPicker();
-}
-function openMixPicker(tab){
+// ----- Terminal widget picker (widgets only) -----
+function openMixPicker(){
   const s = document.getElementById('mixPickerSearch');
   if (s) s.value = '';
-  setMixTab(tab || 'widgets'); // sets active tab + placeholder, then renders
+  renderMixPicker();
   document.getElementById('mixWidgetModal').classList.remove('hidden');
 }
 function renderMixPicker(){
-  if (mixPickerTab === 'bots') return renderMixBots();
   const body = document.getElementById('mixPickerBody');
   const current = getMyMixWidgets();
   const isAdded = (box, idx) => current.some(w => w.box === box && w.idx === idx);
@@ -3975,31 +4032,6 @@ function toggleMixWidget(box, idx){
   saveMyMixWidgets(cur);
   renderMixPicker();
   if (active === 'mymix') renderRight();
-}
-// Bots tab: add/remove a bot from My Box's personal feed (same set the bot card uses)
-function renderMixBots(){
-  const body = document.getElementById('mixPickerBody');
-  const q = (document.getElementById('mixPickerSearch')?.value || '').trim().toLowerCase();
-  const names = (typeof BOT_INFO !== 'undefined') ? Object.keys(BOT_INFO) : [];
-  const html = names.filter(n => {
-    if (!q) return true;
-    return n.toLowerCase().includes(q) || (botInfoFor(n).desc || '').toLowerCase().includes(q);
-  }).map(n => {
-    const added = myMixBots.has(n);
-    const info = botInfoFor(n);
-    return `<div class="mix-pick-bot ${added ? 'added' : ''}" onclick="toggleMixBot('${n}')">`
-      + `<img src="${getTroll(n, true).src}" alt="" />`
-      + `<div class="mix-pick-bot-main"><div class="mix-pick-bot-name">@${n.toUpperCase()}</div><div class="mix-pick-bot-desc">${info.desc}</div></div>`
-      + `<span class="mix-pick-act">${added ? '✓ ADDED' : '+ ADD'}</span>`
-      + `</div>`;
-  }).join('');
-  body.innerHTML = html || `<div class="mix-pick-empty">No bots match “${q}”.</div>`;
-}
-function toggleMixBot(name){
-  if (myMixBots.has(name)) myMixBots.delete(name); else myMixBots.add(name);
-  saveMyBoxSources();
-  renderMixBots();
-  if (active === 'mymix') renderChat();
 }
 
 // Toggle a widget's "+"/"−" button look + tooltip
@@ -4894,8 +4926,11 @@ function openBotProfile(name){
   currentBotName = name;
   const info = botInfoFor(name);
   document.getElementById('botModalUptimeText').textContent = 'online · uptime ' + botUptime(name);
-  document.getElementById('botModalTroll').src = getTroll(name, true).src;
-  document.getElementById('botModalNick').textContent = '@' + name.toUpperCase();
+  const _botAc = botHomeAccent(name);
+  document.getElementById('botModalTroll').src = botAvatar(_botAc);
+  const _bmNick = document.getElementById('botModalNick');
+  _bmNick.textContent = '@' + name.toUpperCase();
+  _bmNick.style.color = _botAc;
   document.getElementById('botModalTitle').textContent = name.replace(/_/g,' ').toUpperCase();
   document.getElementById('botModalDesc').textContent = info.desc;
   const creatorEl = document.getElementById('botModalCreator');
