@@ -45,6 +45,21 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-preview .rp-nick { font-weight: 700; color: #7c7c7c; opacity: 0.8; }
 .room-preview.typing .rp-text::after { content: ''; display: inline-block; width: 5px; height: 9px; background: #8a8a8a; margin-left: 2px; vertical-align: -1px; animation: previewBlink 0.6s steps(1) infinite; }
 @keyframes previewBlink { 50% { opacity: 0; } }
+
+/* CRT boot-in — one-time "power on" sweep over the Boxes list (mobile).
+   Driven entirely from JS (inline styles), NOT CSS @keyframes — these are the
+   visuals; the motion/opacity is tweened in crtBootBoxes() so it runs in every
+   environment (same approach as the JS typewriter previews). */
+.left.crt-booting { position: relative; }
+.crt-boot-flash { position: absolute; inset: 0; pointer-events: none; z-index: 49; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(180,255,150,0.16), rgba(140,228,90,0.06) 45%, transparent 70%); mix-blend-mode: screen; opacity: 0; }
+.crt-boot-scan { position: absolute; left: 0; right: 0; top: -7%; height: 64px; pointer-events: none; z-index: 50; opacity: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(140,228,90,0.05) 38%, rgba(140,228,90,0.14) 49%, rgba(220,255,200,0.55) 50%, rgba(140,228,90,0.14) 51%, rgba(140,228,90,0.05) 62%, transparent 100%);
+  box-shadow: 0 0 26px 6px rgba(140,228,90,0.16); }
+[data-crt-theme="amber"] .crt-boot-flash { background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(255,210,130,0.18), rgba(255,165,50,0.06) 45%, transparent 70%); }
+[data-crt-theme="amber"] .crt-boot-scan { background: linear-gradient(to bottom, transparent, rgba(255,165,50,0.14) 49%, rgba(255,225,170,0.55) 50%, rgba(255,165,50,0.14) 51%, transparent); box-shadow: 0 0 26px 6px rgba(255,165,50,0.16); }
+[data-crt-theme="hacker"] .crt-boot-flash { background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(140,255,160,0.18), rgba(0,255,65,0.07) 45%, transparent 70%); }
+[data-crt-theme="hacker"] .crt-boot-scan { background: linear-gradient(to bottom, transparent, rgba(0,255,65,0.16) 49%, rgba(200,255,200,0.55) 50%, rgba(0,255,65,0.16) 51%, transparent); box-shadow: 0 0 26px 6px rgba(0,255,65,0.18); }
+
 /* App version tag in the sidebar header — mobile only */
 .app-version { display: none; font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; letter-spacing: 0.05em; }
 .room-tag { font-size: 11px; color: #888; }
@@ -164,8 +179,19 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .r-title { font-size: 14px; color: #e0e0e0; letter-spacing: 0.08em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .r-icons { display: flex; gap: 2px; align-items: flex-start; margin-top: -2px; margin-right: -2px; }
 .r-arrow { cursor: pointer; opacity: 0.3; transition: opacity 0.15s; padding: 1px; }
+.r-arrow svg { display: block; } /* kill inline-baseline gap so "+" and arrows align */
 .r-arrow:hover { opacity: 0.8; }
 .r-arrow.disabled { opacity: 0.1; pointer-events: none; }
+/* "+/−" matches the arrows (same grey + opacity); tooltip handled by the global [data-tip] popup */
+.r-arrow.r-add { margin-right: 4px; color: #9a9a9a; }
+.r-arrow.r-add svg { fill: currentColor; }
+/* Mobile: bigger tap targets, tight spacing, pushed toward the right edge */
+@media (max-width: 900px){
+  .r-icons { gap: 0; align-items: center; margin-top: 0; margin-right: -4px; }
+  .r-arrow { padding: 6px; opacity: 0.5; }
+  .r-arrow svg { width: 16px; height: 16px; }
+  .r-arrow.r-add { margin-right: 0; }
+}
 .live-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #3ddc84; margin-right: 4px; animation: blink 1.2s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .big-num { font-size: 24px; color: #e0e0e0; letter-spacing: 0.02em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
@@ -366,16 +392,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 #profileModal .profile-modal-body::-webkit-scrollbar-track, #profileEditModal .pe-body::-webkit-scrollbar-track { background: transparent; }
 #profileModal .profile-modal-body::-webkit-scrollbar-thumb, #profileEditModal .pe-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 0; }
 #profileModal .profile-modal-body:hover::-webkit-scrollbar-thumb, #profileEditModal .pe-body:hover::-webkit-scrollbar-thumb { background: #3a3a3a; }
-/* Multi-layer colour wash behind the troll preview: tint emanates only from the TOP and
-   BOTTOM frame edges and fades to clear toward the centre (under the troll), in the troll colour */
-#pePreview, #profileModal .profile-modal-avatar, #mobileProfileContent .profile-modal-avatar {
-  background:
-    linear-gradient(to bottom, color-mix(in srgb, var(--troll-glow, transparent) 12%, transparent) 0%, transparent 25%),
-    linear-gradient(to top,    color-mix(in srgb, var(--troll-glow, transparent) 9%, transparent) 0%, transparent 28%),
-    radial-gradient(130% 50% at 50% -14%, color-mix(in srgb, var(--troll-glow, transparent) 9%, transparent), transparent 48%),
-    radial-gradient(130% 46% at 50% 114%, color-mix(in srgb, var(--troll-glow, transparent) 6%, transparent), transparent 46%);
-}
-/* Mobile profile: horizontal divider under the troll+nick so the wash also reads off a frame edge */
+/* (Colour wash behind the troll preview removed — disabled for now per feedback.) */
+/* Mobile profile: horizontal divider under the troll+nick */
 #mobileProfileContent .profile-modal-avatar { border-bottom: 1px solid #333; padding-bottom: 18px; }
 .profile-modal-head { display: flex; justify-content: space-between; align-items: center; height: 57px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; border-bottom: 1px solid #333; }
 .profile-modal-head span { font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -402,6 +420,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-badge { position: relative; padding: 4px 10px; border: 1px solid #333; font-size: 10px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; cursor: default; }
 /* Floating tooltip (fixed-positioned → escapes the modal's scroll/overflow clipping) */
 .data-tip-pop { position: fixed; z-index: 12000; display: none; pointer-events: none; background: #0a0a0a; border: 1px solid #444; color: #cfcfcf; font-family: 'Roboto', sans-serif; font-size: 11px; padding: 6px 9px; max-width: 220px; white-space: normal; line-height: 1.35; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+/* Mobile: larger "Add to My Box" tip on the widget "+" */
+@media (max-width: 900px){ .data-tip-pop.tip-lg { font-size: 15px; padding: 9px 13px; } }
 .profile-badge.active { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 .profile-modal-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #333; }
 .profile-modal-btn { flex: 1; padding: 10px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; cursor: pointer; border: 1px solid #444; background: transparent; color: #ccc; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
@@ -546,6 +566,30 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-empty-bot img { width: 20px; height: 20px; image-rendering: pixelated; }
 .mix-empty-bot span { font-family: 'Roboto', sans-serif; font-size: 11px; color: #aaa; text-transform: uppercase; }
 .mix-empty-hint { font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; margin-top: 4px; }
+/* My Box onboarding (empty) — single CTA + quick-add chips */
+.mix-empty-troll { width: 64px; height: 64px; image-rendering: pixelated; opacity: 0.9; margin-bottom: 2px; }
+.mix-empty-cta { margin-top: 8px; background: transparent; border: 1px solid var(--ac, #8CE45A); color: var(--ac, #8CE45A); font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; padding: 11px 22px; cursor: pointer; }
+.mix-empty-cta:hover { background: color-mix(in srgb, var(--ac, #8CE45A) 14%, transparent); }
+.mix-empty-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.mix-empty-chips.one-line { flex-wrap: nowrap; max-width: 100%; overflow-x: auto; }
+.mix-empty-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #333; background: transparent; padding: 6px 10px; cursor: pointer; font-family: 'Roboto', sans-serif; font-size: 12px; color: #bbb; text-transform: uppercase; }
+.mix-empty-chip:hover { border-color: var(--ac, #8CE45A); background: #111; }
+.mix-empty-chip img { width: 18px; height: 18px; image-rendering: pixelated; }
+.mix-empty-chip .ch-hash { font-weight: 700; }
+/* My Box "Following … Edit" summary bar */
+.mybox-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; background: #0c0c0c; flex-shrink: 0; min-height: 40px; box-sizing: border-box; }
+.mybox-bar .mbb-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+.mybox-bar .mbb-list { display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
+.mybox-bar .mbb-src { font-family: 'Roboto', sans-serif; font-size: 12px; white-space: nowrap; }
+.mybox-bar .mbb-src.bot { color: #8CE45A; }
+.mybox-bar .mbb-more { font-family: 'Roboto', sans-serif; font-size: 11px; color: #666; flex-shrink: 0; }
+.mybox-bar .mbb-edit { margin-left: auto; flex-shrink: 0; background: transparent; border: 1px solid #3a3a3a; color: #cfcfcf; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 12px; cursor: pointer; }
+.mybox-bar .mbb-edit:hover { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+/* My Box addressee chips (above input) */
+.mybox-targets { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-top: 1px solid #222; flex-shrink: 0; overflow-x: auto; }
+.mybox-targets .mbt-label { font-family: 'Roboto', sans-serif; font-size: 11px; color: #666; flex-shrink: 0; }
+.mybox-targets .mbt-chip { background: transparent; border: 1px solid #333; color: #aaa; font-family: 'Roboto', sans-serif; font-size: 12px; padding: 4px 10px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.mybox-targets .mbt-chip.active { border-color: var(--c, #8CE45A); color: var(--c, #8CE45A); background: color-mix(in srgb, var(--c, #8CE45A) 12%, transparent); }
 /* My Mix terminal */
 .mix-term-empty { padding: 24px 16px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #777; line-height: 1.7; }
 .mix-widget-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -568,6 +612,20 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-picker-body:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
 .mix-picker-body:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .mix-pick-empty { padding: 20px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #666; }
+/* Picker tabs (Widgets / Bots) */
+.mix-tabs { display: flex; margin-top: 10px; border: 1px solid #333; }
+.mix-tab { flex: 1; background: transparent; border: none; border-right: 1px solid #333; color: #777; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; padding: 9px 0; cursor: pointer; }
+.mix-tab:last-child { border-right: none; }
+.mix-tab.active { color: var(--ac, #8CE45A); background: color-mix(in srgb, var(--ac, #8CE45A) 10%, transparent); }
+/* Bot rows inside the picker */
+.mix-pick-bot { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.mix-pick-bot:last-child { border-bottom: none; }
+.mix-pick-bot:hover { background: #141414; }
+.mix-pick-bot img { width: 26px; height: 26px; image-rendering: pixelated; flex-shrink: 0; }
+.mix-pick-bot-main { flex: 1; min-width: 0; }
+.mix-pick-bot-name { color: #e0e0e0; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; }
+.mix-pick-bot-desc { color: #666; font-family: 'Roboto', sans-serif; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mix-pick-bot.added .mix-pick-act { color: var(--ac, #8CE45A); }
 /* Social Intel card (BTC) — pixel/stitched style */
 .si-card { position: relative; background: transparent; color: #cfcfcf; padding: 9px 10px; border: 1px dashed var(--si-ac, var(--ac, #f7931a)); box-sizing: border-box; display: flex; flex-direction: column; }
 .si-card-head { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; flex-shrink: 0; }
@@ -2107,9 +2165,14 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
     <button class="bvt-seg" id="bvtTermSeg" onclick="setMobileView('terminal')">Terminal</button>
   </div>
   <div class="announce" id="chatAnnounce"><span style="color:#333">&#9873;</span> Any long message about the airdrop or other announcements? Everything's here.</div>
+  <!-- My Box: "Following … Edit" sources summary (shown only for My Box chat with sources) -->
+  <div class="mybox-bar hidden" id="myboxBar"></div>
   <div class="chat-feed" id="chat-feed"></div>
   <!-- Mobile: box's terminal widgets mount here (below the persistent header + switcher) -->
   <div id="mobileTermMount"></div>
+
+  <!-- My Box: addressee chips — which chat you're posting to (chats only) -->
+  <div class="mybox-targets hidden" id="myboxTargets"></div>
 
   <!-- Reply chip (shown above input while composing a reply) -->
   <div class="reply-chip hidden" id="replyChip"></div>
@@ -2385,12 +2448,29 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 <!-- MY MIX WIDGET PICKER -->
 <div class="modal-wrap hidden" id="mixWidgetModal">
   <div class="modal mix-picker">
-    <p class="modal-title"># add widget to my box</p>
-    <div class="modal-rules">Pull any widget from any box into your personal terminal.</div>
+    <p class="modal-title">add to my box</p>
+    <div class="modal-rules">Pull widgets from any box, or add a bot to your personal feed.</div>
+    <div class="mix-tabs">
+      <button class="mix-tab active" id="mixTabWidgets" onclick="setMixTab('widgets')">Widgets</button>
+      <button class="mix-tab" id="mixTabBots" onclick="setMixTab('bots')">Bots</button>
+    </div>
     <input class="mix-picker-search" id="mixPickerSearch" type="text" placeholder="Search widgets or boxes — e.g. sol, news, score" oninput="renderMixPicker()" />
     <div class="mix-picker-body" id="mixPickerBody"></div>
     <div class="modal-row">
       <button class="modal-btn confirm" onclick="document.getElementById('mixWidgetModal').classList.add('hidden')">DONE</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY BOX SOURCES PICKER (chat-view: channel chats + bots, grouped by channel) -->
+<div class="modal-wrap hidden" id="sourcesModal">
+  <div class="modal mix-picker">
+    <p class="modal-title">add to my box</p>
+    <div class="modal-rules">Follow a channel's chat, or pick individual bots — mix them into one feed.</div>
+    <input class="mix-picker-search" id="sourcesSearch" type="text" placeholder="Search channels or bots — e.g. btc, news" oninput="renderSourcesPicker()" />
+    <div class="mix-picker-body" id="sourcesBody"></div>
+    <div class="modal-row">
+      <button class="modal-btn confirm" onclick="closeSourcesPicker()">DONE</button>
     </div>
   </div>
 </div>
@@ -2956,8 +3036,17 @@ const CHATS = {
 ['eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 CHATS.mymix = []; // My Mix is built dynamically from bots the user adds
 
+// Widget control icons — all 10×10 so the "+/−" and the arrows line up by height.
+const ADD_PLUS_SVG  = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="10"/><rect x="0" y="4" width="10" height="2"/></svg>`;
+const ADD_MINUS_SVG = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="0" y="4" width="10" height="2"/></svg>`;
+const ARROW_UP_SVG   = `<svg width="10" height="10" viewBox="0 0 10 10" fill="#9a9a9a" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/><rect x="4" y="5" width="2" height="5"/></svg>`;
+const ARROW_DOWN_SVG = `<svg width="10" height="10" viewBox="0 0 10 10" fill="#9a9a9a" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="5"/><rect x="0" y="5" width="10" height="1"/><rect x="1" y="6" width="8" height="1"/><rect x="2" y="7" width="6" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="4" y="9" width="2" height="1"/></svg>`;
 function rHead(t) {
-  return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons"><span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span><span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span></div></div>`;
+  return `<div class="r-head"><span class="r-title">[${t}]</span><div class="r-icons">`
+    + `<span class="r-arrow r-add" data-tip="Add to My Box" onclick="addWidgetToMyBox(this)">${ADD_PLUS_SVG}</span>`
+    + `<span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up">${ARROW_UP_SVG}</span>`
+    + `<span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down">${ARROW_DOWN_SVG}</span>`
+    + `</div></div>`;
 }
 
 // ─── New widgets: budget bar + resource chart ───
@@ -3093,8 +3182,9 @@ function socialIntelCard(box){
   const room = ROOMS.find(r => r.id === box);
   const ac = room ? room.ac : '#f7931a';
   const arrows = `<div class="r-icons">`
-    + `<span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="1"/><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="1" y="3" width="8" height="1"/><rect x="0" y="4" width="10" height="1"/></svg></span>`
-    + `<span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down"><svg width="10" height="5" viewBox="0 0 10 5" fill="#888" style="image-rendering:pixelated"><rect x="0" y="0" width="10" height="1"/><rect x="1" y="1" width="8" height="1"/><rect x="2" y="2" width="6" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="4" y="4" width="2" height="1"/></svg></span>`
+    + `<span class="r-arrow r-add" data-tip="Add to My Box" onclick="addWidgetToMyBox(this)">${ADD_PLUS_SVG}</span>`
+    + `<span class="r-arrow r-arrow-up" onclick="moveWidget(this,-1)" title="Move up">${ARROW_UP_SVG}</span>`
+    + `<span class="r-arrow r-arrow-down" onclick="moveWidget(this,1)" title="Move down">${ARROW_DOWN_SVG}</span>`
     + `</div>`;
   return `<div class="r-block"><div class="si-card" data-box="${box}" data-ts="${Date.now()}" style="--si-ac:${ac}">`
     + `<div class="si-card-head">`
@@ -3308,6 +3398,56 @@ function animateRoomPreviews(){
   });
 }
 
+// "Power on" CRT boot, replayed on every entry to Boxes (mobile): a scan-line
+// sweeps the list top→bottom, rows snap in one by one with a phosphor flash +
+// glitch jitter, then the live previews type in (flows into animateRoomPreviews).
+let _bootTimers = [];
+function _bootStop(){
+  _bootTimers.forEach(clearInterval); _bootTimers.forEach(clearTimeout); _bootTimers = [];
+  document.querySelectorAll('.crt-boot-scan,.crt-boot-flash').forEach(e => e.remove());
+  if (leftPanel) leftPanel.classList.remove('crt-booting');
+  // Safety: never leave rows stuck hidden if a boot was interrupted.
+  document.querySelectorAll('#rooms-list .room-item').forEach(r => { r.style.opacity = ''; r.style.filter = ''; r.style.transform = ''; });
+}
+function crtBootBoxes(){
+  if (typeof isMobile === 'function' && !isMobile()){ animateRoomPreviews(); return; }
+  const list = document.getElementById('rooms-list');
+  const rows = list ? Array.from(list.querySelectorAll('.room-item')) : [];
+  if (!list || !rows.length){ animateRoomPreviews(); return; }
+
+  _bootStop(); // cancel any boot still in flight (rapid re-entry) before restarting
+  fillRoomPreviews();           // rows already carry their last message — NO typewriter afterwards
+  leftPanel.classList.add('crt-booting');
+  // Hide rows up-front. Opacity ONLY — no transform → headers/borders never shift sideways.
+  rows.forEach(r => { r.style.opacity = '0'; });
+
+  const scan = document.createElement('div'); scan.className = 'crt-boot-scan';
+  scan.style.opacity = '1';
+  leftPanel.appendChild(scan);
+  const halfBeam = (scan.offsetHeight || 64) / 2; // bright line sits at the band's centre
+
+  // Stepped reveal (one timer): the scan snaps down row by row — like the typewriter
+  // ticking through characters — and each box pops in only once the beam has fully
+  // passed it (bright line lands on the row's BOTTOM edge), so nothing below shows early.
+  let i = 0; const stepMs = 85;
+  const tick = setInterval(() => {
+    if (i < rows.length){
+      const row = rows[i];
+      const bottom = row.getBoundingClientRect().bottom - leftPanel.getBoundingClientRect().top;
+      scan.style.top = (bottom - halfBeam) + 'px'; // bright line at this row's bottom
+      row.style.opacity = '1';                      // reveal only the box the beam just cleared
+      i++;
+    } else {
+      clearInterval(tick);
+      if (scan.parentNode) scan.remove();
+      leftPanel.classList.remove('crt-booting');
+      rows.forEach(r => { r.style.opacity = ''; }); // hand back to stylesheet
+      // No animateRoomPreviews() — last messages are already shown, so they don't re-type.
+    }
+  }, stepMs);
+  _bootTimers.push(tick);
+}
+
 // Troll avatars + nick colors — consistent per author
 const TROLL_COUNT = 6;
 const TROLL_COLORS = {
@@ -3478,10 +3618,29 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && replyState
 
 let hideBots=false;
 const mutedBots = new Set();
+// My Box sources: individual bots + whole channel chats (both feed the My Box chat).
 const myMixBots = new Set();
-// Collect every message authored by a bot the user added to My Mix (from all rooms)
+const myMixChats = new Set();
+let myboxTarget = null; // which chat new messages post to
+function loadMyBoxSources(){
+  try { const o = JSON.parse(localStorage.getItem('tb_mybox_sources'));
+    if (o){ (o.bots||[]).forEach(b => myMixBots.add(b)); (o.chats||[]).forEach(c => myMixChats.add(c)); }
+  } catch(e){}
+}
+function saveMyBoxSources(){
+  try { localStorage.setItem('tb_mybox_sources', JSON.stringify({ bots:[...myMixBots], chats:[...myMixChats] })); } catch(e){}
+}
+function myBoxEmpty(){ return myMixBots.size === 0 && myMixChats.size === 0; }
+// Bots that post in a given channel (unique bot authors present in its history)
+function getChannelBots(roomId){
+  const arr = CHATS[roomId] || [];
+  const seen = new Set(); const out = [];
+  arr.forEach(m => { if (m.bot && m.author && !seen.has(m.author)){ seen.add(m.author); out.push(m.author); } });
+  return out;
+}
+// Build the My Box feed: bot msgs from followed bots + human msgs from followed channel chats
 function buildMyMix(){
-  if (myMixBots.size === 0) return [];
+  if (myBoxEmpty()) return [];
   const out = [];
   const seen = new Set(); // some rooms alias the same array (eth/sol == btc); avoid duplicates
   for (const k in CHATS){
@@ -3491,30 +3650,100 @@ function buildMyMix(){
     seen.add(arr);
     const room = ROOMS.find(r => r.id === k);
     const ac = room ? room.ac : '';      // source-box accent, so each tag is colored by its box
-    arr.forEach((m, srcIdx) => { if (m.bot && myMixBots.has(m.author)) out.push(Object.assign({}, m, { _srcAc: ac, _srcTag: room ? room.label : m.tag, _srcRoom: k, _srcIdx: srcIdx })); });
+    const chatOn = [...myMixChats].some(id => CHATS[id] === arr); // alias-safe (eth/sol == btc)
+    arr.forEach((m, srcIdx) => {
+      const include = m.sys ? false : (m.bot ? myMixBots.has(m.author) : (chatOn && !!m.author));
+      if (include) out.push(Object.assign({}, m, { _srcAc: ac, _srcTag: room ? room.label : m.tag, _srcRoom: k, _srcIdx: srcIdx }));
+    });
   }
   return out;
 }
 function renderMyMixEmpty(feed){
   const botNames = (typeof BOT_INFO !== 'undefined') ? Object.keys(BOT_INFO) : [];
-  const chips = botNames.map(n => `<div class="mix-empty-bot" onclick="openBotProfile('${n}')"><img src="${getTroll(n,true).src}" /><span>@${n.toUpperCase()}</span></div>`).join('');
+  const chans = ROOMS.filter(r => r.id !== 'mymix' && r.id !== 'general').slice(0, 4);
+  const chanChips = chans.map(r => `<button class="mix-empty-chip" onclick="addMyBoxChat('${r.id}')"><span class="ch-hash" style="color:${r.ac}">#</span>${r.label.replace(/^#/,'')}</button>`).join('');
+  const botChips = botNames.slice(0, 5).map(n => `<button class="mix-empty-chip" onclick="addMyBoxBot('${n}')"><img src="${getTroll(n,true).src}" />@${n.toUpperCase()}</button>`).join('');
   feed.innerHTML = `
     <div class="mix-empty">
-      <div class="mix-empty-title">Your My Box is empty</div>
-      <div class="mix-empty-text">My Box is your personal feed of bots. To add one:</div>
-      <ol class="mix-empty-steps">
-        <li>Open a box (e.g. <b>#BTC</b>, <b>#AI</b>, <b>#SPORTS</b>)</li>
-        <li>Inside the box, find a bot and tap its name</li>
-        <li>In the bot card, tap <b>ADD TO MY BOX</b></li>
-      </ol>
-      <div class="mix-empty-hint">Bots you can add — tap to open:</div>
-      <div class="mix-empty-bots">${chips}</div>
+      <img class="mix-empty-troll" src="trolls/5.svg" />
+      <div class="mix-empty-title">Build your My Box feed</div>
+      <div class="mix-empty-text">One feed = the channel chats you follow + the bots you pick.</div>
+      <button class="mix-empty-cta" onclick="openSourcesPicker()">&#65291; Add sources</button>
+      <div class="mix-empty-hint">Quick add</div>
+      <div class="mix-empty-chips one-line">${chanChips}</div>
+      <div class="mix-empty-chips">${botChips}</div>
     </div>`;
 }
+// ===== My Box sources: bar, picker, addressee, toggles =====
+function renderMyBoxBar(){
+  const bar = document.getElementById('myboxBar');
+  if (!bar) return;
+  if (active !== 'mymix' || myBoxEmpty()){ bar.classList.add('hidden'); bar.innerHTML = ''; return; }
+  const items = [];
+  myMixChats.forEach(id => { const r = ROOMS.find(x => x.id === id); if (r) items.push(`<span class="mbb-src chan" style="color:${r.ac}">${r.label}</span>`); });
+  myMixBots.forEach(n => items.push(`<span class="mbb-src bot">@${n.toUpperCase()}</span>`));
+  const shown = items.slice(0, 4).join('');
+  const more = items.length > 4 ? `<span class="mbb-more">+${items.length - 4}</span>` : '';
+  bar.innerHTML = `<span class="mbb-label">Following</span><span class="mbb-list">${shown}${more}</span><button class="mbb-edit" onclick="openSourcesPicker()">Edit</button>`;
+  bar.classList.remove('hidden');
+}
+function renderMyBoxTargets(){
+  const el = document.getElementById('myboxTargets');
+  const inp = document.getElementById('chat-input');
+  if (!el) return;
+  if (active !== 'mymix'){ el.classList.add('hidden'); el.innerHTML = ''; if (inp) inp.disabled = false; return; }
+  const chats = [...myMixChats];
+  if (chats.length === 0){ el.classList.add('hidden'); el.innerHTML = ''; if (inp){ inp.disabled = true; inp.placeholder = 'Add a chat to post here'; } return; }
+  if (!myboxTarget || !myMixChats.has(myboxTarget)) myboxTarget = chats[0];
+  if (inp) inp.disabled = false;
+  el.innerHTML = `<span class="mbt-label">to:</span>` + chats.map(id => { const r = ROOMS.find(x => x.id === id); return `<button class="mbt-chip${id === myboxTarget ? ' active' : ''}" style="--c:${r.ac}" onclick="setMyBoxTarget('${id}')">${r.label}</button>`; }).join('');
+  el.classList.remove('hidden');
+  if (inp){ const r = ROOMS.find(x => x.id === myboxTarget); inp.placeholder = r ? `Type to ${r.label}…` : 'Type…'; }
+}
+function setMyBoxTarget(id){ myboxTarget = id; renderMyBoxTargets(); const inp = document.getElementById('chat-input'); if (inp) inp.focus(); }
+function refreshMyBox(){
+  saveMyBoxSources();
+  const m = document.getElementById('sourcesModal');
+  if (m && !m.classList.contains('hidden')) renderSourcesPicker();
+  if (active === 'mymix') renderChat(); // re-renders feed + bar + targets
+}
+function toggleMyBoxChat(id){ if (myMixChats.has(id)){ myMixChats.delete(id); if (myboxTarget === id) myboxTarget = null; } else myMixChats.add(id); refreshMyBox(); }
+function toggleMyBoxBot(n){ if (myMixBots.has(n)) myMixBots.delete(n); else myMixBots.add(n); refreshMyBox(); }
+function addMyBoxChat(id){ myMixChats.add(id); refreshMyBox(); }
+function addMyBoxBot(n){ myMixBots.add(n); refreshMyBox(); }
+function openSourcesPicker(){
+  const s = document.getElementById('sourcesSearch'); if (s) s.value = '';
+  renderSourcesPicker();
+  document.getElementById('sourcesModal').classList.remove('hidden');
+}
+function closeSourcesPicker(){ document.getElementById('sourcesModal').classList.add('hidden'); }
+function renderSourcesPicker(){
+  const body = document.getElementById('sourcesBody');
+  if (!body) return;
+  const q = (document.getElementById('sourcesSearch')?.value || '').trim().toLowerCase();
+  const html = ROOMS.filter(r => r.id !== 'mymix').map(room => {
+    const id = room.id, ac = room.ac, label = room.label;
+    const labelMatch = !q || label.toLowerCase().includes(q);
+    let rows = '';
+    if (labelMatch || 'channel chat'.includes(q)){
+      const on = myMixChats.has(id);
+      rows += `<div class="mix-pick-row ${on ? 'added' : ''}" onclick="toggleMyBoxChat('${id}')"><span class="mix-pick-title">&#128172; Channel chat</span><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
+    }
+    getChannelBots(id).filter(n => labelMatch || n.toLowerCase().includes(q)).forEach(n => {
+      const on = myMixBots.has(n);
+      rows += `<div class="mix-pick-bot ${on ? 'added' : ''}" onclick="toggleMyBoxBot('${n}')"><img src="${getTroll(n,true).src}" /><div class="mix-pick-bot-main"><div class="mix-pick-bot-name">@${n.toUpperCase()}</div></div><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
+    });
+    if (!rows) return '';
+    return `<div class="mix-pick-group"><div class="mix-pick-box" style="color:${ac};border-color:${ac}">${label}</div>${rows}</div>`;
+  }).join('');
+  body.innerHTML = html || `<div class="mix-pick-empty">No channels or bots match “${q}”.</div>`;
+}
 function renderChat(){
+  renderMyBoxBar();      // self-hide unless active My Box with sources
+  renderMyBoxTargets();
   if (active === 'mymix') {
     const feedEl = document.getElementById('chat-feed');
-    if (myMixBots.size === 0) { renderMyMixEmpty(feedEl); return; }
+    if (myBoxEmpty()) { renderMyMixEmpty(feedEl); return; }
   }
   const msgs = active === 'mymix' ? buildMyMix() : (CHATS[active]||CHATS.btc);
   let html='';
@@ -3579,6 +3808,7 @@ function renderRight(){
   const tmp = document.createElement('div');
   tmp.innerHTML = panelHtml;
   const blocks = Array.from(tmp.querySelectorAll('.r-block'));
+  blocks.forEach((b, i) => b.dataset.rawIdx = i); // raw getPanel index (matches getBoxWidgets); survives reorder below
   // apply saved order
   const saved = getWidgetOrder(active);
   if(saved && saved.length === blocks.length) {
@@ -3597,6 +3827,13 @@ function renderRight(){
   container.id = 'widgets-container';
   blocks.forEach(b => container.appendChild(b));
   rightEl.appendChild(container);
+  // Mark widgets already pulled into My Box so their "+" reads as added
+  const inMix = getMyMixWidgets();
+  container.querySelectorAll('.r-block').forEach(b => {
+    const idx = parseInt(b.dataset.rawIdx, 10);
+    const add = b.querySelector('.r-add');
+    if (add && inMix.some(w => w.box === active && w.idx === idx)) setMixAddState(add, true);
+  });
   rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="document.getElementById('widgetModal').classList.remove('hidden')">CREATE WIDGET +</button></div>`);
   updateArrowStates();
   initVibes();
@@ -3678,14 +3915,27 @@ function removeMyMixWidget(pos){
   saveMyMixWidgets(cur);
   renderRight();
 }
-// ----- Picker modal -----
-function openMixPicker(){
+// ----- Picker modal (two tabs: widgets + bots) -----
+let mixPickerTab = 'widgets';
+function setMixTab(tab){
+  mixPickerTab = (tab === 'bots') ? 'bots' : 'widgets';
+  const tw = document.getElementById('mixTabWidgets'), tb = document.getElementById('mixTabBots');
+  if (tw) tw.classList.toggle('active', mixPickerTab === 'widgets');
+  if (tb) tb.classList.toggle('active', mixPickerTab === 'bots');
+  const s = document.getElementById('mixPickerSearch');
+  if (s) s.placeholder = mixPickerTab === 'bots'
+    ? 'Search bots — e.g. news, jokes, trivia'
+    : 'Search widgets or boxes — e.g. sol, news, score';
+  renderMixPicker();
+}
+function openMixPicker(tab){
   const s = document.getElementById('mixPickerSearch');
   if (s) s.value = '';
-  renderMixPicker();
+  setMixTab(tab || 'widgets'); // sets active tab + placeholder, then renders
   document.getElementById('mixWidgetModal').classList.remove('hidden');
 }
 function renderMixPicker(){
+  if (mixPickerTab === 'bots') return renderMixBots();
   const body = document.getElementById('mixPickerBody');
   const current = getMyMixWidgets();
   const isAdded = (box, idx) => current.some(w => w.box === box && w.idx === idx);
@@ -3714,6 +3964,52 @@ function toggleMixWidget(box, idx){
   saveMyMixWidgets(cur);
   renderMixPicker();
   if (active === 'mymix') renderRight();
+}
+// Bots tab: add/remove a bot from My Box's personal feed (same set the bot card uses)
+function renderMixBots(){
+  const body = document.getElementById('mixPickerBody');
+  const q = (document.getElementById('mixPickerSearch')?.value || '').trim().toLowerCase();
+  const names = (typeof BOT_INFO !== 'undefined') ? Object.keys(BOT_INFO) : [];
+  const html = names.filter(n => {
+    if (!q) return true;
+    return n.toLowerCase().includes(q) || (botInfoFor(n).desc || '').toLowerCase().includes(q);
+  }).map(n => {
+    const added = myMixBots.has(n);
+    const info = botInfoFor(n);
+    return `<div class="mix-pick-bot ${added ? 'added' : ''}" onclick="toggleMixBot('${n}')">`
+      + `<img src="${getTroll(n, true).src}" alt="" />`
+      + `<div class="mix-pick-bot-main"><div class="mix-pick-bot-name">@${n.toUpperCase()}</div><div class="mix-pick-bot-desc">${info.desc}</div></div>`
+      + `<span class="mix-pick-act">${added ? '✓ ADDED' : '+ ADD'}</span>`
+      + `</div>`;
+  }).join('');
+  body.innerHTML = html || `<div class="mix-pick-empty">No bots match “${q}”.</div>`;
+}
+function toggleMixBot(name){
+  if (myMixBots.has(name)) myMixBots.delete(name); else myMixBots.add(name);
+  saveMyBoxSources();
+  renderMixBots();
+  if (active === 'mymix') renderChat();
+}
+
+// Toggle a widget's "+"/"−" button look + tooltip
+function setMixAddState(el, added){
+  el.innerHTML = added ? ADD_MINUS_SVG : ADD_PLUS_SVG;
+  el.dataset.tip = added ? 'Remove from My Box' : 'Add to My Box';
+  el.classList.toggle('added', added);
+}
+// "+/−" on a widget inside a regular box → pull that widget into / out of the My Box terminal.
+// Uses the block's raw getPanel index (data-rawIdx) so it matches getBoxWidgets/buildMixWidget.
+function addWidgetToMyBox(el){
+  const block = el.closest('.r-block');
+  if (!block) return;
+  const idx = parseInt(block.dataset.rawIdx, 10);
+  if (isNaN(idx)) return;
+  const box = active;
+  const cur = getMyMixWidgets();
+  const at = cur.findIndex(w => w.box === box && w.idx === idx);
+  if (at >= 0) cur.splice(at, 1); else cur.push({ box, idx });
+  saveMyMixWidgets(cur);
+  setMixAddState(el, at < 0); // was absent → now added (show "−"); else removed (show "+")
 }
 
 function moveWidget(arrowEl, dir) {
@@ -3958,8 +4254,10 @@ setRoom('general');
 // === AUTH STATE MACHINE ===
 // States: 'welcome' | 'anon' | 'auth'
 let authState = 'welcome';
+let crtScanArmed = false; // set true on a real login → scan plays once on next Boxes entry
 
-function setAuthState(state) {
+function setAuthState(state, opts) {
+  const prev = authState;
   authState = state;
   const welcome = document.getElementById('welcomeOverlay');
   const profileAuth = document.getElementById('profileAuth');
@@ -3988,6 +4286,20 @@ function setAuthState(state) {
     createBoxBtn.classList.add('hidden');
   }
 
+  // Remember the login so a refresh keeps the user in (skips welcome → previews only, no scan).
+  try {
+    if (state === 'anon' || state === 'auth') localStorage.setItem('tb_authState', state);
+    else localStorage.removeItem('tb_authState');
+  } catch (e) {}
+
+  // The CRT scan plays exactly ONCE — right after a real registration/login (welcome → in),
+  // never on a refresh-restore or a plain tab switch. Mobile only.
+  const isRestore = !!(opts && opts.restore);
+  if (!isRestore && prev === 'welcome' && (state === 'anon' || state === 'auth')) {
+    crtScanArmed = true;
+    if (typeof isMobile === 'function' && isMobile()) setMobileView('boxes'); // land on Boxes → scan fires
+  }
+
   // First time entering the app (anon or auth) → kick off the onboarding tour
   if ((state === 'anon' || state === 'auth') && typeof startTour === 'function') startTour(false);
 }
@@ -4003,23 +4315,29 @@ function sendChatMessage() {
   const inp = document.getElementById('chat-input');
   const text = inp.value.trim();
   if (!text) return;
+  // In My Box, route the message to the selected addressee channel (chats only).
+  let target = active;
+  if (active === 'mymix'){
+    if (!myboxTarget || !myMixChats.has(myboxTarget)) return; // no chat to post to
+    target = myboxTarget;
+  }
   const now = new Date();
   const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase().replace(' ','');
-  const tag = (active==='general'||active==='mymix') ? '#'+active.toUpperCase() : '';
-  if (!CHATS[active]) CHATS[active] = [];
+  const tag = (target==='general') ? '#'+target.toUpperCase() : '';
+  if (!CHATS[target]) CHATS[target] = [];
   // Attach reply context if composing a reply in this box
-  const replyTo = (replyState && replyState.box === active)
+  const replyTo = (replyState && replyState.box === target)
     ? { idx: replyState.idx, author: replyState.author, preview: replyState.preview }
     : null;
   const msg = { tag, author: 'ANONYMOUS', bot: false, text, time, _ts: Date.now() };
   if (replyTo) msg.replyTo = replyTo;
-  CHATS[active].push(msg);
+  CHATS[target].push(msg);
   inp.value = '';
   cancelReply();
   renderChat();
   // best-effort sync to Firebase (won't block UI)
   try {
-    fetch(`${FB_URL}/rooms/${active}/messages.json`, { method: 'POST', body: JSON.stringify({ author: 'ANONYMOUS', text, time, tag, ts: msg._ts, replyTo }), headers: {'Content-Type':'application/json'} }).catch(()=>{});
+    fetch(`${FB_URL}/rooms/${target}/messages.json`, { method: 'POST', body: JSON.stringify({ author: 'ANONYMOUS', text, time, tag, ts: msg._ts, replyTo }), headers: {'Content-Type':'application/json'} }).catch(()=>{});
   } catch(e) {}
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
 }
@@ -4353,6 +4671,7 @@ document.getElementById('peEditFromModal').addEventListener('click', openProfile
     const txt = el.getAttribute('data-tip');
     if (!txt) return;
     tip.textContent = txt;
+    tip.classList.toggle('tip-lg', el.classList.contains('r-add')); // larger tip for the widget "+"
     tip.style.borderColor = getComputedStyle(el).borderTopColor; // match badge accent
     tip.style.display = 'block';
     const r = el.getBoundingClientRect();
@@ -4371,6 +4690,7 @@ document.getElementById('peEditFromModal').addEventListener('click', openProfile
 
 // Init
 loadMyProfile();
+loadMyBoxSources(); // restore followed channel chats + bots
 applyMyProfile(myProfile);
 
 // === ONBOARDING TOUR ===
@@ -4608,6 +4928,7 @@ document.getElementById('botMixBtn').addEventListener('click', () => {
   if (!currentBotName) return;
   if (myMixBots.has(currentBotName)) myMixBots.delete(currentBotName);
   else myMixBots.add(currentBotName);
+  saveMyBoxSources();
   syncBotButtons();
   if (active === 'mymix') renderChat();
 });
@@ -4727,8 +5048,10 @@ document.getElementById('mobileSettingsBack').addEventListener('click', () => {
   observer.observe(document.getElementById('welcomeOverlay'), { attributes: true, attributeFilter: ['class'] });
 })();
 
-// Start in welcome state
-setAuthState('welcome');
+// Restore a previous login if there is one (refresh keeps the user in → previews only, no scan);
+// otherwise show the welcome screen. {restore:true} prevents the CRT scan from arming here.
+const _savedAuth = (function(){ try { return localStorage.getItem('tb_authState'); } catch (e) { return null; } })();
+setAuthState(_savedAuth === 'auth' || _savedAuth === 'anon' ? _savedAuth : 'welcome', { restore: true });
 
 // Create Box modal
 const createModal = document.getElementById('createModal');
@@ -4907,8 +5230,9 @@ function setMobileView(view) {
     let on;
     if (view === 'profile') on = (dv === 'profile');
     else if (view === 'boxes') on = (dv === 'boxes');
+    else if (view === 'mybox') on = (dv === 'mybox'); // explicit — active='mymix' is set later in this fn
     else {
-      // chat / terminal / mybox are sub-views of a box context →
+      // chat / terminal are sub-views of a box context →
       // highlight My Box when the active room is the personal box, otherwise Boxes
       on = (active === 'mymix') ? (dv === 'mybox') : (dv === 'boxes');
     }
@@ -4917,7 +5241,8 @@ function setMobileView(view) {
 
   if (view === 'boxes') {
     leftPanel.classList.add('mobile-active');
-    animateRoomPreviews(); // type in the live message previews on entry
+    if (crtScanArmed){ crtScanArmed = false; crtBootBoxes(); } // once, right after login
+    else { _bootStop(); animateRoomPreviews(); }               // otherwise just the preview typewriter (clear any leftover scan)
   } else if (view === 'chat') {
     unmountBoxTerminal();
     centerPanel.classList.add('mobile-active');
@@ -5018,10 +5343,11 @@ renderRooms = function() {
   }
 };
 
-// Init mobile on load
+// Init mobile on load — render first, THEN enter Boxes, so the boot-in (or live
+// previews) animates against the final rows instead of being wiped by a re-render.
 if (isMobile()) {
-  setMobileView('boxes');
   renderRooms();
+  setMobileView('boxes');
 }
 
 // Handle resize
