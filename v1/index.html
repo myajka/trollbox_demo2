@@ -28,6 +28,12 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 .left { background: #0a0a0a; border: 1px solid #333; display: flex; flex-direction: column; min-height: 0; }
+/* Safari 18.2+ disables ::-webkit-scrollbar when scrollbar-width/color have a non-auto value.
+   In WebKit (Chrome+Safari) reset those to auto so our ::-webkit-scrollbar styles apply;
+   Firefox (no ::-webkit-scrollbar support) keeps using scrollbar-width/color. */
+@supports selector(::-webkit-scrollbar){
+  * { scrollbar-width: auto !important; scrollbar-color: auto !important; }
+}
 .left-rooms { flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .left-rooms:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .left-rooms::-webkit-scrollbar { width: 6px; background: transparent; }
