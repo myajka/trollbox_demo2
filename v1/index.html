@@ -15,9 +15,9 @@
 </style>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; }
+html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; }
 body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%); }
-.app { display: grid; grid-template-columns: 360px 1fr 360px; height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Space Mono', monospace; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 8px; gap: 8px; }
+.app { display: grid; grid-template-columns: 360px 1fr 360px; height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Roboto', sans-serif; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 8px; gap: 8px; }
 .app::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px); }
 .app::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%); animation: flicker 3s steps(4) infinite; }
 @keyframes flicker { 0%,100% { opacity: 1; } 10% { opacity: 0.95; } 30% { opacity: 1; } 45% { opacity: 0.97; } 60% { opacity: 1; } 80% { opacity: 0.94; } 90% { opacity: 1; } }
@@ -46,10 +46,10 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-preview.typing .rp-text::after { content: ''; display: inline-block; width: 5px; height: 9px; background: #8a8a8a; margin-left: 2px; vertical-align: -1px; animation: previewBlink 0.6s steps(1) infinite; }
 @keyframes previewBlink { 50% { opacity: 0; } }
 /* App version tag in the sidebar header — mobile only */
-.app-version { display: none; font-family: 'Space Mono', monospace; font-size: 11px; color: #555; letter-spacing: 0.05em; }
+.app-version { display: none; font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; letter-spacing: 0.05em; }
 .room-tag { font-size: 11px; color: #888; }
 .room-user-icon { fill: #555; }
-.room-count { font-size: 12px; color: #555; font-family: 'Space Mono', monospace; }
+.room-count { font-size: 12px; color: #555; font-family: 'Roboto', sans-serif; }
 .room-item.active .room-count { color: #777; }
 /* My Box — distinct pinned button at the top of the sidebar (desktop) */
 .mybox-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 24px); box-sizing: border-box; margin: 10px 12px; padding: 12px; background: transparent; border: 1px solid #3a3a3a; color: #e0e0e0; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
@@ -84,14 +84,14 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-name { color: #4ab8e8; font-size: 12px; font-family: 'CHNOPixelCodePro', monospace; }
 .profile-status { font-size: 12px; color: #ddd; margin-top: 2px; font-family: 'Roboto', sans-serif; }
 .profile-btns { display: flex; gap: 6px; margin-top: 10px; }
-.pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Space Mono', monospace; cursor: pointer; text-align: center; }
+.pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Roboto', sans-serif; cursor: pointer; text-align: center; }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
 .section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 44px; box-sizing: border-box; flex-shrink: 0; }
 .search-create-row { display: flex; gap: 6px; padding: 7px 10px; border-top: 1px solid #333; flex-shrink: 0; align-items: stretch; }
 .search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; position: relative; }
 .search-cursor { display: none; position: absolute; width: 9px; height: 14px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
 .search-box.focused .search-cursor { display: block; }
-.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; caret-color: transparent; }
+.search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; width: 100%; caret-color: transparent; }
 .search-box input::placeholder { color: #555; }
 
 /* CENTER */
@@ -114,10 +114,15 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .chat-feed:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
 .chat-feed:hover::-webkit-scrollbar-track { background: #0a0a0a; }
 .msg { display: grid; grid-template-columns: 44px 1fr; padding: 3px 14px; gap: 0; }
-.msg.has-tag { grid-template-columns: auto 1fr; }
+/* General / My Box: box tag + avatar float at the start; message text flows full-width (no indent on wrap) */
+.msg.has-tag { display: block; }
+.msg.has-tag::after { content: ''; display: block; clear: both; }
+.msg.has-tag .msg-tag { float: left; padding: 2px 6px 0 0; }
+.msg.has-tag .msg-body { display: block; }
+.msg.has-tag .msg-troll { float: left; }
 .msg:hover { background: #111; }
-.msg-tag { font-size: 12px; color: #666; text-align: left; padding-right: 8px; padding-top: 1px; font-family: 'CHNOPixelCodePro', monospace; white-space: nowrap; }
-.msg-tag.active-tag { color: var(--ac, #8CE45A); }
+.msg-tag { font-size: 12px; color: #e0e0e0; text-align: left; padding-right: 8px; padding-top: 1px; font-family: 'CHNOPixelCodePro', monospace; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.03em; }
+.msg-tag-hash { font-weight: 700; }
 .msg-body { display: grid; grid-template-columns: 28px 1fr; }
 .msg-body-content { display: inline; }
 .msg-troll { width: 24px; height: 24px; margin-right: 4px; display: block; grid-row: 1; cursor: pointer; }
@@ -131,7 +136,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .sys-msg { text-align: center; padding: 4px 14px; font-size: 13px; color: #444; font-family: 'Roboto', sans-serif; font-weight: 300; }
 .sys-msg .msg-time { margin-left: 6px; }
 .msg-translate { display: inline; }
-.msg-translate .tr-icon { display: inline-block; vertical-align: middle; margin: 0 6px; opacity: 0.45; }
+.msg-translate .tr-icon { display: inline-block; vertical-align: middle; margin: 0 6px 2px; color: #8CE45A; opacity: 0.5; }
 .msg-translate .tr-text { color: #e0e0e0; display: inline; font-family: 'Roboto', sans-serif; font-size: 14px; }
 .msg.has-tr .msg-text { color: #666; }
 .date-sep::before, .date-sep::after { content: ''; position: absolute; top: 50%; height: 1px; background: #1e1e1e; width: 30%; }
@@ -142,7 +147,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .chat-input:focus { border-color: #333; }
 @keyframes crt-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 .crt-cursor { display: none; position: absolute; width: 9px; height: 16px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
-.send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 0 12px; font-family: 'Space Mono', monospace; font-size: 18px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 0 12px; font-family: 'Roboto', sans-serif; font-size: 18px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; }
 .send-btn:hover { color: #e0e0e0; }
 .announce { background: #111; border-bottom: 1px solid #2a2a2a; padding: 6px 14px; font-size: 13px; color: #777; display: flex; gap: 6px; align-items: center; font-family: 'Roboto', sans-serif; }
 
@@ -164,24 +169,24 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .live-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #3ddc84; margin-right: 4px; animation: blink 1.2s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .big-num { font-size: 24px; color: #e0e0e0; letter-spacing: 0.02em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
-.small-change { font-size: 12px; padding: 1px 5px; border-radius: 0; font-family: 'Space Mono', monospace; }
+.small-change { font-size: 12px; padding: 1px 5px; border-radius: 0; font-family: 'Roboto', sans-serif; }
 .up { background: #1a2e1a; color: #3ddc84; }
 .down { background: #2e1a1a; color: #ff5555; }
 .poll-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
-.poll-lbl { font-size: 12px; color: #bbb; min-width: 56px; font-family: 'Space Mono', monospace; }
+.poll-lbl { font-size: 12px; color: #bbb; min-width: 56px; font-family: 'Roboto', sans-serif; }
 .bar-bg { flex: 1; height: 6px; background: #161616; border-radius: 0; overflow: hidden; }
 .bar-fg { height: 100%; background: var(--ac, #8CE45A); border-radius: 0; }
-.bar-pct { font-size: 12px; color: #bbb; min-width: 28px; text-align: right; font-family: 'Space Mono', monospace; }
+.bar-pct { font-size: 12px; color: #bbb; min-width: 28px; text-align: right; font-family: 'Roboto', sans-serif; }
 .news-item { padding: 5px 0; border-bottom: 1px solid #2a2a2a; }
 .news-item:last-child { border-bottom: none; }
 .news-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--ac, #8CE45A); margin-right: 5px; vertical-align: middle; }
 .news-text { font-size: 13px; color: #ccc; line-height: 1.5; font-family: 'Roboto', sans-serif; }
-.news-time { font-size: 11px; color: #555; margin-top: 1px; font-family: 'Space Mono', monospace; }
+.news-time { font-size: 11px; color: #555; margin-top: 1px; font-family: 'Roboto', sans-serif; }
 .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .mood-btn { padding: 6px 0; font-size: 10px; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; cursor: pointer; border: 1px solid #333; background: #111; color: #999; border-radius: 0; text-align: center; letter-spacing: 0.02em; position: relative; overflow: hidden; transition: border-color 0.15s, color 0.15s, background 0.15s; }
 .mood-btn:hover { border-color: var(--ac); color: var(--ac); }
 .mood-btn.sel { border-color: var(--ac); color: var(--ac); background: #141414; }
-.mood-btn .mood-pct { display: inline; font-size: 11px; color: #bbb; margin-left: 6px; font-family: 'Space Mono', monospace; }
+.mood-btn .mood-pct { display: inline; font-size: 11px; color: #bbb; margin-left: 6px; font-family: 'Roboto', sans-serif; }
 .vibe-emoji { position: fixed; pointer-events: none; font-size: 24px; z-index: 99999; animation: vibeFloat 1.2s ease-out forwards; }
 @keyframes vibeFloat {
   0% { opacity: 1; transform: translateY(0) scale(1); }
@@ -195,11 +200,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   60% { opacity: 0.7; transform: translate(calc(var(--vx) * 1.5), calc(var(--vy) * 1.5)) scale(3) rotate(360deg); }
   100% { opacity: 0; transform: translate(calc(var(--vx) * 2), calc(var(--vy) * 2)) scale(1) rotate(540deg); }
 }
-.score-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #2a2a2a; font-size: 12px; font-family: 'Space Mono', monospace; }
+.score-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #2a2a2a; font-size: 12px; font-family: 'Roboto', sans-serif; }
 .score-row:last-child { border-bottom: none; }
 .score-val { color: #e0e0e0; letter-spacing: 0.05em; }
 .live-badge { font-size: 11px; color: #ff5555; }
-.tag-pill { display: inline-block; font-size: 12px; padding: 2px 6px; border: 1px solid #333; border-radius: 0; color: #999; margin: 2px; cursor: pointer; font-family: 'Space Mono', monospace; }
+.tag-pill { display: inline-block; font-size: 12px; padding: 2px 6px; border: 1px solid #333; border-radius: 0; color: #999; margin: 2px; cursor: pointer; font-family: 'Roboto', sans-serif; }
 .tag-pill:hover { border-color: var(--ac); color: var(--ac); }
 .online-row { display: flex; justify-content: space-between; align-items: center; }
 .user-grid { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 6px; }
@@ -214,8 +219,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .trend-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #2a2a2a; font-size: 12px; }
 .trend-row:last-child { border-bottom: none; }
 .trend-name { color: #ccc; font-family: 'Roboto', sans-serif; font-size: 13px; }
-.trend-val { color: var(--ac); font-family: 'Space Mono', monospace; font-size: 12px; }
-.create-box-btn { width: 38px; min-width: 38px; height: 38px; padding: 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'Space Mono', monospace; font-size: 20px; line-height: 38px; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; }
+.trend-val { color: var(--ac); font-family: 'Roboto', sans-serif; font-size: 12px; }
+.create-box-btn { width: 38px; min-width: 38px; height: 38px; padding: 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'Roboto', sans-serif; font-size: 20px; line-height: 38px; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; }
 .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 .create-widget-wrap { padding: 10px 12px; }
 .create-widget-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
@@ -283,17 +288,43 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .res-seg { width: 100%; background-image: repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, rgba(0,0,0,0.85) 1px, rgba(0,0,0,0.85) 2px); }
 .res-axis { display: flex; justify-content: space-between; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #555; letter-spacing: 0.04em; padding: 0 2px; margin-top: 2px; }
 
-.modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; }
-.modal { background: #111; border: 1px solid #444; border-radius: 0; padding: 20px; width: 300px; font-family: 'Space Mono', monospace; }
+.modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: flex-start; justify-content: center; z-index: 10000; overflow-y: auto; padding: 26px 16px; box-sizing: border-box; }
+/* Panel centers when it fits; when too tall it sticks to the top (26px) and the wrap scrolls */
+.modal-wrap > * { margin-top: auto; margin-bottom: auto; }
+.modal { background: #111; border: 1px solid #444; border-radius: 0; padding: 20px; width: 300px; font-family: 'Roboto', sans-serif; }
 .modal-title { font-size: 14px; color: #fff; letter-spacing: 0.08em; margin: 0 0 16px; text-transform: uppercase; font-family: 'CHNOPixelCodePro', monospace; }
 .modal-rules { font-size: 11px; color: #555; margin-top: -8px; margin-bottom: 14px; font-family: 'Roboto', sans-serif; }
 .modal-rules a { color: var(--ac); text-decoration: none; }
 .modal-rules a:hover { text-decoration: underline; color: #fff; }
-.modal label { font-size: 12px; color: #777; display: block; margin-bottom: 5px; letter-spacing: 0.04em; font-family: 'CHNOPixelCodePro', monospace; }
-.modal input, .modal select { width: 100%; background: #0a0a0a; border: 1px solid #444; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; padding: 8px 10px; border-radius: 0; box-sizing: border-box; margin-bottom: 12px; outline: none; }
+.modal label { font-size: 13px; color: #e0e0e0; display: block; margin-bottom: 6px; letter-spacing: 0.08em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
+.modal input, .modal select { width: 100%; background: #0a0a0a; border: 1px solid #444; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; padding: 8px 10px; border-radius: 0; box-sizing: border-box; margin-bottom: 12px; outline: none; }
 .modal input:focus, .modal select:focus { border-color: var(--ac); }
 .modal input::placeholder { color: #444; }
 .modal select option { background: #111; color: #e0e0e0; }
+/* Create-box accent colour picker */
+.box-swatches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 12px; }
+.box-swatch { aspect-ratio: 1 / 1; border: 2px solid transparent; border-radius: 0; cursor: pointer; padding: 0; box-sizing: border-box; transition: transform .1s; }
+.box-swatch:hover { transform: scale(1.08); }
+.box-swatch.active { border-color: #fff; box-shadow: inset 0 0 0 3px #111; }
+.boxname-field { position: relative; margin-bottom: 12px; }
+.boxname-field input { margin-bottom: 0; padding-left: 26px; }
+.boxname-hash { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--ac, #8CE45A); font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700; pointer-events: none; }
+#createModal #boxName { color: #e0e0e0; font-weight: 700; }
+.reactions-field { position: relative; margin-bottom: 12px; }
+.reactions-field input { margin-bottom: 0; }
+.reactions-example { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); pointer-events: none; filter: grayscale(1); opacity: 0.4; font-size: 13px; letter-spacing: 0.06em; }
+/* Custom dropdown (replaces native select — controllable arrow gap & list width) */
+.modal-select { position: relative; width: 100%; box-sizing: border-box; background: #0a0a0a; border: 1px solid #444; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; padding: 8px 32px 8px 10px; margin-bottom: 12px; cursor: pointer; user-select: none; outline: none; }
+.modal-select:focus, .modal-select.open { border-color: var(--ac, #8CE45A); }
+.ms-value { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #888; pointer-events: none; transition: transform .15s, color .15s; }
+.modal-select:hover .ms-arrow, .modal-select.open .ms-arrow { color: var(--ac, #8CE45A); }
+.modal-select.open .ms-arrow { transform: translateY(-50%) rotate(180deg); }
+.ms-list { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 3px); background: #0a0a0a; border: 1px solid #444; z-index: 20; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+.modal-select.open .ms-list { display: block; }
+.ms-opt { padding: 9px 10px; color: #cfcfcf; white-space: nowrap; }
+.ms-opt:hover { background: #161616; color: var(--ac, #8CE45A); }
+.ms-opt.selected { color: var(--ac, #8CE45A); }
 .modal-row { display: flex; gap: 8px; margin-top: 4px; }
 .modal-btn { flex: 1; padding: 9px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; border-radius: 0; cursor: pointer; border: 1px solid; letter-spacing: 0.04em; text-transform: uppercase; }
 .modal-btn.cancel { background: transparent; border-color: #2a2a2a; color: #777; }
@@ -301,6 +332,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .modal-btn.confirm { background: var(--ac, #8CE45A); border-color: var(--ac, #8CE45A); color: #0a0a0a; font-weight: 700; }
 .modal-btn.confirm:hover { filter: brightness(1.2); color: #000; }
 .modal-hint { font-size: 11px; color: #555; margin-top: -8px; margin-bottom: 12px; font-family: 'Roboto', sans-serif; }
+.modal-note { font-size: 11px; color: #666; margin-top: 12px; line-height: 1.5; font-family: 'Roboto', sans-serif; text-align: center; }
+#createModal .modal-btn.cancel { flex: 0 0 auto; padding-left: 22px; padding-right: 22px; }
+#createModal .modal-btn.confirm { flex: 1; }
 .modal-wrap.hidden { display: none !important; }
 /* Profile & settings are not tied to a box — pin their accent to the theme's,
    not the last-visited box colour that setRoom() writes onto #root/body. */
@@ -310,10 +344,42 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 [data-crt-theme="aurora"] #profileModal, [data-crt-theme="aurora"] #profileEditModal, [data-crt-theme="aurora"] #settingsModal, [data-crt-theme="aurora"] #mobileSettingsView, [data-crt-theme="aurora"] #mobileProfileView { --ac: #FCD34D; }
 
 /* PROFILE MODAL (desktop) */
-.profile-modal { background: #111; border: 1px solid #444; width: 340px; font-family: 'Space Mono', monospace; display: flex; flex-direction: column; }
-.profile-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #333; }
+.profile-modal { background: #111; border: 1px solid #444; width: 380px; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; }
+/* Desktop: profile & edit = ONE window, horizontal — big preview on the left, content on the
+   right. Identical box for both (view↔edit swaps only the right content, like "next screen"). */
+#profileModal .profile-modal, #profileEditModal .pe-modal { width: 640px; height: min(565px, calc(100vh - 60px)); }
+.pm-cols, #profileEditModal .pe-cols { display: flex; flex: 1; min-height: 0; }
+#profileModal .profile-modal-avatar, #profileEditModal .pe-preview {
+  width: 230px; flex-shrink: 0; box-sizing: border-box; gap: 14px;
+  align-items: center; justify-content: center; padding: 20px;
+  border-right: 1px solid #333; border-bottom: none;
+}
+#profileModal .profile-modal-avatar img, #profileEditModal .pe-preview-troll { width: 150px; height: 150px; }
+#profileModal .profile-modal-avatar .profile-modal-nick, #profileEditModal .pe-preview-nick { font-size: 19px; text-align: center; word-break: break-word; }
+.pm-right, #profileEditModal .pe-right { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+#profileModal .pm-right .profile-modal-body, #profileEditModal .pe-right .pe-body { flex: 1; min-height: 0; overflow-y: auto; }
+.profile-modal-row-value.profile-bio-value { flex: 1; min-width: 0; text-align: right; padding-left: 16px; font-family: 'Roboto', sans-serif; font-weight: 300; white-space: normal; word-break: break-word; line-height: 1.45; }
+.profile-modal-row:has(.profile-bio-value) { align-items: flex-start; }
+/* Scrollbar styled like the rest of the UI (thin, dark thumb, transparent track) */
+#profileModal .profile-modal-body, #profileEditModal .pe-body { scrollbar-width: thin; scrollbar-color: #2a2a2a transparent; }
+#profileModal .profile-modal-body::-webkit-scrollbar, #profileEditModal .pe-body::-webkit-scrollbar { width: 6px; background: transparent; }
+#profileModal .profile-modal-body::-webkit-scrollbar-track, #profileEditModal .pe-body::-webkit-scrollbar-track { background: transparent; }
+#profileModal .profile-modal-body::-webkit-scrollbar-thumb, #profileEditModal .pe-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 0; }
+#profileModal .profile-modal-body:hover::-webkit-scrollbar-thumb, #profileEditModal .pe-body:hover::-webkit-scrollbar-thumb { background: #3a3a3a; }
+/* Multi-layer colour wash behind the troll preview: tint emanates only from the TOP and
+   BOTTOM frame edges and fades to clear toward the centre (under the troll), in the troll colour */
+#pePreview, #profileModal .profile-modal-avatar, #mobileProfileContent .profile-modal-avatar {
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--troll-glow, transparent) 12%, transparent) 0%, transparent 25%),
+    linear-gradient(to top,    color-mix(in srgb, var(--troll-glow, transparent) 9%, transparent) 0%, transparent 28%),
+    radial-gradient(130% 50% at 50% -14%, color-mix(in srgb, var(--troll-glow, transparent) 9%, transparent), transparent 48%),
+    radial-gradient(130% 46% at 50% 114%, color-mix(in srgb, var(--troll-glow, transparent) 6%, transparent), transparent 46%);
+}
+/* Mobile profile: horizontal divider under the troll+nick so the wash also reads off a frame edge */
+#mobileProfileContent .profile-modal-avatar { border-bottom: 1px solid #333; padding-bottom: 18px; }
+.profile-modal-head { display: flex; justify-content: space-between; align-items: center; height: 57px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; border-bottom: 1px solid #333; }
 .profile-modal-head span { font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; }
-.profile-modal-close { background: none; border: none; color: #555; font-size: 28px; cursor: pointer; font-family: 'Space Mono', monospace; padding: 0; line-height: 1; }
+.profile-modal-close { background: none; border: none; color: #555; font-size: 28px; cursor: pointer; font-family: 'Roboto', sans-serif; padding: 0; line-height: 1; }
 .profile-modal-close:hover { color: #fff; }
 .profile-modal-avatar { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; gap: 12px; }
 .profile-modal-avatar img { width: 80px; height: 80px; image-rendering: pixelated; }
@@ -323,7 +389,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-divider { height: 1px; background: #333; margin: 12px 0; }
 .profile-modal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
 .profile-modal-row-label { font-size: 12px; color: #888; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; }
-.profile-modal-row-value { font-size: 12px; color: #e0e0e0; font-family: 'Space Mono', monospace; }
+.profile-modal-row-value { font-size: 12px; color: #e0e0e0; font-family: 'Roboto', sans-serif; }
 .profile-modal-row-value a { color: var(--ac, #8CE45A); text-decoration: none; }
 .profile-modal-row-value a:hover { text-decoration: underline; }
 .profile-modal-row-value .copy-btn { background: none; border: none; color: #555; cursor: pointer; font-size: 14px; margin-left: 6px; padding: 0; }
@@ -334,15 +400,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-stat-label { font-size: 10px; color: #666; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.04em; }
 .profile-modal-badges { display: flex; gap: 6px; padding: 8px 0; flex-wrap: wrap; }
 .profile-badge { position: relative; padding: 4px 10px; border: 1px solid #333; font-size: 10px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; cursor: default; }
-.profile-badge[data-tip]:hover::after {
-  content: attr(data-tip);
-  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-  background: #0a0a0a; border: 1px solid var(--ac, #8CE45A); color: #cfcfcf;
-  font-family: 'Roboto', sans-serif; font-size: 11px; text-transform: none; letter-spacing: normal;
-  padding: 6px 9px; width: max-content; max-width: 200px; white-space: normal; line-height: 1.35;
-  text-align: center; z-index: 60; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-}
-.profile-badge:not(.active)[data-tip]:hover::after { border-color: #444; }
+/* Floating tooltip (fixed-positioned → escapes the modal's scroll/overflow clipping) */
+.data-tip-pop { position: fixed; z-index: 12000; display: none; pointer-events: none; background: #0a0a0a; border: 1px solid #444; color: #cfcfcf; font-family: 'Roboto', sans-serif; font-size: 11px; padding: 6px 9px; max-width: 220px; white-space: normal; line-height: 1.35; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
 .profile-badge.active { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 .profile-modal-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #333; }
 .profile-modal-btn { flex: 1; padding: 10px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; cursor: pointer; border: 1px solid #444; background: transparent; color: #ccc; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
@@ -351,16 +410,19 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-btn.danger:hover { color: #f44; border-color: #f44; }
 .bot-tag { display: inline-block; font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; color: #0a0a0a; background: var(--ac, #8CE45A); padding: 2px 5px; letter-spacing: 0.08em; vertical-align: middle; }
 .bot-code-panel { margin-top: 12px; border: 1px solid #333; background: #0a0a0a; max-height: 220px; overflow: auto; }
-.bot-code-panel pre { margin: 0; padding: 10px 12px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.5; color: #8CE45A; white-space: pre; tab-size: 2; }
+.bot-code-panel pre { margin: 0; padding: 10px 12px; font-family: 'Roboto', sans-serif; font-size: 11px; line-height: 1.5; color: #8CE45A; white-space: pre; tab-size: 2; }
 .bot-online { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888; font-family: 'Roboto', sans-serif; }
 .bot-online-dot { width: 7px; height: 7px; border-radius: 50%; background: #8CE45A; box-shadow: 0 0 6px #8CE45A; }
 .profile-modal-actions.bot-actions { flex-wrap: wrap; }
 .profile-modal-actions.bot-actions .profile-modal-btn { flex: 1 1 calc(50% - 4px); }
 .profile-modal-btn.on { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 
+/* CRT scanlines over every modal panel (modals sit above the global .app::before) */
+.modal, .profile-modal, .settings-modal { position: relative; }
+.modal::after, .profile-modal::after, .settings-modal::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.13) 0px, rgba(0,0,0,0.13) 1px, transparent 1px, transparent 3px); }
+
 /* PROFILE EDIT MODAL */
-.pe-modal { width: 380px; position: relative; }
-.pe-modal::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.13) 0px, rgba(0,0,0,0.13) 1px, transparent 1px, transparent 3px); }
+.pe-modal { width: 380px; }
 .pe-head-actions { display: flex; align-items: center; gap: 14px; }
 .pe-icon-btn { background: none; border: none; color: #888; cursor: pointer; padding: 0; line-height: 1; display: flex; align-items: center; }
 .pe-icon-btn:hover { color: #fff; }
@@ -390,33 +452,38 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .pe-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 0; background: #111; transition: transform .2s; }
 .pe-switch.on { background: var(--ac, #5c8aff); }
 .pe-switch.on::after { transform: translateX(18px); }
-/* Mobile-only edit-profile page chrome (hidden on desktop) */
-.pe-back { display: none; }
-.pe-title-mobile { display: none; }
-.pe-save-mobile { display: none; }
+/* Edit-profile header chrome (desktop + mobile): ← back + EDIT PROFILE title, no save icon / × */
+.pe-back { display: flex; align-items: center; background: none; border: none; color: var(--ac, #8CE45A); font-size: 22px; line-height: 1; padding: 0; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; }
+.pe-title-desktop { display: none; }
+.pe-title-mobile { display: inline; }
+#profileEditModal .pe-title-mobile { color: #e0e0e0; }
+#profileEditModal .profile-modal-head { justify-content: flex-start; gap: 10px; }
+#profileEditModal .pe-head-actions { display: none; }
+/* SAVE button at the bottom of the edit-profile modal (desktop + mobile) */
+.pe-save-mobile { display: block; flex-shrink: 0; box-sizing: border-box; margin: 4px 16px 16px; width: calc(100% - 32px); padding: 14px 0; background: transparent; color: #ccc; border: 1px solid #444; font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; text-align: center; cursor: pointer; }
+.pe-save-mobile:hover { border-color: #666; color: #fff; }
+.pe-save-mobile:active { background: #151515; }
+/* Top save icon replaced by the bottom SAVE button */
+#peSaveBtn { display: none; }
 @media (max-width: 900px) {
   /* Edit profile becomes a full-screen page like mobile Settings */
   /* Edit profile is a focused sub-flow (own Back + SAVE) → hide the bottom nav and
      show it as a full framed card, instead of a tab-level page. */
   body.pe-editing .mobile-nav { display: none !important; }
-  #profileEditModal { align-items: stretch; justify-content: stretch; top: 8px; left: 8px; right: 8px; bottom: 8px; background: #0a0a0a; border: 1px solid #333; }
+  #profileEditModal { align-items: stretch; justify-content: stretch; top: 8px; left: 8px; right: 8px; bottom: 8px; padding: 0; overflow: hidden; background: #0a0a0a; border: 1px solid #333; }
   .mobile-nav-item[data-view="profile"] .mobile-nav-icon { transform: translateX(-1px); }
   #profileEditModal .pe-modal { width: 100%; height: 100%; max-height: 100%; border: none; background: #0a0a0a; }
-  #profileEditModal .profile-modal-head { flex-shrink: 0; justify-content: flex-start; gap: 10px; }
-  .pe-title-desktop { display: none; }
-  .pe-title-mobile { display: inline; }
-  #profileEditModal .pe-title-mobile { color: #e0e0e0; } /* match SETTINGS/PROFILE header brightness */
-  .pe-back { display: flex; align-items: center; background: none; border: none; color: var(--ac, #8CE45A); font-size: 22px; line-height: 1; padding: 0; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; }
-  #profileEditModal .pe-head-actions { display: none; }
-  #profileEditModal .pe-preview { flex-shrink: 0; }
+  #profileEditModal .profile-modal-head { flex-shrink: 0; }
+  /* Mobile: back to vertical full-screen page — preview on top, form below */
+  #profileEditModal .pe-cols { flex-direction: column; flex: 1; min-height: 0; }
+  #profileEditModal .pe-preview { width: auto; flex-shrink: 0; justify-content: flex-start; padding: 20px 20px 22px; border-right: none; border-bottom: 1px solid #333; }
+  #profileEditModal .pe-right { flex: 1; min-height: 0; }
   #profileEditModal .pe-body { flex: 1; overflow-y: auto; }
-  .pe-save-mobile { display: block; flex-shrink: 0; box-sizing: border-box; margin: 12px 16px; width: calc(100% - 32px); padding: 14px 0; background: transparent; color: #ccc; border: 1px solid #444; font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; text-align: center; cursor: pointer; }
-  .pe-save-mobile:hover { border-color: #666; color: #fff; }
-  .pe-save-mobile:active { background: #151515; }
+  .pe-save-mobile { margin: 12px 16px; }
 }
 
 /* ONBOARDING TOUR */
-#tour { position: fixed; inset: 0; z-index: 12000; display: none; font-family: 'Space Mono', monospace; }
+#tour { position: fixed; inset: 0; z-index: 12000; display: none; font-family: 'Roboto', sans-serif; }
 #tour.show { display: block; }
 .tour-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.74); }
 .tour-spot { position: absolute; border-radius: 6px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.74); outline: 2px solid var(--ac, #8CE45A); outline-offset: 3px; transition: top .25s ease, left .25s ease, width .25s ease, height .25s ease; pointer-events: none; }
@@ -477,7 +544,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-empty-bot { display: flex; align-items: center; gap: 6px; border: 1px solid #333; padding: 5px 9px 5px 5px; cursor: pointer; transition: border-color 0.1s, background 0.1s; }
 .mix-empty-bot:hover { border-color: var(--ac, #8CE45A); background: #111; }
 .mix-empty-bot img { width: 20px; height: 20px; image-rendering: pixelated; }
-.mix-empty-bot span { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; text-transform: uppercase; }
+.mix-empty-bot span { font-family: 'Roboto', sans-serif; font-size: 11px; color: #aaa; text-transform: uppercase; }
 .mix-empty-hint { font-family: 'Roboto', sans-serif; font-size: 11px; color: #555; margin-top: 4px; }
 /* My Mix terminal */
 .mix-term-empty { padding: 24px 16px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #777; line-height: 1.7; }
@@ -490,7 +557,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-widget-ctrls .mix-remove:hover { color: #f44; }
 /* My Mix widget picker modal */
 .mix-picker { width: 380px; max-width: 92vw; }
-.mix-picker-search { width: 100%; box-sizing: border-box; background: #141414; border: 1px solid #333; border-radius: 0; padding: 8px 10px; margin-top: 8px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; outline: none; }
+.mix-picker-search { width: 100%; box-sizing: border-box; background: #141414; border: 1px solid #333; border-radius: 0; padding: 8px 10px; margin-top: 8px; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; outline: none; }
 .mix-picker-search:focus { border-color: var(--ac, #8CE45A); }
 .mix-picker-search::placeholder { color: #555; }
 .mix-picker-body { max-height: 50vh; overflow-y: auto; margin: 10px 0; border: 1px solid #2a2a2a; scrollbar-width: thin; scrollbar-color: transparent transparent; }
@@ -525,14 +592,14 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mix-pick-box { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 7px 10px; background: #0d0d0d; border-left: 2px solid; position: sticky; top: 0; }
 .mix-pick-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; cursor: pointer; transition: background 0.1s; }
 .mix-pick-row:hover { background: #161616; }
-.mix-pick-title { font-family: 'Space Mono', monospace; font-size: 12px; color: #ccc; }
+.mix-pick-title { font-family: 'Roboto', sans-serif; font-size: 12px; color: #ccc; }
 .mix-pick-act { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #666; letter-spacing: 0.04em; }
 .mix-pick-row.added .mix-pick-act { color: var(--ac, #8CE45A); }
 .mix-pick-row.added .mix-pick-title { color: #888; }
 
 /* SETTINGS MODAL */
-.settings-modal { background: #111; border: 1px solid #444; width: 420px; max-height: 80vh; font-family: 'Space Mono', monospace; display: flex; flex-direction: column; }
-.settings-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #333; }
+.settings-modal { background: #111; border: 1px solid #444; width: 420px; max-height: 80vh; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; }
+.settings-modal-head { display: flex; justify-content: space-between; align-items: center; height: 57px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; border-bottom: 1px solid #333; }
 .settings-modal-head span { font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; }
 .settings-modal-body { padding: 16px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #2a2a2a #111; }
 .settings-section { margin-bottom: 20px; }
@@ -571,12 +638,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .users-list-back { background: none; border: none; color: var(--ac, #8CE45A); font-size: 20px; cursor: pointer; font-family: 'CHNOPixelCodePro', monospace; padding: 0; line-height: 1; }
 .users-list-back:hover { filter: brightness(1.3); }
 .users-list-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #e0e0e0; text-transform: uppercase; letter-spacing: 0.06em; }
-.users-list-count { color: #666; font-size: 12px; font-family: 'Space Mono', monospace; margin-left: auto; }
+.users-list-count { color: #666; font-size: 12px; font-family: 'Roboto', sans-serif; margin-left: auto; }
 .users-list-body { flex: 1; overflow-y: auto; padding: 4px 0; scrollbar-width: thin; scrollbar-color: #2a2a2a #0a0a0a; }
 .users-list-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; transition: background 0.1s; }
 .users-list-item:hover { background: #111; }
 .users-list-item img { width: 24px; height: 24px; image-rendering: pixelated; }
-.users-list-name { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+.users-list-name { font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
 .users-list-mod { font-size: 14px; margin-left: -4px; }
 .users-list-status { font-size: 11px; color: #555; font-family: 'Roboto', sans-serif; margin-left: auto; }
 
@@ -601,7 +668,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 /* AUTH BLOCK (replaces profile when anon) */
 .auth-block { border-top: 1px solid #333; padding: 12px; flex-shrink: 0; }
 .auth-label { font-size: 12px; color: #eee; margin-bottom: 10px; letter-spacing: 0.1em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
-.auth-input { width: 100%; background: #141414; border: 1px solid #444; border-radius: 0; padding: 8px 10px; color: #e0e0e0; font-family: 'Space Mono', monospace; font-size: 13px; outline: none; box-sizing: border-box; margin-bottom: 8px; }
+.auth-input { width: 100%; background: #141414; border: 1px solid #444; border-radius: 0; padding: 8px 10px; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; outline: none; box-sizing: border-box; margin-bottom: 8px; }
 .auth-input:focus { border-color: var(--ac, #8CE45A); }
 .auth-input::placeholder { color: #444; }
 .auth-btn { width: 100%; padding: 10px 0; background: var(--ac, #8CE45A); border: none; border-radius: 0; color: #0a0a0a; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; font-weight: 700; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
@@ -722,6 +789,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   .center.show-terminal #chatInputAuth,
   .center.show-terminal #chatInputAnon { display: none !important; }
   .center.show-terminal #mobileTermMount { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
+  .msg { padding-bottom: 6px; }
   .msg-author { font-size: 15px; }
   .msg-text { font-size: 16px; line-height: 1.4; }
   .msg-translate .tr-text { font-size: 16px; line-height: 1.4; }
@@ -2249,28 +2317,39 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 
 <div class="modal-wrap hidden" id="createModal">
   <div class="modal">
-    <p class="modal-title"># create box</p>
+    <p class="modal-title">create box</p>
     <div class="modal-rules">Before creating, please read the <a href="#">Box Creation Rules</a></div>
     <label>box name</label>
-    <input type="text" placeholder="#MY_BOX" maxlength="20" id="boxName" />
+    <div class="boxname-field">
+      <span class="boxname-hash">#</span>
+      <input type="text" placeholder="PEPECHNE" maxlength="10" id="boxName" />
+    </div>
     <label>category</label>
-    <select id="boxCategory">
-      <option>CRYPTO</option>
-      <option>GAMING</option>
-      <option>SPORTS</option>
-      <option>GENERAL</option>
-      <option>OTHER</option>
-    </select>
+    <input type="text" placeholder="e.g. CRYPTO" maxlength="12" id="boxCategory" autocomplete="off" />
+    <div class="modal-hint">pick one category — it becomes the box description</div>
+    <label>accent color</label>
+    <div class="box-swatches" id="boxSwatches"></div>
+    <label>reactions</label>
+    <div class="reactions-field">
+      <input type="text" id="boxReactions" autocomplete="off" />
+      <span class="reactions-example" id="reactionsExample" aria-hidden="true">😀 🔥 🚀 💀 🌙</span>
+    </div>
+    <div class="modal-hint">add up to 5 emoji for this box's reactions</div>
     <label>access</label>
-    <select id="boxAccess">
-      <option>PUBLIC</option>
-      <option>PRIVATE (invite only)</option>
-    </select>
+    <div class="modal-select" id="boxAccess" data-value="PUBLIC" tabindex="0">
+      <span class="ms-value">PUBLIC</span>
+      <svg class="ms-arrow" width="10" height="6" viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z" fill="currentColor"/></svg>
+      <div class="ms-list">
+        <div class="ms-opt selected" data-value="PUBLIC">PUBLIC</div>
+        <div class="ms-opt" data-value="PRIVATE">PRIVATE (invite only)</div>
+      </div>
+    </div>
     <div class="modal-hint">box will be visible in #MY_BOX</div>
     <div class="modal-row">
       <button class="modal-btn cancel" id="cancelBox">CANCEL</button>
-      <button class="modal-btn confirm" id="confirmBox">CREATE &#8594;</button>
+      <button class="modal-btn confirm" id="confirmBox">SEND REQUEST &#8594;</button>
     </div>
+    <div class="modal-note">A moderator will review your request. Once your box is approved, it will appear at the top of your boxes list.</div>
   </div>
 </div>
 
@@ -2323,38 +2402,46 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
       <span id="profileModalTitle">My Profile</span>
       <button class="profile-modal-close" id="closeProfileModal">&times;</button>
     </div>
-    <div class="profile-modal-avatar">
-      <img src="trolls/5.svg" id="profileModalTroll" class="my-troll-modal" />
-      <div class="profile-modal-nick" id="profileModalNick">@BOSS_NIKITOS</div>
-    </div>
-    <div class="profile-modal-body">
-      <div class="profile-modal-stats">
-        <div class="profile-stat"><div class="profile-stat-num">142</div><div class="profile-stat-label">Messages</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">23d</div><div class="profile-stat-label">Active</div></div>
+    <div class="pm-cols">
+      <div class="profile-modal-avatar">
+        <img src="trolls/5.svg" id="profileModalTroll" class="my-troll-modal" />
+        <div class="profile-modal-nick" id="profileModalNick">@BOSS_NIKITOS</div>
       </div>
-      <div class="profile-modal-divider"></div>
-      <div class="profile-modal-row">
-        <span class="profile-modal-row-label">Joined</span>
-        <span class="profile-modal-row-value">26 / 07 / 2024</span>
-      </div>
-      <div class="profile-modal-row">
-        <span class="profile-modal-row-label">Link</span>
-        <span class="profile-modal-row-value"><a href="#">troll.box/boss_nikitos</a><button class="copy-btn" title="Copy">&#x2398;</button></span>
-      </div>
-      <div class="profile-badges-wrap" id="profileBadgesWrap">
-        <div class="profile-modal-divider"></div>
-        <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
-        <div class="profile-modal-badges">
-          <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
-          <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
-          <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
-          <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+      <div class="pm-right">
+        <div class="profile-modal-body">
+          <div class="profile-modal-stats">
+            <div class="profile-stat"><div class="profile-stat-num">142</div><div class="profile-stat-label">Messages</div></div>
+            <div class="profile-stat"><div class="profile-stat-num">23d</div><div class="profile-stat-label">Active</div></div>
+          </div>
+          <div class="profile-modal-divider"></div>
+          <div class="profile-modal-row">
+            <span class="profile-modal-row-label">Bio</span>
+            <span class="profile-modal-row-value profile-bio-value" id="profileModalBio">—</span>
+          </div>
+          <div class="profile-modal-row">
+            <span class="profile-modal-row-label">Joined</span>
+            <span class="profile-modal-row-value">26 / 07 / 2024</span>
+          </div>
+          <div class="profile-modal-row">
+            <span class="profile-modal-row-label">Link</span>
+            <span class="profile-modal-row-value"><a href="#">troll.box/boss_nikitos</a><button class="copy-btn" title="Copy">&#x2398;</button></span>
+          </div>
+          <div class="profile-badges-wrap" id="profileBadgesWrap">
+            <div class="profile-modal-divider"></div>
+            <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
+            <div class="profile-modal-badges">
+              <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+              <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
+              <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+              <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+            </div>
+          </div>
+        </div>
+        <div class="profile-modal-actions" id="profileModalActions">
+          <button class="profile-modal-btn" id="peEditFromModal">EDIT PROFILE</button>
+          <button class="profile-modal-btn danger" id="profileLogoutBtn">LOG OUT</button>
         </div>
       </div>
-    </div>
-    <div class="profile-modal-actions" id="profileModalActions">
-      <button class="profile-modal-btn" id="peEditFromModal">EDIT PROFILE</button>
-      <button class="profile-modal-btn danger" id="profileLogoutBtn">LOG OUT</button>
     </div>
   </div>
 </div>
@@ -2371,30 +2458,38 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
         <button class="pe-icon-btn close" id="peCloseBtn" title="Close">&times;</button>
       </div>
     </div>
-    <div class="pe-preview" id="pePreview">
-      <img src="trolls/5.svg" class="my-troll pe-preview-troll" id="pePreviewTroll" alt="" />
-      <div class="pe-preview-nick" id="pePreviewNick">@BOSS_NIKITOS</div>
+    <div class="pe-cols">
+      <div class="pe-preview" id="pePreview">
+        <img src="trolls/5.svg" class="my-troll pe-preview-troll" id="pePreviewTroll" alt="" />
+        <div class="pe-preview-nick" id="pePreviewNick">@BOSS_NIKITOS</div>
+      </div>
+      <div class="pe-right">
+        <div class="pe-body">
+          <div class="pe-label">Choose color</div>
+          <div class="pe-swatches" id="peSwatches"></div>
+          <div class="pe-shades" id="peShades">
+            <button class="pe-shade" data-shade="lighter">Lighter</button>
+            <button class="pe-shade active" data-shade="default">Default</button>
+            <button class="pe-shade" data-shade="darker">Darker</button>
+          </div>
+          <div class="pe-label">Display name</div>
+          <div class="pe-name-wrap">
+            <input class="pe-name-input" id="peName" maxlength="16" autocomplete="off" spellcheck="false" />
+            <span class="pe-name-count" id="peNameCount">0/16</span>
+          </div>
+          <div class="pe-label">Bio</div>
+          <div class="pe-name-wrap">
+            <input class="pe-name-input" id="peBio" maxlength="54" autocomplete="off" spellcheck="false" placeholder="Say something about yourself" />
+            <span class="pe-name-count" id="peBioCount">0/54</span>
+          </div>
+          <div class="pe-badge-row">
+            <span class="pe-label">Show badges in profile</span>
+            <button class="pe-switch on" id="peBadgeSwitch" role="switch" aria-checked="true"></button>
+          </div>
+        </div>
+        <button class="pe-save-mobile" id="peSaveMobile">SAVE</button>
+      </div>
     </div>
-    <div class="pe-body">
-      <div class="pe-label">Choose color</div>
-      <div class="pe-swatches" id="peSwatches"></div>
-      <div class="pe-shades" id="peShades">
-        <button class="pe-shade" data-shade="lighter">Lighter</button>
-        <button class="pe-shade active" data-shade="default">Default</button>
-        <button class="pe-shade" data-shade="darker">Darker</button>
-      </div>
-      <div class="pe-label">Display name</div>
-      <div class="pe-name-wrap">
-        <input class="pe-name-input" id="peName" maxlength="16" autocomplete="off" spellcheck="false" />
-        <span class="pe-name-count" id="peNameCount">0/16</span>
-      </div>
-      <div class="pe-helper">This the name people will know you by on troll.box. You can always change it later.</div>
-      <div class="pe-badge-row">
-        <span class="pe-label">Show badges in profile</span>
-        <button class="pe-switch on" id="peBadgeSwitch" role="switch" aria-checked="true"></button>
-      </div>
-    </div>
-    <button class="pe-save-mobile" id="peSaveMobile">SAVE</button>
   </div>
 </div>
 
@@ -2768,51 +2863,45 @@ const CHATS = {
     {tag:'#AI', author:'startup_bro', bot:false, text:'thats exactly our thesis!! ...pls invest 🙏', time:'12:12pm'},
   ],
   general: [
-    {tag:'#GEN', author:'gmguy', bot:false, text:'gm everyone, another beautiful day to be a degen ☀️', time:'8:00am'},
-    {tag:'#GEN', author:'earlybird', bot:false, text:'gm gm, coffee #3 already and its not even 9am help', time:'8:05am'},
-    {tag:'#GEN', author:'news_bot', bot:true, text:'Good morning! BTC $67,420 (+1.2%) | ETH $3,812 (+0.8%) | SOL $178 (+3.1%)', time:'8:10am'},
-    {tag:'#GEN', author:'randomwisdom', bot:false, text:'fun fact: honey never spoils. 3000yr old honey still edible 🍯', time:'8:15am'},
-    {tag:'#GEN', author:'skeptic_sam', bot:false, text:'no way thats real, honey from 3000 years ago?? source?', time:'8:18am'},
+    {tag:'#BITCOIN', author:'gmguy', bot:false, text:'gm everyone, another beautiful day to be a degen ☀️', time:'8:00am'},
+    {tag:'#SOLANA', author:'earlybird', bot:false, text:'gm gm, coffee #3 already and its not even 9am help', time:'8:05am'},
+    {tag:'#BITCOIN', author:'news_bot', bot:true, text:'Good morning! BTC $67,420 (+1.2%) | ETH $3,812 (+0.8%) | SOL $178 (+3.1%)', time:'8:10am'},
+    {tag:'#AI', author:'randomwisdom', bot:false, text:'fun fact: honey never spoils. 3000yr old honey still edible 🍯', time:'8:15am'},
+    {tag:'#AI', author:'skeptic_sam', bot:false, text:'no way thats real, honey from 3000 years ago?? source?', time:'8:18am'},
     {tag:'#AI', author:'randomwisdom', bot:false, text:'its literally on wikipedia bro, egyptian tombs had edible honey', time:'8:20am'},
-    {tag:'#GEN', author:'le_parisien', bot:false, text:'Le miel c\'est sacré en France, on en met partout 🥐', time:'8:22am', tr:'Honey is sacred in France, we put it on everything'},
-    {tag:'#GEN', author:'night_owl', bot:false, text:'why am i still awake its 8am and i havent slept yet 💀', time:'8:25am'},
-    {tag:'#GEN', author:'wellness_guru', bot:false, text:'go to sleep omg, your circadian rythm is destroyed', time:'8:27am'},
-    {tag:'$BTC', author:'night_owl', bot:false, text:'one more youtube video and ill sleep i promise', time:'8:28am'},
-    {tag:'#GEN', author:'jokes_bot', bot:true, text:'I told my wallet I\'d stop spending. We\'re not on speaking terms anymore 💸', time:'9:00am'},
-    {tag:'#GEN', author:'food_lover', bot:false, text:'just made the most perfect scrambled eggs of my life and nobody is awake to witness it 😤', time:'9:12am'},
-    {tag:'#GEN', author:'trivia_bot', bot:true, text:'Did you know? The first computer bug was an actual moth found in a Harvard Mark II in 1947 🦟', time:'9:30am'},
+    {tag:'#STABLECOINS', author:'le_parisien', bot:false, text:'Le miel c\'est sacré en France, on en met partout 🥐', time:'8:22am', tr:'Honey is sacred in France, we put it on everything'},
+    {tag:'#GAMING', author:'night_owl', bot:false, text:'why am i still awake its 8am and i havent slept yet 💀', time:'8:25am'},
+    {tag:'#GAMING', author:'wellness_guru', bot:false, text:'go to sleep omg, your circadian rythm is destroyed', time:'8:27am'},
+    {tag:'#SOLANA', author:'night_owl', bot:false, text:'one more youtube video and ill sleep i promise', time:'8:28am'},
+    {tag:'#FINANCE', author:'jokes_bot', bot:true, text:'I told my wallet I\'d stop spending. We\'re not on speaking terms anymore 💸', time:'9:00am'},
+    {tag:'#POLITICS', author:'muller_de', bot:false, text:'Die Politik wird jeden Tag absurder, ich kann nicht mehr 🤡', time:'9:08am', tr:'Politics gets more absurd every day, I can\'t take it anymore'},
+    {tag:'#ETHEREUM', author:'food_lover', bot:false, text:'gas finally low enough that i can make a transaction AND eat today', time:'9:12am'},
+    {tag:'#AI', author:'trivia_bot', bot:true, text:'Did you know? The first computer bug was an actual moth found in a Harvard Mark II in 1947 🦟', time:'9:30am'},
     {sys:true, text:'chaosmonger joined the box', time:'9:58am'},
-    {tag:'#GEN', author:'shanghai_vibes', bot:false, text:'早上好各位，今天有什么好玩的话题吗', time:'9:59am', tr:'Good morning everyone, any fun topics today?'},
-    {tag:'#POL', author:'chaosmonger', bot:false, text:'anyone else feel like the internet peaked in 2012', time:'10:00am'},
-    {tag:'#GEN', author:'copemaxi', bot:false, text:'every year someone says that and yet here we are', time:'10:05am'},
-    {tag:'#GEN', author:'nostalgia_', bot:false, text:'2012 internet was different tho, no algortihms just vibes and flash games', time:'10:08am'},
+    {tag:'#STABLECOINS', author:'shanghai_vibes', bot:false, text:'早上好各位，今天稳定币有什么新闻吗', time:'9:59am', tr:'Good morning everyone, any stablecoin news today?'},
+    {tag:'#POLITICS', author:'chaosmonger', bot:false, text:'anyone else feel like the internet peaked in 2012', time:'10:00am'},
+    {tag:'#GAMING', author:'nostalgia_', bot:false, text:'2012 internet was different tho, no algortihms just vibes and flash games', time:'10:08am'},
     {tag:'#GAMING', author:'zoomer_z', bot:false, text:'what are flash games 💀💀 (genuine question)', time:'10:10am'},
-    {tag:'#GEN', author:'chaosmonger', bot:false, text:'...i just aged 50 years reading that comment', time:'10:11am'},
-    {tag:'#GEN', author:'news_bot', bot:true, text:'Trending worldwide: #MondayMotivation, #CryptoTwitter, #AINews, #GamingCommunity', time:'10:30am'},
-    {tag:'#GEN', author:'el_troll_mx', bot:false, text:'Motivación del lunes: sobrevivir hasta el viernes sin renunciar 😂', time:'10:31am', tr:'Monday motivation: survive until Friday without quitting'},
-    {tag:'#GEN', author:'motivator', bot:false, text:'monday motivation is just a hashtag nobody actually feels motivated on mondays lol', time:'10:32am'},
-    {tag:'$ETH', author:'gmguy', bot:false, text:'i feel motivated!! ...to go back to bed 😴', time:'10:35am'},
-    {tag:'#GEN', author:'pet_pics', bot:false, text:'my cat just knocked my coffee off the desk, 10/10 would still die for him 🐱', time:'10:45am'},
-    {tag:'#GEN', author:'jokes_bot', bot:true, text:'My cat has 3 moods: hungry, sleeping, and knocking things off tables for sport', time:'10:50am'},
-    {tag:'#GEN', author:'tokyo_drift', bot:false, text:'猫が最強のペットだと思う、反論は受け付けない', time:'10:55am', tr:'I think cats are the best pets, I will not accept arguments'},
-    {tag:'#AI', author:'randomwisdom', bot:false, text:'another fun fact: octopuses have 3 hearts. when they swim one stops beating. basically me doing cardio', time:'11:00am'},
-    {tag:'#GEN', author:'music_bot', bot:true, text:'Now playing in #GENERAL: lo-fi beats to troll/relax to — 1,247 listeners 🎵', time:'11:05am'},
-    {tag:'#SPORTS', author:'fitness_bro', bot:false, text:'speaking of cardio who else hit the gym today?? leg day gang 🦵', time:'11:10am'},
-    {tag:'#GEN', author:'copemaxi', bot:false, text:'my fingers hitting the keyboard counts as exercise right', time:'11:12am'},
-    {tag:'#GEN', author:'news_bot', bot:true, text:'Breaking: GitHub down for 20 min — developers worldwide touching grass for the first time', time:'11:20am'},
-    {tag:'#GEN', author:'food_lover', bot:false, text:'lunch debate: pizza or sushi? wrong answers only', time:'11:30am'},
-    {tag:'#GEN', author:'chaosmonger', bot:false, text:'pizza sushi fusion, its a thing in japan and its actually fire', time:'11:32am'},
-    {tag:'#GEN', author:'skeptic_sam', bot:false, text:'that sounds absolutely disgusting ngl', time:'11:33am'},
-    {tag:'#GEN', author:'earlybird', bot:false, text:'its called a sushi pizza and its amazing dont knock it till u try it', time:'11:35am'},
-    {tag:'#GEN', author:'brazuca_zz', bot:false, text:'Pizza com sushi? Aqui no Brasil a gente coloca tudo na pizza kkkk', time:'11:40am', tr:'Pizza with sushi? Here in Brazil we put everything on pizza lol'},
-    {tag:'$SOL', author:'night_owl', bot:false, text:'update: i did not sleep. its now noon. send help 🫠', time:'12:00pm'},
-    {tag:'#GEN', author:'wellness_guru', bot:false, text:'RIP your serotonin levels tomorrow lmao', time:'12:02pm'},
-    {tag:'#GEN', author:'jokes_bot', bot:true, text:'My sleep schedule is like my code — full of bugs and nobody knows how it still runs', time:'12:15pm'},
+    {tag:'#GAMING', author:'chaosmonger', bot:false, text:'...i just aged 50 years reading that comment', time:'10:11am'},
+    {tag:'#ETHEREUM', author:'kyiv_dev', bot:false, text:'нарешті газ дешевий, можна спокійно застейкати 🇺🇦', time:'10:18am', tr:'finally gas is cheap, can stake calmly'},
+    {tag:'#POLITICS', author:'el_troll_mx', bot:false, text:'Motivación del lunes: sobrevivir hasta el viernes sin renunciar 😂', time:'10:31am', tr:'Monday motivation: survive until Friday without quitting'},
+    {tag:'#SPORTS', author:'fitness_bro', bot:false, text:'who else hit the gym today?? leg day gang 🦵', time:'11:10am'},
+    {tag:'#GAMING', author:'copemaxi', bot:false, text:'my fingers hitting the keyboard counts as exercise right', time:'11:12am'},
+    {tag:'#AI', author:'news_bot', bot:true, text:'Breaking: GitHub down for 20 min — developers worldwide touching grass for the first time', time:'11:20am'},
+    {tag:'#STABLECOINS', author:'seoul_ahjussi', bot:false, text:'스테이블코인이 제일 안전하지, 변동성 지긋지긋해', time:'11:24am', tr:'Stablecoins are the safest, I\'m sick of the volatility'},
+    {tag:'#GAMING', author:'food_lover', bot:false, text:'lunch debate: pizza or sushi? wrong answers only', time:'11:30am'},
+    {tag:'#GAMING', author:'roma_caput', bot:false, text:'La pizza con l\'ananas è un crimine, ma sushi pizza? geniale', time:'11:33am', tr:'Pineapple pizza is a crime, but sushi pizza? genius'},
+    {tag:'#GAMING', author:'brazuca_zz', bot:false, text:'Pizza com sushi? Aqui no Brasil a gente coloca tudo na pizza kkkk', time:'11:40am', tr:'Pizza with sushi? Here in Brazil we put everything on pizza lol'},
+    {tag:'#SOLANA', author:'night_owl', bot:false, text:'update: i did not sleep. its now noon. send help 🫠', time:'12:00pm'},
+    {tag:'#AI', author:'crypto_tanuki', bot:false, text:'AIに寝ろと言われた。AIの方が俺より健康的だ', time:'12:04pm', tr:'The AI told me to sleep. The AI is healthier than me'},
+    {tag:'#FINANCE', author:'jokes_bot', bot:true, text:'My sleep schedule is like my code — full of bugs and nobody knows how it still runs', time:'12:15pm'},
     {sys:true, text:'night_owl left the box', time:'12:10pm'},
-    {tag:'#GEN', author:'poll_bot', bot:true, text:'Poll: Best time to be online? 🌅 Morning 12% | ☀️ Afternoon 28% | 🌙 Night 60%', time:'12:18pm'},
+    {tag:'#POLITICS', author:'poll_bot', bot:true, text:'Poll: Best time to be online? 🌅 Morning 12% | ☀️ Afternoon 28% | 🌙 Night 60%', time:'12:18pm'},
+    {tag:'#STABLECOINS', author:'istanbul_55', bot:false, text:'Enflasyon varken stablecoin tutmak mantıklı, TL eriyor 📉', time:'12:24pm', tr:'With inflation, holding stablecoins makes sense, the lira is melting'},
     {tag:'#GAMING', author:'zoomer_z', bot:false, text:'this box is lowkey my favorite place on the internet rn, yall are unhinged in the best way 💜', time:'12:20pm'},
-    {tag:'#GEN', author:'gmguy', bot:false, text:'troll.box supremacy, we out here 😤🔥', time:'12:22pm'},
-    {tag:'#GEN', author:'trivia_bot', bot:true, text:'Fun fact: there are more possible chess games than atoms in the observable universe ♟️', time:'12:30pm'},
+    {tag:'#BITCOIN', author:'gmguy', bot:false, text:'troll.box supremacy, we out here 😤🔥', time:'12:22pm'},
+    {tag:'#AI', author:'mumbai_max', bot:false, text:'भाई ये AI सच में नौकरी खा जाएगा क्या? थोड़ा डर लग रहा है', time:'12:28pm', tr:'Bro is this AI really going to take our jobs? I\'m a bit scared'},
+    {tag:'#AI', author:'trivia_bot', bot:true, text:'Fun fact: there are more possible chess games than atoms in the observable universe ♟️', time:'12:30pm'},
   ],
   stables: [
     {sys:true, text:'usdt_maxi joined the box', time:'9:00am'},
@@ -3116,7 +3205,7 @@ const PANELS = {
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Boomers discovering BTC through ETFs:<br>"Honey, I invested in digital gold!"</div></div>`,
   general: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">DEGENS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">3,102 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:'Space Mono',monospace;margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
+    <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:'Roboto',sans-serif;margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
     <div class="r-block">${rHead('FACT OF THE HOUR')}<div style="font-size:12px;color:#777;line-height:1.6;border-left:2px solid #1e1e1e;padding-left:8px">Honey never spoils. Archaeologists found 3,000-year-old honey still edible.</div><div style="font-size:11px;color:#333;margin-top:4px">refreshes every 60 min</div></div>
     <div class="r-block">${rHead('VIBES CHECK')}<div class="mood-grid"><div class="mood-btn" data-vibe="good">GOOD VIBES</div><div class="mood-btn" data-vibe="meh">MEH</div><div class="mood-btn" data-vibe="chaotic">CHAOTIC</div><div class="mood-btn" data-vibe="ngmi">NGMI</div></div></div>
     ${socialIntelCard('general')}
@@ -3340,6 +3429,20 @@ function renderReplyQuote(m){
     + `</div>`;
 }
 
+// Source-box tag for General / My Box messages — sidebar style: coloured "#" + white name
+function msgSrcTag(m){
+  const raw = m._srcTag || m.tag || '';
+  if (!raw) return '';
+  const nm = raw.replace(/^[#$]/, '');
+  let ac = m._srcAc;
+  if (!ac) {
+    const up = nm.toUpperCase();
+    const rm = ROOMS.find(r => r.label.replace(/^#/, '').toUpperCase() === up || (r.tag || '').replace(/[\[\]]/g, '').toUpperCase() === up);
+    ac = rm ? rm.ac : '#8CE45A';
+  }
+  return `<span class="msg-tag"><span class="msg-tag-hash" style="color:${ac}">#</span>${nm}</span>`;
+}
+
 function startReply(idx){
   closeMsgPopup();
   let box = active, srcIdx = idx, m;
@@ -3431,10 +3534,10 @@ function renderChat(){
     const replyHtml = renderReplyQuote(m);
     html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
       ${replyHtml}
-      ${showTag?`<span class="msg-tag ${(m._srcTag||m.tag)?'active-tag':''}"${m._srcAc?` style="color:${m._srcAc}"`:''}>${m._srcTag||m.tag||''}</span>`:''}
+      ${showTag?msgSrcTag(m):''}
       <div class="msg-body">
         <img class="msg-troll" src="${getTroll(m.author, m.bot).src}" /><div class="msg-body-content"><span class="msg-author ${m.bot?'bot-author':''}" style="color:${getTroll(m.author, m.bot).color}">${m.author}:</span>
-        <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g opacity="0.8"><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="#E0E0E0"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="#E0E0E0"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="#E0E0E0"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
+        <span class="msg-text${m.bot?' bot-text':''}" > ${m.text}</span>${m.tr?`<span class="msg-translate"><svg class="tr-icon" width="18" height="18" viewBox="0 0 22 22" fill="none"><g><path d="M14 13V14H11V13H14ZM6 13V14H3V13H6ZM11 13H9V12H11V13ZM8 12V13H6V12H8ZM9 12H8V11H9V12ZM9 11V10H10V11H9ZM8 11H7V9H8V11ZM10 10V8H11V10H10ZM7 9H6V7H7V9ZM11 8V6H3V5H8V3H9V5H14V6H12V8H11Z" fill="currentColor"/><path d="M12 19V17H13V14H14V12H15V10H16V12H17V14H18V17H19V19H18V17H13V19H12ZM15 14H14V16H17V14H16V12H15V14Z" fill="currentColor"/><path d="M21.5 0.5V21.5H0.5V0.5H21.5Z" stroke="currentColor"/></g></svg><span class="tr-text">${m.tr}</span></span>`:''}
         <span class="msg-time">${m.time}</span>${reactionsHtml}</div>
       </div>
     </div>`;
@@ -4074,6 +4177,7 @@ document.getElementById('profileAuth').addEventListener('click', (e) => {
   const pmt = document.getElementById('profileModalTroll');
   pmt.src = 'trolls/5.svg';
   pmt.style.filter = trollFilter(myProfile);
+  const pmAv = document.querySelector('#profileModal .profile-modal-avatar'); if (pmAv) pmAv.style.setProperty('--troll-glow', peColor(myProfile.color));
   document.getElementById('profileModalActions').style.display = '';
   const bw = document.getElementById('profileBadgesWrap');
   if (bw) bw.style.display = myProfile.showBadges ? '' : 'none';
@@ -4105,6 +4209,7 @@ function openUserProfile(name, isBot) {
   const pmTroll = document.getElementById('profileModalTroll');
   if (isOwn) { pmTroll.src = 'trolls/5.svg'; pmTroll.style.filter = trollFilter(myProfile); nickEl.style.color = peColor(myProfile.color); }
   else { pmTroll.style.filter = ''; }
+  const pmAv = document.querySelector('#profileModal .profile-modal-avatar'); if (pmAv) pmAv.style.setProperty('--troll-glow', isOwn ? peColor(myProfile.color) : troll.color);
   const bw = document.getElementById('profileBadgesWrap');
   if (bw) bw.style.display = (isOwn && !myProfile.showBadges) ? 'none' : '';
   profileModal.classList.remove('hidden');
@@ -4127,7 +4232,7 @@ function trollFilter(p){
   return `hue-rotate(${c.rot}deg) brightness(${b})`;
 }
 
-let myProfile = { color:'blue', shade:'default', name:'BOSS_NIKITOS', showBadges:true };
+let myProfile = { color:'blue', shade:'default', name:'BOSS_NIKITOS', showBadges:true, bio:'' };
 function loadMyProfile(){
   try { const o = JSON.parse(localStorage.getItem('tb_profile')); if (o && typeof o === 'object') myProfile = Object.assign(myProfile, o); } catch(e){}
   if (!myProfile.name) {
@@ -4150,14 +4255,20 @@ function applyMyProfile(p){
   // Profile edit modal live preview (troll filter handled by .my-troll loop above)
   const pn = document.getElementById('pePreviewNick');
   if (pn) { pn.textContent = nickText; pn.style.color = col; }
+  // Colour glow behind the troll preview (edit + mobile profile) — matches selected colour
+  document.querySelectorAll('#pePreview, #mobileProfileContent .profile-modal-avatar').forEach(el => el.style.setProperty('--troll-glow', col));
   // Profile card troll/nick when the modal currently shows my own profile
   const title = document.getElementById('profileModalTitle');
   if (title && title.textContent === 'My Profile') {
     const pmTroll = document.getElementById('profileModalTroll'); if (pmTroll) pmTroll.style.filter = filter;
     const pmNick = document.getElementById('profileModalNick'); if (pmNick) { pmNick.textContent = nickText; pmNick.style.color = col; }
+    const pmAv = document.querySelector('#profileModal .profile-modal-avatar'); if (pmAv) pmAv.style.setProperty('--troll-glow', col);
   }
   // Badges visibility (own surfaces)
   document.querySelectorAll('.my-badges-wrap, #profileBadgesWrap').forEach(w => { w.style.display = p.showBadges ? '' : 'none'; });
+  // Bio (profile view)
+  const bioEl = document.getElementById('profileModalBio');
+  if (bioEl) bioEl.textContent = (p.bio && p.bio.trim()) ? p.bio : '—';
 }
 
 const profileEditModal = document.getElementById('profileEditModal');
@@ -4170,6 +4281,9 @@ function renderProfileEdit(){
   const name = document.getElementById('peName');
   name.value = peDraft.name || '';
   document.getElementById('peNameCount').textContent = (peDraft.name || '').length + '/16';
+  const bio = document.getElementById('peBio');
+  bio.value = peDraft.bio || '';
+  document.getElementById('peBioCount').textContent = (peDraft.bio || '').length + '/54';
   document.getElementById('peBadgeSwitch').classList.toggle('on', !!peDraft.showBadges);
 }
 
@@ -4184,6 +4298,9 @@ function closeProfileEdit(revert){
   if (revert) applyMyProfile(myProfile); // discard draft preview
   profileEditModal.classList.add('hidden');
   document.body.classList.remove('pe-editing');
+  // Desktop: editing is a state of the profile modal → return to the profile view (not close).
+  // Mobile: the profile page is already underneath, nothing to re-show.
+  if (!window.matchMedia('(max-width: 900px)').matches) profileModal.classList.remove('hidden');
 }
 
 // Build swatches once
@@ -4200,6 +4317,10 @@ document.getElementById('peName').addEventListener('input', e => {
   document.getElementById('peNameCount').textContent = peDraft.name.length + '/16';
   applyMyProfile(peDraft);
 });
+document.getElementById('peBio').addEventListener('input', e => {
+  peDraft.bio = e.target.value.slice(0, 54);
+  document.getElementById('peBioCount').textContent = peDraft.bio.length + '/54';
+});
 document.getElementById('peBadgeSwitch').addEventListener('click', () => {
   peDraft.showBadges = !peDraft.showBadges;
   document.getElementById('peBadgeSwitch').classList.toggle('on', peDraft.showBadges);
@@ -4211,6 +4332,7 @@ document.getElementById('peSaveBtn').addEventListener('click', () => {
   applyMyProfile(myProfile);
   profileEditModal.classList.add('hidden');
   document.body.classList.remove('pe-editing');
+  if (!window.matchMedia('(max-width: 900px)').matches) profileModal.classList.remove('hidden'); // desktop: back to profile view
 });
 document.getElementById('peCloseBtn').addEventListener('click', () => closeProfileEdit(true));
 document.getElementById('peBackBtn').addEventListener('click', () => closeProfileEdit(true));
@@ -4220,6 +4342,32 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && !profileEd
 
 // EDIT PROFILE button inside the (desktop) profile card
 document.getElementById('peEditFromModal').addEventListener('click', openProfileEdit);
+
+// Floating tooltip for [data-tip] (badges) — rendered at <body> level so it isn't clipped
+// by the profile modal's scrollable body / preview pane.
+(function(){
+  const tip = document.createElement('div');
+  tip.className = 'data-tip-pop';
+  document.body.appendChild(tip);
+  function show(el){
+    const txt = el.getAttribute('data-tip');
+    if (!txt) return;
+    tip.textContent = txt;
+    tip.style.borderColor = getComputedStyle(el).borderTopColor; // match badge accent
+    tip.style.display = 'block';
+    const r = el.getBoundingClientRect();
+    const t = tip.getBoundingClientRect();
+    let left = r.left + r.width / 2 - t.width / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - t.width - 8));
+    let top = r.top - t.height - 8;
+    if (top < 8) top = r.bottom + 8; // flip below if no room above
+    tip.style.left = Math.round(left) + 'px';
+    tip.style.top = Math.round(top) + 'px';
+  }
+  function hide(){ tip.style.display = 'none'; }
+  document.addEventListener('mouseover', e => { const el = e.target.closest('[data-tip]'); if (el) show(el); });
+  document.addEventListener('mouseout', e => { const el = e.target.closest('[data-tip]'); if (el) hide(); });
+})();
 
 // Init
 loadMyProfile();
@@ -4595,6 +4743,58 @@ boxNameInput.addEventListener('input', () => {
   boxNameInput.value = boxNameInput.value.replace(/[^a-zA-Z0-9_]/g, '').toUpperCase();
 });
 
+// Box accent palette: 7 existing (from PE_COLORS) + 7 brighter extras (placeholder — replace later)
+const BOX_COLORS = [
+  '#F44336', '#FF7A3D', '#F5C518', '#54D6A6', '#33C6E0', '#5C8AFF', '#B56FD4',
+  '#A3E635', '#2DD4BF', '#38BDF8', '#A78BFA', '#E879F9', '#FB7185', '#FBBF24'
+];
+const boxSwatchesEl = document.getElementById('boxSwatches');
+let selectedBoxColor = BOX_COLORS[0];
+boxSwatchesEl.innerHTML = BOX_COLORS.map((c, i) =>
+  `<button class="box-swatch${i === 0 ? ' active' : ''}" data-color="${c}" style="background:${c}" title="${c}"></button>`).join('');
+function selectBoxColor(c) {
+  selectedBoxColor = c;
+  boxSwatchesEl.querySelectorAll('.box-swatch').forEach(b => b.classList.toggle('active', b.dataset.color === c));
+  createModal.style.setProperty('--ac', c); // live: name, focus ring & CREATE button take the box colour
+}
+boxSwatchesEl.querySelectorAll('.box-swatch').forEach(b => b.addEventListener('click', () => selectBoxColor(b.dataset.color)));
+selectBoxColor(selectedBoxColor);
+
+// Reactions: keep at most 5 emoji (grapheme clusters), preserving spacing
+const boxReactions = document.getElementById('boxReactions');
+const reactionsExample = document.getElementById('reactionsExample');
+function syncReactionsExample() { reactionsExample.style.display = boxReactions.value ? 'none' : ''; }
+syncReactionsExample();
+boxReactions.addEventListener('input', () => {
+  syncReactionsExample();
+  let graphemes;
+  try { graphemes = [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(boxReactions.value)].map(s => s.segment); }
+  catch (e) { graphemes = Array.from(boxReactions.value); }
+  if (graphemes.filter(g => g.trim() !== '').length <= 5) return;
+  let count = 0, out = '';
+  for (const g of graphemes) {
+    if (g.trim() === '') { out += g; continue; }
+    if (count < 5) { out += g; count++; }
+  }
+  boxReactions.value = out.replace(/\s+$/, '');
+});
+
+// Access — custom dropdown
+const boxAccess = document.getElementById('boxAccess');
+const boxAccessValue = boxAccess.querySelector('.ms-value');
+boxAccess.addEventListener('click', e => {
+  const opt = e.target.closest('.ms-opt');
+  if (opt) {
+    boxAccess.querySelectorAll('.ms-opt').forEach(o => o.classList.toggle('selected', o === opt));
+    boxAccessValue.textContent = opt.textContent;
+    boxAccess.dataset.value = opt.dataset.value;
+    boxAccess.classList.remove('open');
+    return;
+  }
+  boxAccess.classList.toggle('open');
+});
+document.addEventListener('click', e => { if (!boxAccess.contains(e.target)) boxAccess.classList.remove('open'); });
+
 // Search box
 const searchBox = document.getElementById('searchBox');
 
@@ -4753,6 +4953,10 @@ function setMobileView(view) {
           <div class="profile-stat"><div class="profile-stat-num">23d</div><div class="profile-stat-label">Active</div></div>
         </div>
         <div class="profile-modal-divider"></div>
+        <div class="profile-modal-row">
+          <span class="profile-modal-row-label">Bio</span>
+          <span class="profile-modal-row-value profile-bio-value">${(myProfile.bio && myProfile.bio.trim()) ? siEsc(myProfile.bio) : '—'}</span>
+        </div>
         <div class="profile-modal-row">
           <span class="profile-modal-row-label">Joined</span>
           <span class="profile-modal-row-value">26 / 07 / 2024</span>
