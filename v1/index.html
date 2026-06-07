@@ -33,6 +33,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
    Firefox (no ::-webkit-scrollbar support) keeps using scrollbar-width/color. */
 @supports selector(::-webkit-scrollbar){
   * { scrollbar-width: auto !important; scrollbar-color: auto !important; }
+  /* Global fallback so elements without their own ::-webkit-scrollbar rules
+     (settings/users-list bodies, etc.) still get a thin dark scrollbar in WebKit. */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 0; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 }
 .left-rooms { flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .left-rooms:hover { scrollbar-color: #2a2a2a #0a0a0a; }
@@ -131,9 +137,8 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .chat-feed:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .chat-feed::-webkit-scrollbar { width: 6px; background: transparent; }
 .chat-feed::-webkit-scrollbar-track { background: transparent; }
-.chat-feed::-webkit-scrollbar-thumb { background: transparent; border-radius: 0; }
-.chat-feed:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
-.chat-feed:hover::-webkit-scrollbar-track { background: #0a0a0a; }
+.chat-feed::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 0; } /* visible while scrolling (all chats, touch) */
+.chat-feed:hover::-webkit-scrollbar-thumb { background: #3a3a3a; }
 .msg { display: grid; grid-template-columns: 44px 1fr; padding: 3px 14px; gap: 0; }
 /* General / My Box: box tag + avatar float at the start; message text flows full-width (no indent on wrap) */
 .msg.has-tag { display: block; }
