@@ -147,6 +147,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .msg.has-tag .msg-body { display: block; }
 .msg.has-tag .msg-troll { float: left; }
 .msg:hover { background: #111; }
+/* Last reply addressed to the current user — accent-tinted highlight (box accent), so it isn't missed */
+.msg.reply-to-me { background: color-mix(in srgb, var(--ac, #8CE45A) 7%, transparent); box-shadow: inset 3px 0 0 var(--ac, #8CE45A); }
+.msg.reply-to-me:hover { background: color-mix(in srgb, var(--ac, #8CE45A) 12%, transparent); }
 .msg-tag { font-size: 12px; color: #e0e0e0; text-align: left; padding-right: 8px; padding-top: 1px; font-family: 'CHNOPixelCodePro', monospace; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.03em; }
 .msg-tag-hash { font-weight: 700; }
 .msg-body { display: grid; grid-template-columns: 28px 1fr; }
@@ -207,6 +210,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 @keyframes blink { 50% { opacity: 0; } }
 .big-num { font-size: 24px; color: #e0e0e0; letter-spacing: 0.02em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .small-change { font-size: 12px; padding: 1px 5px; border-radius: 0; font-family: 'Roboto', sans-serif; }
+/* Inline pixel glyphs replacing UI unicode arrows/star/play — no emoji substitution on mobile */
+.tri { display: inline-block; vertical-align: -1px; }
+.tri.star { vertical-align: -1px; margin-right: 2px; }
 .up { background: #1a2e1a; color: #3ddc84; }
 .down { background: #2e1a1a; color: #ff5555; }
 .poll-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
@@ -452,6 +458,18 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .modal, .profile-modal, .settings-modal { position: relative; }
 .modal::after, .profile-modal::after, .settings-modal::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.13) 0px, rgba(0,0,0,0.13) 1px, transparent 1px, transparent 3px); }
 
+/* Real "CRT effects OFF" (settings toggle): kill scanlines, beam, noise, vignette & glow.
+   html.crt-off out-specifies the per-theme !important effect rules. */
+html.crt-off .crt-beam,
+html.crt-off .crt-noise { display: none !important; }
+html.crt-off .app::before,
+html.crt-off .app::after,
+html.crt-off body::before { background: none !important; animation: none !important; }
+html.crt-off .modal::after,
+html.crt-off .profile-modal::after,
+html.crt-off .settings-modal::after { display: none !important; }
+html.crt-off body { text-shadow: none !important; }
+
 /* PROFILE EDIT MODAL */
 .pe-modal { width: 380px; }
 .pe-head-actions { display: flex; align-items: center; gap: 14px; }
@@ -631,9 +649,12 @@ body.is-anon .stats-divider { display: none; }
 .mix-widget-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .mix-widget-src { font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; letter-spacing: 0.06em; border: 1px solid; padding: 2px 6px; text-transform: uppercase; }
 .mix-widget-ctrls { display: flex; align-items: center; gap: 10px; }
-.mix-widget-ctrls .mix-arrow, .mix-widget-ctrls .mix-remove { cursor: pointer; color: #555; font-size: 14px; line-height: 1; user-select: none; }
-.mix-widget-ctrls .mix-arrow:hover { color: var(--ac, #8CE45A); }
-.mix-widget-ctrls .mix-remove { font-size: 20px; }
+/* Same arrows as box widgets (pixel SVG with shaft); cross matched to their height */
+.mix-widget-ctrls .mix-arrow, .mix-widget-ctrls .mix-remove { cursor: pointer; color: #9a9a9a; line-height: 1; user-select: none; display: flex; align-items: center; }
+.mix-widget-ctrls .mix-arrow { opacity: 0.55; transition: opacity 0.15s; }
+.mix-widget-ctrls .mix-arrow:hover { opacity: 1; }
+.mix-widget-ctrls .mix-arrow svg { display: block; width: 14px; height: 14px; }
+.mix-widget-ctrls .mix-remove { font-size: 18px; height: 14px; }
 .mix-widget-ctrls .mix-remove:hover { color: #f44; }
 /* My Mix widget picker modal */
 .mix-picker { width: 380px; max-width: 92vw; }
@@ -2175,7 +2196,7 @@ body.is-anon .stats-divider { display: none; }
       </div>
     </div>
     <div class="profile-btns">
-      <div class="pbtn" id="settingsBtn">Settings &#9881;</div>
+      <div class="pbtn" id="settingsBtn">Settings</div>
       <div class="pbtn" id="logoutBtn">Logout &#8594;</div>
     </div>
   </div>
@@ -2204,7 +2225,7 @@ body.is-anon .stats-divider { display: none; }
     <button class="bvt-seg active" id="bvtBoxSeg" onclick="setMobileView('chat')">Box</button>
     <button class="bvt-seg" id="bvtTermSeg" onclick="setMobileView('terminal')">Terminal</button>
   </div>
-  <div class="announce" id="chatAnnounce"><span style="color:#333">&#9873;</span> Any long message about the airdrop or other announcements? Everything's here.</div>
+  <div class="announce" id="chatAnnounce"><svg width="9" height="10" viewBox="0 0 9 10" fill="#333" style="vertical-align:-1px;margin-right:4px"><path d="M0 0h1v10H0zM1 0h7L6 2l2 2H1z"/></svg>Any long message about the airdrop or other announcements? Everything's here.</div>
   <!-- My Box: "Following … Edit" sources summary (shown only for My Box chat with sources) -->
   <div class="mybox-bar hidden" id="myboxBar"></div>
   <div class="chat-feed" id="chat-feed"></div>
@@ -2300,7 +2321,7 @@ body.is-anon .stats-divider { display: none; }
           <span class="settings-row-label">CRT effects</span>
           <span class="settings-row-hint">Scanlines, beam &amp; noise</span>
         </div>
-        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+        <div class="settings-toggle crt-toggle on" onclick="setCrtEffects(!this.classList.contains('on'))"></div>
       </div>
     </div>
 
@@ -2722,7 +2743,7 @@ body.is-anon .stats-divider { display: none; }
             <span class="settings-row-label">CRT effects</span>
             <span class="settings-row-hint">Scanlines, beam &amp; noise</span>
           </div>
-          <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+          <div class="settings-toggle crt-toggle on" onclick="setCrtEffects(!this.classList.contains('on'))"></div>
         </div>
       </div>
 
@@ -3096,6 +3117,19 @@ const CHATS = {
 ['eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 CHATS.mymix = []; // My Mix is built dynamically from bots the user adds
 
+// Demo seed: a couple of replies that mention the current user, so the "reply to me"
+// highlight is visible (last such reply in a box gets the accent-tinted highlight).
+(function seedRepliesToMe(){
+  const me = 'BOSS_NIKITOS';
+  const seed = (arr, tag, myText, myTime, byWho, reply, replyTime) => {
+    if (!arr) return; const at = arr.length;
+    arr.push({ tag, author:'boss_nikitos', bot:false, text:myText, time:myTime });
+    arr.push({ tag, author:byWho, bot:false, text:reply, time:replyTime, replyTo:{ idx:at, author:me, preview:myText } });
+  };
+  seed(CHATS.btc, '$BTC', 'btc reclaiming 65k feels different this time', '2:30pm', 'whalewatch', 'agreed, the etf flows back you up on this one', '2:33pm');
+  seed(CHATS.general, '#GENERAL', 'the new custom widgets are actually huge', '2:38pm', 'kyoshee', 'fr the My Box terminal is goated', '2:41pm');
+})();
+
 // Widget control icons — all 10×10 so the "+/−" and the arrows line up by height.
 const ADD_PLUS_SVG  = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="10"/><rect x="0" y="4" width="10" height="2"/></svg>`;
 const ADD_MINUS_SVG = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="0" y="4" width="10" height="2"/></svg>`;
@@ -3298,15 +3332,15 @@ function highlightChatMsg(idx, box){
 const PANELS = {
   btc: (ac,id)=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE USERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">267 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down">▼ 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
-    <div class="r-block">${rHead('COMMUNITY SENTIMENT')}<div class="mood-grid"><div class="mood-btn sel">BULLISH ▲</div><div class="mood-btn">BEARISH ▼</div><div class="mood-btn">HODL</div><div class="mood-btn">NGMI</div></div><div style="margin-top:7px"><div class="poll-row"><span class="poll-lbl">Bullish</span><div class="bar-bg"><div class="bar-fg" style="width:62%"></div></div><span class="bar-pct">62%</span></div><div class="poll-row"><span class="poll-lbl">Bearish</span><div class="bar-bg"><div class="bar-fg" style="width:24%"></div></div><span class="bar-pct">24%</span></div><div class="poll-row"><span class="poll-lbl">Neutral</span><div class="bar-bg"><div class="bar-fg" style="width:14%"></div></div><span class="bar-pct">14%</span></div></div></div>
+    <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg> 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
+    <div class="r-block">${rHead('COMMUNITY SENTIMENT')}<div class="mood-grid"><div class="mood-btn sel">BULLISH <svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg></div><div class="mood-btn">BEARISH <svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg></div><div class="mood-btn">HODL</div><div class="mood-btn">NGMI</div></div><div style="margin-top:7px"><div class="poll-row"><span class="poll-lbl">Bullish</span><div class="bar-bg"><div class="bar-fg" style="width:62%"></div></div><span class="bar-pct">62%</span></div><div class="poll-row"><span class="poll-lbl">Bearish</span><div class="bar-bg"><div class="bar-fg" style="width:24%"></div></div><span class="bar-pct">24%</span></div><div class="poll-row"><span class="poll-lbl">Neutral</span><div class="bar-bg"><div class="bar-fg" style="width:14%"></div></div><span class="bar-pct">14%</span></div></div></div>
     ${socialIntelCard(id||'btc')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Fed holds rates — BTC pumps 1.2%</span><div class="news-time" style="padding-left:9px">3 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH staking hits ATH — 32M ETH locked</span><div class="news-time" style="padding-left:9px">18 min ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Don't burn your savings on the stock market alone; do it under the guidance of an experienced investment advisor!</div></div>
     <div class="r-block">${rHead('BUDGET')}<div class="budget-row"><span>SPENT: $1,400</span><span>LIMIT: $2,000</span></div>${budgetBar(1400,2000,28)}<div class="budget-foot"><div class="budget-msg">You're getting close to your limit. Consider slowing down spending.</div><button class="budget-details">Details</button></div></div>`,
   gaming: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE GAMERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">1,841 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('LIVE STREAMS NOW')}<div class="trend-row"><span class="trend-name">xQc — Minecraft</span><span class="trend-val">127k &#9654;</span></div><div class="trend-row"><span class="trend-name">shroud — Valorant</span><span class="trend-val">84k &#9654;</span></div><div class="trend-row"><span class="trend-name">pokimane — Chat</span><span class="trend-val">51k &#9654;</span></div></div>
+    <div class="r-block">${rHead('LIVE STREAMS NOW')}<div class="trend-row"><span class="trend-name">xQc — Minecraft</span><span class="trend-val">127k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div><div class="trend-row"><span class="trend-name">shroud — Valorant</span><span class="trend-val">84k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div><div class="trend-row"><span class="trend-name">pokimane — Chat</span><span class="trend-val">51k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div></div>
     <div class="r-block">${rHead('TRENDING TODAY')}<div class="trend-row"><span class="trend-name">#1 Elden Ring DLC</span><span class="trend-val">+340%</span></div><div class="trend-row"><span class="trend-name">#2 GTA VI leak</span><span class="trend-val">+210%</span></div><div class="trend-row"><span class="trend-name">#3 Valorant patch</span><span class="trend-val">+88%</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — GOAT?')}<div class="poll-row"><span class="poll-lbl">MrBeast</span><div class="bar-bg"><div class="bar-fg" style="width:44%"></div></div><span class="bar-pct">44%</span></div><div class="poll-row"><span class="poll-lbl">PewDiePie</span><div class="bar-bg"><div class="bar-fg" style="width:38%"></div></div><span class="bar-pct">38%</span></div><div class="poll-row"><span class="poll-lbl">Ninja</span><div class="bar-bg"><div class="bar-fg" style="width:18%"></div></div><span class="bar-pct">18%</span></div></div>
     ${socialIntelCard('gaming')}
@@ -3330,8 +3364,8 @@ const PANELS = {
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Finally something that can lie faster than politicians — AI.</div></div>`,
   ai: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">NERDS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">578 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('AI STOCK INDEX')}<div class="big-num">$842.5</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up">▲ 2.4%</span></div>${stockChart(3)}<div style="margin-top:8px"><div class="trend-row"><span class="trend-name">NVDA</span><span class="trend-val small-change up">▲ 3.8%</span></div><div class="trend-row"><span class="trend-name">MSFT</span><span class="trend-val small-change up">▲ 1.6%</span></div><div class="trend-row"><span class="trend-name">GOOGL</span><span class="trend-val small-change up">▲ 2.1%</span></div><div class="trend-row"><span class="trend-name">META</span><span class="trend-val small-change down">▼ 0.4%</span></div></div></div>
-    <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val">★18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val">★11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val">★9k</span></div></div>
+    <div class="r-block">${rHead('AI STOCK INDEX')}<div class="big-num">$842.5</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.4%</span></div>${stockChart(3)}<div style="margin-top:8px"><div class="trend-row"><span class="trend-name">NVDA</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 3.8%</span></div><div class="trend-row"><span class="trend-name">MSFT</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 1.6%</span></div><div class="trend-row"><span class="trend-name">GOOGL</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.1%</span></div><div class="trend-row"><span class="trend-name">META</span><span class="trend-val small-change down"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg> 0.4%</span></div></div></div>
+    <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>9k</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
     ${socialIntelCard('ai')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
@@ -3339,7 +3373,7 @@ const PANELS = {
     <div class="r-block">${rHead('TOP MODELS 24H')}${bracketStat('API calls','4.2M')}${bracketStat('Models','130')}${bracketStat('Active users','15k')}${bracketStat('Avg latency','7ms')}<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-family:'CHNOPixelCodePro',monospace;font-size:11px;color:#999;letter-spacing:0.04em"><span style="color:#e0e0e0">USAGE BY HOUR</span><span style="color:#888">1 day · all models</span></div>${resourceChart(2)}</div>`,
   stables: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">STABLE DEGENS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">189 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
+    <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
     <div class="r-block">${rHead('PEG TRACKER')}<div class="trend-row"><span class="trend-name">USDT</span><span class="trend-val" style="color:${ac}">$1.0001</span></div><div class="trend-row"><span class="trend-name">USDC</span><span class="trend-val" style="color:${ac}">$0.9999</span></div><div class="trend-row"><span class="trend-name">DAI</span><span class="trend-val" style="color:${ac}">$1.0002</span></div><div class="trend-row"><span class="trend-name">PYUSD</span><span class="trend-val" style="color:${ac}">$0.9998</span></div></div>
     <div class="r-block">${rHead('DOMINANCE')}<div class="poll-row"><span class="poll-lbl">USDT</span><div class="bar-bg"><div class="bar-fg" style="width:68%"></div></div><span class="bar-pct">68%</span></div><div class="poll-row"><span class="poll-lbl">USDC</span><div class="bar-bg"><div class="bar-fg" style="width:21%"></div></div><span class="bar-pct">21%</span></div><div class="poll-row"><span class="poll-lbl">DAI</span><div class="bar-bg"><div class="bar-fg" style="width:6%"></div></div><span class="bar-pct">6%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:5%"></div></div><span class="bar-pct">5%</span></div></div>
     ${socialIntelCard('stables')}
@@ -3347,7 +3381,7 @@ const PANELS = {
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">My portfolio is 100% stablecoins.<br>I sleep great while yall get rekt.</div></div>`,
   etf: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">TRADERS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">412 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('BTC ETF TOTAL AUM')}<div class="big-num">$62.8B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up">▲ 1.8%</span></div>${spark([20,22,25,28,30,33,35,38,40,42,45,50,55,58,62],ac)}</div>
+    <div class="r-block">${rHead('BTC ETF TOTAL AUM')}<div class="big-num">$62.8B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 1.8%</span></div>${spark([20,22,25,28,30,33,35,38,40,42,45,50,55,58,62],ac)}</div>
     <div class="r-block">${rHead('DAILY FLOWS')}<div class="trend-row"><span class="trend-name">IBIT (BlackRock)</span><span class="trend-val" style="color:#3ddc84">+$401M</span></div><div class="trend-row"><span class="trend-name">FBTC (Fidelity)</span><span class="trend-val" style="color:#3ddc84">+$120M</span></div><div class="trend-row"><span class="trend-name">GBTC (Grayscale)</span><span class="trend-val" style="color:#ff5555">-$52M</span></div><div class="trend-row"><span class="trend-name">ARKB (Ark/21)</span><span class="trend-val" style="color:#3ddc84">+$38M</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST ETF?')}<div class="poll-row"><span class="poll-lbl">IBIT</span><div class="bar-bg"><div class="bar-fg" style="width:52%"></div></div><span class="bar-pct">52%</span></div><div class="poll-row"><span class="poll-lbl">FBTC</span><div class="bar-bg"><div class="bar-fg" style="width:28%"></div></div><span class="bar-pct">28%</span></div><div class="poll-row"><span class="poll-lbl">GBTC</span><div class="bar-bg"><div class="bar-fg" style="width:12%"></div></div><span class="bar-pct">12%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:8%"></div></div><span class="bar-pct">8%</span></div></div>
     ${socialIntelCard('etf')}
@@ -3473,6 +3507,7 @@ function _bootStop(){
 }
 function crtBootBoxes(){
   if (typeof isMobile === 'function' && !isMobile()){ animateRoomPreviews(); return; }
+  if (typeof crtEffectsOn === 'function' && !crtEffectsOn()){ animateRoomPreviews(); return; } // CRT off → no boot scan
   const list = document.getElementById('rooms-list');
   const rows = list ? Array.from(list.querySelectorAll('.room-item')) : [];
   if (!list || !rows.length){ animateRoomPreviews(); return; }
@@ -3656,6 +3691,8 @@ document.addEventListener('click', () => closeMsgPopup());
 // === REPLY ===
 function escapeReply(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+// Current user's nick (no @, upper) — for matching replies addressed to me
+function myNick(){ return (document.getElementById('profileDisplayName')?.textContent || '@BOSS_NIKITOS').replace(/^@/,'').toUpperCase(); }
 function renderReplyQuote(m){
   const rt = m && m.replyTo;
   if (!rt) return '';
@@ -3869,6 +3906,10 @@ function renderChat(){
     if (myBoxEmpty()) { renderMyMixEmpty(feedEl); return; }
   }
   const msgs = active === 'mymix' ? buildMyMix() : (CHATS[active]||CHATS.btc);
+  // Highlight the LAST message that replies to the current user (so a reply to you isn't missed)
+  const _me = myNick();
+  let lastReplyToMeIdx = -1;
+  msgs.forEach((m,i) => { if (m && m.replyTo && (m.replyTo.author||'').toUpperCase() === _me) lastReplyToMeIdx = i; });
   let html='';
   msgs.forEach((m,i)=>{
     if(i%10===0){
@@ -3889,7 +3930,7 @@ function renderChat(){
     const trollSrc = m.bot ? botAvatar(botAc) : getTroll(m.author, m.bot).src;
     const nickColor = m.bot ? botAc : getTroll(m.author, m.bot).color;
     const botTextStyle = m.bot ? ` style="color:color-mix(in srgb, ${botAc} 45%, #c8c8c8)"` : '';
-    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
+    html+=`<div class="msg${m.tr?' has-tr':''}${showTag?' has-tag':''}${i===lastReplyToMeIdx?' reply-to-me':''}" data-idx="${i}" data-author="${m.author}" data-bot="${m.bot?1:''}" style="${showTag?'':'grid-template-columns:1fr'}">
       ${replyHtml}
       ${showTag?msgSrcTag(m):''}
       <div class="msg-body">
@@ -4005,8 +4046,8 @@ function buildMixWidget(w, pos){
   bar.className = 'mix-widget-bar';
   bar.innerHTML = `<span class="mix-widget-src" style="color:${room.ac};border-color:${room.ac}">${room.label}</span>`
     + `<span class="mix-widget-ctrls">`
-    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},-1)" title="Move up">&#9650;</span>`
-    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},1)" title="Move down">&#9660;</span>`
+    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},-1)" title="Move up">${ARROW_UP_SVG}</span>`
+    + `<span class="mix-arrow" onclick="moveMyMixWidget(${pos},1)" title="Move down">${ARROW_DOWN_SVG}</span>`
     + `<span class="mix-remove" onclick="removeMyMixWidget(${pos})" title="Remove">&times;</span>`
     + `</span>`;
   block.insertBefore(bar, block.firstChild);
@@ -4035,13 +4076,13 @@ function moveMyMixWidget(pos, dir){
   if (n < 0 || n >= cur.length) return;
   [cur[pos], cur[n]] = [cur[n], cur[pos]];
   saveMyMixWidgets(cur);
-  renderRight();
+  refreshActiveTerminal();
 }
 function removeMyMixWidget(pos){
   const cur = getMyMixWidgets();
   cur.splice(pos, 1);
   saveMyMixWidgets(cur);
-  renderRight();
+  refreshActiveTerminal();
 }
 // ----- Terminal widget picker (widgets only) -----
 function openMixPicker(){
@@ -4078,7 +4119,7 @@ function toggleMixWidget(box, idx){
   if (at >= 0) cur.splice(at, 1); else cur.push({ box, idx });
   saveMyMixWidgets(cur);
   renderMixPicker();
-  if (active === 'mymix') renderRight();
+  if (active === 'mymix') refreshActiveTerminal();
 }
 
 // Toggle a widget's "+"/"−" button look + tooltip
@@ -4367,6 +4408,15 @@ function showRegwall(reason){
   if (m) m.classList.remove('hidden');
 }
 function hideRegwall(){ const m = document.getElementById('regwallModal'); if (m) m.classList.add('hidden'); }
+
+// ── CRT effects toggle (settings) — real on/off, persisted ──
+function setCrtEffects(on){
+  document.documentElement.classList.toggle('crt-off', !on);
+  document.querySelectorAll('.crt-toggle').forEach(t => t.classList.toggle('on', on));
+  try { localStorage.setItem('tb_crt', on ? '1' : '0'); } catch (e) {}
+}
+function crtEffectsOn(){ return !document.documentElement.classList.contains('crt-off'); }
+(function(){ let on = true; try { on = localStorage.getItem('tb_crt') !== '0'; } catch (e) {} setCrtEffects(on); })();
 
 function setAuthState(state, opts) {
   const prev = authState;
@@ -5347,6 +5397,12 @@ function unmountBoxTerminal(){
   const mount = document.getElementById('mobileTermMount');
   if (mount) mount.innerHTML = '';
   renderRight(); // restore widgets back into #right-panel
+}
+// Refresh the box terminal so edits show live. On mobile the widgets are moved into the centre
+// mount, so re-render of #right-panel alone isn't visible — re-mount instead.
+function refreshActiveTerminal(){
+  if (typeof isMobile === 'function' && isMobile() && mobileView === 'terminal') mountBoxTerminal();
+  else renderRight();
 }
 
 function setMobileView(view) {
