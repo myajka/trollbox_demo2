@@ -3117,19 +3117,6 @@ const CHATS = {
 ['eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 CHATS.mymix = []; // My Mix is built dynamically from bots the user adds
 
-// Demo seed: a couple of replies that mention the current user, so the "reply to me"
-// highlight is visible (last such reply in a box gets the accent-tinted highlight).
-(function seedRepliesToMe(){
-  const me = 'BOSS_NIKITOS';
-  const seed = (arr, tag, myText, myTime, byWho, reply, replyTime) => {
-    if (!arr) return; const at = arr.length;
-    arr.push({ tag, author:'boss_nikitos', bot:false, text:myText, time:myTime });
-    arr.push({ tag, author:byWho, bot:false, text:reply, time:replyTime, replyTo:{ idx:at, author:me, preview:myText } });
-  };
-  seed(CHATS.btc, '$BTC', 'btc reclaiming 65k feels different this time', '2:30pm', 'whalewatch', 'agreed, the etf flows back you up on this one', '2:33pm');
-  seed(CHATS.general, '#GENERAL', 'the new custom widgets are actually huge', '2:38pm', 'kyoshee', 'fr the My Box terminal is goated', '2:41pm');
-})();
-
 // Widget control icons — all 10×10 so the "+/−" and the arrows line up by height.
 const ADD_PLUS_SVG  = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="10"/><rect x="0" y="4" width="10" height="2"/></svg>`;
 const ADD_MINUS_SVG = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="0" y="4" width="10" height="2"/></svg>`;
