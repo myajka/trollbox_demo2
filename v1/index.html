@@ -17,7 +17,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; }
 body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%); }
-.app { display: grid; grid-template-columns: 360px 1fr 360px; height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Roboto', sans-serif; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 8px; gap: 8px; }
+.app { display: grid; grid-template-columns: clamp(240px, 26vw, 360px) 1fr clamp(240px, 26vw, 360px); height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Roboto', sans-serif; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 12px; gap: 10px; }
 .app::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px); }
 .app::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%); animation: flicker 3s steps(4) infinite; }
 @keyframes flicker { 0%,100% { opacity: 1; } 10% { opacity: 0.95; } 30% { opacity: 1; } 45% { opacity: 0.97; } 60% { opacity: 1; } 80% { opacity: 0.94; } 90% { opacity: 1; } }
@@ -79,13 +79,56 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .room-count { font-size: 12px; color: #555; font-family: 'Roboto', sans-serif; }
 .room-item.active .room-count { color: #777; }
 /* My Box — distinct pinned button at the top of the sidebar (desktop) */
-.mybox-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 24px); box-sizing: border-box; margin: 10px 12px; padding: 12px; background: transparent; border: 1px solid #3a3a3a; color: #e0e0e0; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.mybox-btn { position: relative; overflow: hidden; display: flex; align-items: center; gap: 13px; width: calc(100% - 24px); box-sizing: border-box; margin: 10px 12px; padding: 10px 12px; background: transparent; border: 1px solid #3a3a3a; color: #e0e0e0; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
 .mybox-btn-icon { fill: #888; flex-shrink: 0; transition: fill .15s; }
-.mybox-btn span { position: relative; top: -2px; } /* pixel-font glyphs sit low in the line box — lift to optical-center with the icon */
+.mybox-btn-body { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.mybox-btn-top { display: flex; align-items: center; gap: 8px; }
+.mybox-btn-label { position: relative; top: -1px; font-size: 15px; } /* pixel-font glyphs sit low in the line box — lift to optical-center with the icon */
+.mybox-btn-meta { margin-left: auto; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.mybox-btn-count { font-family: 'Roboto', sans-serif; font-size: 10px; line-height: 1; letter-spacing: 0; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #2e2e2e; color: #aaa; display: inline-flex; align-items: center; justify-content: center; }
+.mybox-btn:hover .mybox-btn-count, .mybox-btn.active .mybox-btn-count { background: rgba(140,228,90,0.18); color: #8CE45A; }
+.mybox-btn-replies { font-size: 10px; line-height: 1; padding: 2px 5px; border-radius: 8px; background: #E8A33D; color: #1a1a1a; font-weight: 700; letter-spacing: 0; }
+.mybox-btn-preview { font-family: 'Roboto', sans-serif; font-size: 11px; text-transform: none; letter-spacing: 0; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.mybox-btn-preview .mbp-nick { font-family: 'CHNOPixelCodePro', monospace; font-weight: 700; color: #b0b0b0; } /* pixel font for the source nick */
+.mybox-btn-empty { color: #6a6a6a; font-style: normal; font-weight: 500; }
+/* Green fade on the right of the EMPTY My Box button (sits behind the text) */
+.mybox-grad { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, rgba(29,29,29,0) 42%, rgba(70,121,47,0.85) 88%, #62B83C 100%); }
 .mybox-btn:hover, .mybox-btn.active { border-color: #8CE45A; background: rgba(140,228,90,0.12); color: #8CE45A; }
 .mybox-btn:hover .mybox-btn-icon, .mybox-btn.active .mybox-btn-icon { fill: #8CE45A; }
+/* On hover/active the preview text (nick, message, empty hint) goes green too */
+.mybox-btn:hover .mybox-btn-preview, .mybox-btn.active .mybox-btn-preview,
+.mybox-btn:hover .mbp-nick, .mybox-btn.active .mbp-nick,
+.mybox-btn:hover .mybox-btn-empty, .mybox-btn.active .mybox-btn-empty { color: #8CE45A; }
 /* Separate the channel list from the My Box button — top border on the first channel (GENERAL) */
 .rooms-pinned + .room-item { border-top: 1px solid #2a2a2a; }
+
+/* ── Left column collapse (desktop): narrow rail = coloured # + short box name ── */
+.left-collapse-btn { background: transparent; border: 1px solid #333; color: #888; width: 22px; height: 22px; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: color .15s, border-color .15s; }
+.left-collapse-btn:hover { color: #e0e0e0; border-color: #555; }
+.left-collapse-btn svg { display: block; transition: transform .15s; }
+.app.left-collapsed .left-collapse-btn svg { transform: rotate(180deg); } /* chevron flips to ▶ when collapsed */
+.app.left-collapsed { grid-template-columns: 128px 1fr clamp(240px, 26vw, 360px); }
+/* logo: hide the "TROLL.BOX" wordmark but keep the troll mark (left of the wide logo) by clipping */
+.left-logo-wrap { display: inline-flex; align-items: center; }
+.app.left-collapsed .left-logo-wrap { width: 20px; overflow: hidden; flex-shrink: 0; }
+.app.left-collapsed .app-version { display: none; }
+/* rows: keep only the coloured # + name */
+.app.left-collapsed .room-preview, .app.left-collapsed .room-count, .app.left-collapsed .room-tag { display: none; }
+.app.left-collapsed .room-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* My Box pinned button: icon + label only */
+.app.left-collapsed .mybox-btn-preview, .app.left-collapsed .mybox-btn-meta, .app.left-collapsed .mybox-grad { display: none; }
+.app.left-collapsed .mybox-btn { gap: 8px; padding: 10px 8px; }
+.app.left-collapsed .mybox-btn-label { white-space: nowrap; font-size: 13px; }
+.app.left-collapsed .room-main { min-width: 0; }
+/* footer: collapsed = the SAME search box, just narrowed — keep its border + loupe (left),
+   hide the input text; click expands the column. Only the + create button is hidden. */
+.app.left-collapsed .create-box-btn { display: none; }
+.app.left-collapsed .search-box { cursor: pointer; }
+.app.left-collapsed .search-box input, .app.left-collapsed .search-box .search-cursor { display: none; }
+.app.left-collapsed .profile-label, .app.left-collapsed .profile-row > div:not(.avatar), .app.left-collapsed .profile-btns { display: none; }
+.app.left-collapsed .profile-row { justify-content: center; }
+.app.left-collapsed .auth-block { display: none; }
+@media (max-width: 900px){ .left-collapse-btn { display: none; } } /* feature is desktop-only */
 
 /* Connection status — pixel dot (shared colours/states; placement differs per surface) */
 .conn-dot { line-height: 0; pointer-events: none; color: #f7c948; }
@@ -114,12 +157,15 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .pbtn { flex: 1; padding: 5px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #eee; font-size: 11px; font-family: 'Roboto', sans-serif; cursor: pointer; text-align: center; }
 .pbtn:hover { color: #e0e0e0; border-color: #444; }
 .section-head { padding: 10px 12px; font-size: 15px; color: #e0e0e0; letter-spacing: 0.08em; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; min-height: 44px; box-sizing: border-box; flex-shrink: 0; }
+/* Right column (TERMINAL) header has a single label — pin it hard to the left */
+#right-panel .section-head { justify-content: flex-start; text-align: left; }
 .search-create-row { display: flex; gap: 6px; padding: 7px 10px; border-top: 1px solid #333; flex-shrink: 0; align-items: stretch; }
 .search-box { flex: 1; background: transparent; border: 1px solid #333; border-radius: 0; padding: 6px 10px; display: flex; gap: 6px; align-items: center; margin: 0; position: relative; }
 .search-cursor { display: none; position: absolute; width: 9px; height: 14px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
 .search-box.focused .search-cursor { display: block; }
 .search-box input { background: none; border: none; outline: none; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 13px; width: 100%; caret-color: transparent; }
 .search-box input::placeholder { color: #555; }
+.search-box .search-glyph { color: #aaa; width: 16px; height: 16px; }
 
 /* CENTER */
 .center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; }
@@ -134,11 +180,13 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .toggle.on { background: var(--ac, #8CE45A); }
 .toggle.on .toggle-dot { left: 14px; background: #0a0a0a; }
 .chat-feed { flex: 1; overflow-y: auto; padding: 8px 0; min-height: 0; scrollbar-width: thin; scrollbar-color: transparent transparent; }
-.chat-feed:hover { scrollbar-color: #2a2a2a #0a0a0a; }
 .chat-feed::-webkit-scrollbar { width: 6px; background: transparent; }
 .chat-feed::-webkit-scrollbar-track { background: transparent; }
-.chat-feed::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 0; } /* visible while scrolling (all chats, touch) */
-.chat-feed:hover::-webkit-scrollbar-thumb { background: #3a3a3a; }
+.chat-feed::-webkit-scrollbar-thumb { background: transparent; border-radius: 0; } /* hidden when static (desktop) */
+/* Auto-hide: show the thumb only while actively scrolling (JS toggles .scrolling, clears after idle) */
+.chat-feed.scrolling { scrollbar-color: #2a2a2a #0a0a0a; }
+.chat-feed.scrolling::-webkit-scrollbar-thumb { background: #2a2a2a; }
+.chat-feed.scrolling:hover::-webkit-scrollbar-thumb { background: #3a3a3a; }
 .msg { display: grid; grid-template-columns: 44px 1fr; padding: 3px 14px; gap: 0; }
 /* General / My Box: box tag + avatar float at the start; message text flows full-width (no indent on wrap) */
 .msg.has-tag { display: block; }
@@ -176,7 +224,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .chat-input:focus { border-color: #333; }
 @keyframes crt-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 .crt-cursor { display: none; position: absolute; width: 9px; height: 16px; top: 50%; transform: translateY(-50%); background: var(--ac, #8CE45A); opacity: 0.9; animation: crt-blink 0.8s step-end infinite; pointer-events: none; z-index: 2; }
-.send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 0 12px; font-family: 'Roboto', sans-serif; font-size: 18px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 0; aspect-ratio: 1; font-family: 'Roboto', sans-serif; font-size: 18px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .send-btn:hover { color: #e0e0e0; }
 .announce { background: #111; border-bottom: 1px solid #2a2a2a; padding: 6px 14px; font-size: 13px; color: #777; display: flex; gap: 6px; align-items: center; font-family: 'Roboto', sans-serif; }
 
@@ -250,7 +298,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .tag-pill { display: inline-block; font-size: 12px; padding: 2px 6px; border: 1px solid #333; border-radius: 0; color: #999; margin: 2px; cursor: pointer; font-family: 'Roboto', sans-serif; }
 .tag-pill:hover { border-color: var(--ac); color: var(--ac); }
 .online-row { display: flex; justify-content: space-between; align-items: center; }
-.user-grid { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 6px; }
+.user-grid { display: flex; flex-wrap: nowrap; overflow: hidden; gap: 2px; margin-top: 6px; } /* single row, fills horizontally; extra dots clip (no wrap to 2nd line) */
 .u-dot { width: 6px; height: 6px; border-radius: 0; background: var(--ac); opacity: 0.5; }
 .u-dot:nth-child(3n) { opacity: 0.2; }
 .sparkline { display: block; width: 100%; }
@@ -263,7 +311,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .trend-row:last-child { border-bottom: none; }
 .trend-name { color: #ccc; font-family: 'Roboto', sans-serif; font-size: 13px; }
 .trend-val { color: var(--ac); font-family: 'Roboto', sans-serif; font-size: 12px; }
-.create-box-btn { width: 38px; min-width: 38px; height: 38px; padding: 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'Roboto', sans-serif; font-size: 20px; line-height: 38px; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; }
+.create-box-btn { width: 38px; min-width: 38px; height: 38px; padding: 0; background: transparent; border: 1px solid #444; border-radius: 0; color: #666; font-family: 'Roboto', sans-serif; font-size: 20px; line-height: 38px; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; }
 .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 .create-widget-wrap { padding: 10px 12px; }
 .create-widget-btn { width: 100%; padding: 10px 0; background: #141414; border: 1px solid #444; border-radius: 0; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; }
@@ -930,7 +978,9 @@ body.is-anon .stats-divider { display: none; }
   /* Unified with the search bar (same row padding, gap, field height & inner padding) */
   .chat-input-row { padding: 10px 12px; gap: 8px; }
   .chat-input { font-size: 15px; height: 44px; box-sizing: border-box; padding: 0 12px; }
-  .send-btn { font-size: 16px; padding: 0; flex-shrink: 0; width: 44px; min-width: 44px; height: 44px; box-sizing: border-box; }
+  .send-btn { font-size: 16px; padding: 0; flex-shrink: 0; width: 44px; min-width: 44px; height: 44px; box-sizing: border-box; color: #777; transition: color .15s, border-color .15s; }
+  .send-btn.ready { color: #e0e0e0; border-color: #5a5a5a; } /* input has text/emoji → lighter: "you can send now" */
+  .send-icon { width: 26px; height: 26px; } /* slightly larger glyph on mobile */
 
   /* Mobile: profile modal styles */
   .profile-stat-label { font-size: 12px; }
@@ -1738,7 +1788,7 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="snow"] .search-box { border-color: #d8d8d8; }
 [data-crt-theme="snow"] .search-box input { color: #2a2a2a; caret-color: transparent; }
 [data-crt-theme="snow"] .search-box input::placeholder { color: #bbb; }
-[data-crt-theme="snow"] .search-box svg rect { fill: #bbb; }
+[data-crt-theme="snow"] .search-box .search-glyph { color: #bbb; }
 [data-crt-theme="snow"] .create-box-btn { background: #f0f0f0; border-color: #d8d8d8; color: #888; }
 [data-crt-theme="snow"] .create-box-btn:hover { border-color: var(--ac); color: var(--ac); }
 [data-crt-theme="snow"] .create-widget-btn { background: #f0f0f0; border-color: #d8d8d8; color: #888; }
@@ -2179,10 +2229,10 @@ body.is-anon .stats-divider { display: none; }
 
 <!-- LEFT -->
 <div class="left">
-  <div class="section-head"><img src="trollbox_logo_3_slim.svg" alt="troll.box" style="height:16px; filter:brightness(1.4);"/><span class="app-version">v0.1</span></div>
+  <div class="section-head"><span class="left-logo-wrap"><img src="trollbox_logo_3_slim.svg" alt="troll.box" class="left-logo" style="height:16px; filter:brightness(1.4);"/></span><span class="app-version">v0.1</span><button class="left-collapse-btn" id="leftCollapseBtn" aria-label="Collapse boxes" title="Collapse"><svg viewBox="0 0 7 7" width="9" height="9" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/></svg></button></div>
   <div class="left-rooms" id="rooms-list"></div>
   <div class="search-create-row">
-    <div class="search-box" id="searchBox"><svg width="14" height="14" viewBox="0 0 14 14" fill="#555" style="image-rendering:pixelated;flex-shrink:0"><rect x="3" y="0" width="4" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="7" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="4"/><rect x="8" y="2" width="1" height="4"/><rect x="0" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor" id="searchCursor"></span></div>
+    <div class="search-box" id="searchBox"><svg class="search-glyph" width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink:0"><path d="M0.833008 10.833L0.833008 5.83301L2.49967 5.83301L2.49967 10.833H0.833008Z"/><path d="M5.83301 2.49968L5.83301 4.16634L4.16634 4.16634V5.83301L2.49967 5.83301V2.49968L5.83301 2.49968Z"/><path d="M10.833 2.49968L5.83301 2.49968L5.83301 0.833008L10.833 0.83301L10.833 2.49968Z"/><path d="M14.1663 5.83301L12.4997 5.83301L12.4997 4.16634L10.833 4.16634V2.49968L14.1663 2.49968L14.1663 5.83301Z"/><path d="M14.1663 5.83301H15.833V10.833L14.1663 10.833V5.83301Z"/><path d="M2.49967 10.833L2.49967 14.1663H5.83301L5.83301 15.833H10.833V14.1663H14.1663L14.1663 10.833H12.4997L12.4997 12.4997L10.833 12.4997L10.833 14.1663H5.83301V12.4997H4.16634L4.16634 10.833L2.49967 10.833Z"/><path d="M15.833 14.1663V15.833H14.1663L14.1663 14.1663H15.833Z"/><path d="M17.4997 17.4997H15.833L15.833 15.833H17.4997L17.4997 17.4997Z"/><path d="M17.4997 17.4997H19.1663V19.1663H17.4997V17.4997Z"/></svg><input placeholder="Search" id="searchInput" /><span class="search-cursor" id="searchCursor"></span></div>
     <button class="create-box-btn" id="createBoxBtn" title="Create box">+</button>
   </div>
 
@@ -2243,22 +2293,22 @@ body.is-anon .stats-divider { display: none; }
     <span class="crt-cursor" id="crt-cursor"></span>
     <input class="chat-input" placeholder="Type to #btc, we will translate" id="chat-input" />
     <button class="send-btn" aria-label="Send"><svg class="send-icon" width="22" height="22" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="6" y="10" width="2" height="2" fill="currentColor"/>
-      <rect x="4" y="8" width="2" height="2" fill="currentColor"/>
-      <rect x="4" y="6" width="8" height="2" fill="currentColor"/>
-      <rect x="12" y="8" width="5" height="2" fill="currentColor"/>
-      <rect x="17" y="10" width="4" height="2" fill="currentColor"/>
-      <rect x="21" y="12" width="5" height="2" fill="currentColor"/>
-      <rect width="8" height="2" transform="matrix(1 0 0 -1 4 24)" fill="currentColor"/>
-      <rect width="5" height="2" transform="matrix(1 0 0 -1 12 22)" fill="currentColor"/>
-      <rect width="4" height="2" transform="matrix(1 0 0 -1 17 20)" fill="currentColor"/>
-      <rect width="5" height="2" transform="matrix(1 0 0 -1 21 18)" fill="currentColor"/>
-      <rect width="3" height="2" transform="matrix(1 0 0 -1 26 16)" fill="currentColor"/>
-      <rect x="4" y="20" width="2" height="2" fill="currentColor"/>
-      <rect x="8" y="12" width="2" height="2" fill="currentColor"/>
-      <rect x="10.25" y="14" width="7" height="2" fill="currentColor"/>
-      <rect x="8" y="16" width="2" height="2" fill="currentColor"/>
-      <rect x="6" y="18" width="2" height="2" fill="currentColor"/>
+      <path d="M8 10H7V12H8V10Z" fill="currentColor"/>
+      <path d="M7 8H5V10H7V8Z" fill="currentColor"/>
+      <path d="M11 6H5V8H11V6Z" fill="currentColor"/>
+      <path d="M15 8H11V10H15V8Z" fill="currentColor"/>
+      <path d="M19 10H15V12H19V10Z" fill="currentColor"/>
+      <path d="M23 12H19V14H23V12Z" fill="currentColor"/>
+      <path d="M11 24H5V22H11V24Z" fill="currentColor"/>
+      <path d="M15 22H11V20H15V22Z" fill="currentColor"/>
+      <path d="M19 20H15V18H19V20Z" fill="currentColor"/>
+      <path d="M23 18H19V16H23V18Z" fill="currentColor"/>
+      <path d="M26 16H23V14H26V16Z" fill="currentColor"/>
+      <path d="M7 20H5V22H7V20Z" fill="currentColor"/>
+      <path d="M10 12H8V14H10V12Z" fill="currentColor"/>
+      <path d="M16 14H10V16H16V14Z" fill="currentColor"/>
+      <path d="M10 16H8V18H10V16Z" fill="currentColor"/>
+      <path d="M8 18H7V20H8V18Z" fill="currentColor"/>
     </svg></button>
   </div>
 
@@ -3423,9 +3473,16 @@ function renderRooms(){
   const rest = ROOMS.filter(r => r.id !== 'mymix');
   const myboxBtn = `<div class="rooms-pinned"><button class="mybox-btn${active==='mymix'?' active':''}" onclick="setRoom('mymix')">`
     + `<svg class="mybox-btn-icon" width="15" height="15" viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="1"/><rect x="1" y="12" width="12" height="1"/><rect x="1" y="3" width="1" height="10"/><rect x="12" y="3" width="1" height="10"/><rect x="1" y="6" width="12" height="1"/><rect x="6" y="3" width="2" height="3"/></svg>`
-    + `<span>MY BOX</span></button></div>`;
+    + `<span class="mybox-btn-body">`
+    +   `<span class="mybox-btn-top"><span class="mybox-btn-label">MY BOX</span>`
+    +     `<span class="mybox-btn-meta"><span class="mybox-btn-replies hidden" id="myboxReplies"></span><span class="mybox-btn-count hidden" id="myboxCount"></span></span></span>`
+    +   `<span class="mybox-btn-preview" id="myboxPreview"></span>`
+    + `</span>`
+    + `<span class="mybox-grad hidden" id="myboxGrad" aria-hidden="true"></span>`
+    + `</button></div>`;
   document.getElementById('rooms-list').innerHTML = myboxBtn + rest.map(roomItemHtml).join('');
   fillRoomPreviews();
+  startMyBoxPreview();
 }
 
 // === Live last-message preview under each box (mobile boxes screen) ===
@@ -3544,8 +3601,16 @@ const TROLL_COLORS = {
   7: '#8CE45A'  // bot green
 };
 const trollMap = {};
+// VIP devs — bespoke avatars tied to a specific nick (case-insensitive), override the
+// random troll pool. kyoshee = Luffy, boss_nikitos = Kraang.
+const VIP_TROLLS = {
+  kyoshee:      { src: 'trolls/our_avatars/danya/troll_kyoshee.svg', color: '#E0413A' },
+  boss_nikitos: { src: 'trolls/our_avatars/nikit/troll_nikzh.svg',   color: '#7AD86B' }
+};
 function getTroll(author, isBot) {
   if (isBot) return { src: 'trolls/7_bot.svg', color: TROLL_COLORS[7] };
+  const vip = author && VIP_TROLLS[author.toLowerCase()];
+  if (vip) return vip;
   if (author === 'ANONYMOUS') return { src: 'trolls/anon.svg', color: '#ffffff' };
   if (!trollMap[author]) {
     const n = Math.floor(Math.random() * TROLL_COUNT) + 1;
@@ -3793,13 +3858,63 @@ function renderMyMixEmpty(feed){
     <div class="mix-empty">
       <img class="mix-empty-troll" src="trolls/my_box.png" alt="" />
       <div class="mix-empty-title">Build your feed</div>
-      <div class="mix-empty-text">One feed = the channel chats you follow + the bots you pick.</div>
+      <div class="mix-empty-text">one feed = chats you follow + bots you pick</div>
       <button class="mix-empty-cta" onclick="openSourcesPicker()">&#65291; Add sources</button>
       <div class="mix-empty-hint">Quick add</div>
       <div class="mix-empty-chips one-line">${chanChips}</div>
       <div class="mix-empty-chips">${botChips}</div>
     </div>`;
 }
+// ===== My Box pinned button: live indicators + rotating last-message preview (desktop) =====
+// @N  = replies addressed to the current user (subset of the total), accent pill, hidden when 0
+// (N) = total messages in the aggregated feed (followed chats + bots)
+// preview = newest→older messages of the feed, cycled every few seconds
+let _myboxTimer = null, _myboxIdx = 0;
+function myBoxBtnTick(){
+  const el = document.getElementById('myboxPreview'); if (!el) return;
+  const cEl = document.getElementById('myboxCount'), rEl = document.getElementById('myboxReplies');
+  const grad = document.getElementById('myboxGrad');
+  if (myBoxEmpty()){
+    el.innerHTML = '<span class="mybox-btn-empty">No sources yet — tap to add</span>';
+    if (cEl) cEl.classList.add('hidden');
+    if (rEl) rEl.classList.add('hidden');
+    if (grad) grad.classList.remove('hidden');   // green fade only in the empty state
+    return;
+  }
+  if (grad) grad.classList.add('hidden');
+  const feed = buildMyMix(), me = myNick();
+  let replies = 0;
+  feed.forEach(m => { if (m.replyTo && (m.replyTo.author || '').toUpperCase() === me) replies++; });
+  if (cEl){ cEl.textContent = feed.length; cEl.classList.remove('hidden'); }
+  if (rEl){ if (replies > 0){ rEl.textContent = '@' + replies; rEl.classList.remove('hidden'); } else rEl.classList.add('hidden'); }
+  const tail = feed.slice(-6).reverse();           // newest first
+  if (!tail.length){ el.innerHTML = ''; return; }
+  const m = tail[_myboxIdx % tail.length];
+  const text = clipPreview(m.text, 30);
+  el.innerHTML = `<span class="mbp-nick">${escapeReply((m.author || '').toUpperCase())}:</span> <span class="mbp-text">${escapeReply(text)}</span>`;
+  _myboxIdx++;
+}
+// Clip a preview to ~limit chars on a WORD boundary so we never leave a dangling
+// partial word ("…market cap c"); append an ellipsis only when something was cut.
+function clipPreview(s, limit){
+  s = (s || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= limit) return s;
+  let cut = s.slice(0, limit);
+  const sp = cut.lastIndexOf(' ');
+  if (sp >= limit * 0.5) cut = cut.slice(0, sp); // drop the trailing partial word unless it's the whole thing
+  return cut.replace(/[\s.,;:!?—–-]+$/, '') + '…';
+}
+function startMyBoxPreview(){
+  stopMyBoxPreview();
+  // pinned button is desktop-only. Use a self-contained media query, not isMobile():
+  // renderRooms() runs during early init, before `const isMobile` initializes (TDZ).
+  if (window.matchMedia('(max-width: 900px)').matches) return;
+  _myboxIdx = 0;
+  myBoxBtnTick();
+  _myboxTimer = setInterval(myBoxBtnTick, 3500);
+}
+function stopMyBoxPreview(){ if (_myboxTimer){ clearInterval(_myboxTimer); _myboxTimer = null; } }
+
 // ===== My Box sources: bar, picker, addressee, toggles =====
 function renderMyBoxBar(){
   const bar = document.getElementById('myboxBar');
@@ -4486,6 +4601,7 @@ function sendChatMessage() {
   if (replyTo) msg.replyTo = replyTo;
   CHATS[target].push(msg);
   inp.value = '';
+  updateSendReady(); // sent → field empty → back to the muted "idle" look
   cancelReply();
   renderChat();
   // best-effort sync to Firebase (won't block UI)
@@ -4495,10 +4611,18 @@ function sendChatMessage() {
   const cur = document.getElementById('crt-cursor'); if (cur && typeof setupBlockCursor==='function') setupBlockCursor(inp, cur);
   if (isAnon()){ anonMsgCount++; if (anonMsgCount >= ANON_MSG_LIMIT) showRegwall('limit'); } // after the 3rd → reg-wall
 }
+// Toggle the send button's "ready" look (mobile: muted grey → lighter) when the
+// message field has any text/emoji, signalling that a message can be sent.
+function updateSendReady(){
+  const inp = document.getElementById('chat-input');
+  const btn = document.querySelector('#chatInputAuth .send-btn');
+  if (btn) btn.classList.toggle('ready', !!inp && inp.value.trim().length > 0);
+}
 (function bindChatSend() {
   const inp = document.getElementById('chat-input');
   const btn = document.querySelector('#chatInputAuth .send-btn');
   if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); } });
+  if (inp) inp.addEventListener('input', updateSendReady);
   if (btn) btn.addEventListener('click', sendChatMessage);
 })();
 
@@ -5542,6 +5666,45 @@ window.addEventListener('resize', () => {
     renderRooms();
   }
 });
+
+// Left column collapse (desktop): toggle a narrow rail (coloured # + short name),
+// remember the choice. The class lives on .app so it can drive grid-template-columns;
+// the mobile media query overrides the grid with !important, so this is desktop-only.
+function setLeftCollapsed(collapsed, persist){
+  const app = document.querySelector('.app'); if (!app) return;
+  app.classList.toggle('left-collapsed', collapsed);
+  const btn = document.getElementById('leftCollapseBtn');
+  if (btn){ const t = collapsed ? 'Expand boxes' : 'Collapse boxes'; btn.title = t; btn.setAttribute('aria-label', t); }
+  if (persist !== false){ try { localStorage.setItem('tb_left_collapsed', collapsed ? '1' : '0'); } catch(e){} }
+}
+(function(){
+  const btn = document.getElementById('leftCollapseBtn');
+  if (btn) btn.addEventListener('click', () => setLeftCollapsed(!document.querySelector('.app').classList.contains('left-collapsed')));
+  // Collapsed footer: the (narrowed) search box itself expands the column on click,
+  // then focuses the search field. When expanded it behaves as a normal input.
+  const searchBoxEl = document.getElementById('searchBox');
+  if (searchBoxEl) searchBoxEl.addEventListener('click', () => {
+    if (!document.querySelector('.app').classList.contains('left-collapsed')) return;
+    setLeftCollapsed(false);
+    const inp = document.getElementById('searchInput');
+    if (inp) setTimeout(() => inp.focus(), 50);
+  });
+  try { if (localStorage.getItem('tb_left_collapsed') === '1' && !window.matchMedia('(max-width: 900px)').matches) setLeftCollapsed(true, false); } catch(e){}
+})();
+
+// Chat scrollbar auto-hide (desktop): show the thumb only while actively scrolling,
+// hide it again after a short idle. #chat-feed is a stable element (innerHTML is
+// swapped on render, the node persists), so one listener is enough.
+(function(){
+  const feed = document.getElementById('chat-feed');
+  if (!feed) return;
+  let idle;
+  feed.addEventListener('scroll', () => {
+    feed.classList.add('scrolling');
+    clearTimeout(idle);
+    idle = setTimeout(() => feed.classList.remove('scrolling'), 800);
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
