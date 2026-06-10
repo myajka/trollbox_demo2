@@ -102,6 +102,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 /* Separate the channel list from the My Box button — top border on the first channel (GENERAL) */
 .rooms-pinned + .room-item { border-top: 1px solid #2a2a2a; }
 
+/* Boxes reveal — staggered slide/fade-in played once after the onboarding tour is dismissed */
+@keyframes boxesReveal { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+
 /* ── Left column collapse (desktop): narrow rail = coloured # + short box name ── */
 .left-collapse-btn { background: transparent; border: 1px solid #333; color: #888; width: 22px; height: 22px; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: color .15s, border-color .15s; }
 .left-collapse-btn:hover { color: #e0e0e0; border-color: #555; }
@@ -168,10 +171,11 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .search-box .search-glyph { color: #aaa; width: 16px; height: 16px; }
 
 /* CENTER */
-.center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; }
+.center { display: flex; flex-direction: column; background: #0a0a0a; min-height: 0; border: 1px solid #333; position: relative; isolation: isolate; }
 .center-head { padding: 10px 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; min-height: 44px; box-sizing: border-box; flex-shrink: 0; }
 .center-title { color: #e0e0e0; font-size: 15px; letter-spacing: 0.06em; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; }
 .toggle-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #777; font-family: 'Roboto', sans-serif; }
+#botToggleRow { display: none !important; } /* Show/Hide bots — hidden for now (no backend yet) */
 /* Box(chat) / Terminal switcher — shown inside a box on mobile only */
 .box-view-toggle { display: none; }
 #mobileTermMount { display: none; } /* mobile-only: box terminal widgets mount here */
@@ -227,6 +231,18 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .send-btn { background: #141414; border: 1px solid #444; border-radius: 0; color: #999; padding: 0; aspect-ratio: 1; font-family: 'Roboto', sans-serif; font-size: 18px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .send-btn:hover { color: #e0e0e0; }
 .announce { background: #111; border-bottom: 1px solid #2a2a2a; padding: 6px 14px; font-size: 13px; color: #777; display: flex; gap: 6px; align-items: center; font-family: 'Roboto', sans-serif; }
+/* Moderator: EDIT BOX action in the chat header (own box only) */
+.edit-box-btn { margin-left: auto; background: transparent; border: 1px solid #3a3a3a; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 5px 10px; cursor: pointer; flex-shrink: 0; transition: border-color .15s, color .15s; }
+.edit-box-btn:hover { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+/* Beta-test notice below the chat header (dismissible) */
+.beta-notice { display: flex; align-items: center; gap: 10px; padding: 7px 14px; background: rgba(140,228,90,0.06); border-bottom: 1px solid #2a2a2a; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9a9a9a; line-height: 1.4; }
+.beta-notice-text { flex: 1; min-width: 0; }
+.beta-notice-x { background: none; border: none; color: #777; font-size: 24px; line-height: 1; cursor: pointer; padding: 0 2px; flex-shrink: 0; }
+.beta-notice-x:hover { color: #fff; }
+/* Moderator: ADD WIDGETS action in the terminal header + empty user-box terminal */
+.add-widgets-btn { margin-left: auto; background: transparent; border: 1px solid #3a3a3a; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 8px; cursor: pointer; flex-shrink: 0; transition: border-color .15s, color .15s; }
+.add-widgets-btn:hover { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
+.term-empty { padding: 24px 16px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 12px; color: #777; line-height: 1.7; }
 
 /* RIGHT */
 .right { border: 1px solid #333; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: thin; scrollbar-color: transparent transparent; }
@@ -274,6 +290,95 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .news-text { font-size: 13px; color: #ccc; line-height: 1.5; font-family: 'Roboto', sans-serif; }
 .news-time { font-size: 11px; color: #555; margin-top: 1px; font-family: 'Roboto', sans-serif; }
 .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+/* FIFA box — match countdown (big pixel digits) + opinion stacked-bar chart */
+.fifa-cd-match { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #e0e0e0; letter-spacing: 0.03em; text-align: center; }
+.fifa-cd-match i { color: #666; font-style: normal; font-size: 11px; margin: 0 4px; }
+.fcd-flag { display: inline-block; width: 19px; height: 13px; object-fit: cover; border-radius: 2px; vertical-align: middle; margin: 0 6px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); }
+.fifa-cd-tz { font-family: 'Roboto', sans-serif; font-size: 10px; color: #555; letter-spacing: 0.02em; }
+/* WHO WILL WIN — clickable vote buttons (sit above the result bars) */
+.fifa-vote { display: flex; gap: 8px; margin-top: 2px; position: relative; }
+.fifa-vote-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 0; font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #d8d8d8; background: #141414; border: 1px solid #383838; border-radius: 3px; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.fifa-vote-btn:hover:not(:disabled) { border-color: var(--ac, #F5C518); color: #fff; background: #1a1a1a; }
+.fifa-vote-btn:disabled { cursor: default; opacity: 0.6; pointer-events: none; }
+.fifa-vote-btn.voted { border-color: var(--ac, #F5C518); color: var(--ac, #F5C518); background: #161410; }
+.fvb-flag { display: inline-block; width: 18px; height: 13px; object-fit: cover; border-radius: 1px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); }
+/* Hover tooltip shown while the vote is on cooldown */
+.fifa-vote-tip { position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); background: #1d1d1d; border: 1px solid #3a3a3a; color: #cfcfcf; font-family: 'Roboto', sans-serif; font-size: 11px; line-height: 1.3; padding: 6px 10px; border-radius: 3px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 6; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.fifa-vote-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1d1d1d; }
+.fifa-vote.cooling:hover .fifa-vote-tip { opacity: 1; }
+.fvt-cd { color: var(--ac, #F5C518); font-variant-numeric: tabular-nums; }
+.fifa-vote-note { margin-top: 8px; font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--ac, #F5C518); }
+.fifa-vote-note.muted { color: #555; }
+/* Only the two edge times under the opinion chart (earliest · freshest) */
+.sb-ends { display: flex; justify-content: space-between; margin-top: 4px; font-family: 'Roboto', sans-serif; font-size: 9.5px; color: #5a5a5a; }
+.sb-cap { margin-top: 5px; text-align: center; font-family: 'Roboto', sans-serif; font-size: 10px; color: #555; }
+/* Hover a column → highlight it and float a tooltip with that snapshot's time + split */
+.sb-bar { position: relative; cursor: default; }
+/* Only the freshest (rightmost) snapshot stays fully saturated; older ones fade back */
+.sb-chart-12 .sb-bar { overflow: visible; opacity: 0.38; transition: opacity .15s; }
+.sb-chart-12 .sb-bar:last-child { opacity: 1; }
+.sb-chart-12 .sb-bar:hover { opacity: 1; }
+.sb-bar:hover { filter: brightness(1.4); }
+.sb-bar:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1d1d1d; border: 1px solid #3a3a3a; color: #cfcfcf; font-family: 'Roboto', sans-serif; font-size: 10px; padding: 4px 8px; border-radius: 3px; white-space: nowrap; z-index: 7; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.sb-chart-12 .sb-bar:first-child:hover::after { left: 0; transform: none; }
+.sb-chart-12 .sb-bar:last-child:hover::after { left: auto; right: 0; transform: none; }
+/* FIFA fact of the day */
+.fifa-fact { font-family: 'Roboto', sans-serif; font-size: 12.5px; color: #b8b8b8; line-height: 1.6; border-left: 2px solid var(--ac, #F5C518); padding-left: 9px; }
+.fifa-fact-foot { font-family: 'Roboto', sans-serif; font-size: 11px; color: #444; margin-top: 6px; }
+/* FIFA news: bullet in its own column so wrapped lines align with the text start */
+.fnews-item { display: flex; align-items: flex-start; gap: 6px; }
+.fnews-dot { margin: 7px 0 0; flex-shrink: 0; }
+.fnews-body { flex: 1; min-width: 0; }
+.fifa-cd-when { text-align: center; font-family: 'Roboto', sans-serif; font-size: 11px; color: #888; margin-top: 3px; }
+.fifa-cd-time { display: flex; align-items: baseline; justify-content: center; margin-top: 11px; font-family: 'CHNOPixelCodePro', monospace; }
+.fifa-cd-time b { font-size: 30px; font-weight: 400; color: var(--ac, #F5C518); line-height: 1; font-variant-numeric: tabular-nums; min-width: 34px; text-align: center; display: inline-block; }
+.fifa-cd-time i { font-style: normal; font-size: 11px; color: #666; margin: 0 7px 0 1px; }
+.fifa-cd-dots { display: flex; gap: 6px; justify-content: center; margin-top: 11px; }
+.fifa-cd-dot { width: 6px; height: 6px; border-radius: 50%; background: #3a3a3a; cursor: pointer; transition: background .15s; }
+.fifa-cd-dot.on { background: var(--ac, #F5C518); }
+.fifa-cd-dot:hover { background: #777; }
+/* FIFA box — dotted halftone logo backdrop with a sweeping brightness wave.
+   Outer element clips everything to the logo silhouette; inner element is a
+   moving light gradient punched into a fine dot grid. Kept very faint so it
+   never competes with the chat text. Shown only on the FIFA box. */
+.fifa-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; display: none; overflow: hidden;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 228 351'%3E%3Cpath fill='%23fff' d='M170.465 180.201C201.847 180.201 227.286 205.641 227.286 237.022H170.465C201.847 237.022 227.286 262.46 227.286 293.843C227.286 325.225 201.847 350.666 170.465 350.666H56.8223C25.4385 350.666 0 325.225 0 293.843V237.022C0 205.641 25.4385 180.201 56.8223 180.201H170.465ZM132.665 317.438H142.746L144.026 312.984H155.599L156.936 317.438H167.277L155.296 284.293H144.65L132.665 317.438ZM67.0156 317.436H77.2559V305.466H84.626L87.248 298.224H77.2559V291.514H89.666L92.2783 284.293H67.0156V317.436ZM95.4111 317.436H105.65V284.293H95.4102L95.4111 317.436ZM112.695 317.436H122.936V305.466H130.306L132.928 298.224H122.936V291.514H135.346L137.958 284.293H112.695V317.436ZM153.903 306.615H145.854L149.812 292.81L153.903 306.615ZM170.465 0C201.847 0 227.286 25.44 227.286 56.8213C227.286 88.2025 201.847 113.643 170.465 113.643H227.286V170.465H0V113.643C0 82.2601 25.4385 56.8214 56.8223 56.8213H0C0 25.4401 25.4385 0.000135691 56.8223 0H170.465Z'/%3E%3C/svg%3E") center / auto 90% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 228 351'%3E%3Cpath fill='%23fff' d='M170.465 180.201C201.847 180.201 227.286 205.641 227.286 237.022H170.465C201.847 237.022 227.286 262.46 227.286 293.843C227.286 325.225 201.847 350.666 170.465 350.666H56.8223C25.4385 350.666 0 325.225 0 293.843V237.022C0 205.641 25.4385 180.201 56.8223 180.201H170.465ZM132.665 317.438H142.746L144.026 312.984H155.599L156.936 317.438H167.277L155.296 284.293H144.65L132.665 317.438ZM67.0156 317.436H77.2559V305.466H84.626L87.248 298.224H77.2559V291.514H89.666L92.2783 284.293H67.0156V317.436ZM95.4111 317.436H105.65V284.293H95.4102L95.4111 317.436ZM112.695 317.436H122.936V305.466H130.306L132.928 298.224H122.936V291.514H135.346L137.958 284.293H112.695V317.436ZM153.903 306.615H145.854L149.812 292.81L153.903 306.615ZM170.465 0C201.847 0 227.286 25.44 227.286 56.8213C227.286 88.2025 201.847 113.643 170.465 113.643H227.286V170.465H0V113.643C0 82.2601 25.4385 56.8214 56.8223 56.8213H0C0 25.4401 25.4385 0.000135691 56.8223 0H170.465Z'/%3E%3C/svg%3E") center / auto 90% no-repeat;
+}
+.fifa-bg.on { display: block; }
+.fifa-bg-dots { position: absolute; inset: 0; opacity: 0.11;
+  background: linear-gradient(118deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.16) 38%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.16) 62%, rgba(255,255,255,0.16) 100%);
+  background-size: 280% 280%;
+  -webkit-mask: radial-gradient(circle at center, #000 0.9px, transparent 1.5px) 0 0 / 5px 5px;
+          mask: radial-gradient(circle at center, #000 0.9px, transparent 1.5px) 0 0 / 5px 5px;
+  animation: fifaWave 7s ease-in-out infinite alternate;
+}
+@keyframes fifaWave { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+/* FIFA upcoming-matches schedule cards */
+.fifa-sched { display: flex; flex-direction: column; gap: 6px; }
+.fifa-sched-row { display: flex; align-items: center; gap: 11px; padding: 8px 11px 8px 9px; background: linear-gradient(to right, #131313, #0d0d0d); border: 1px solid #242424; border-left: 2px solid var(--ac, #F5C518); border-radius: 2px; transition: background .15s, transform .15s; }
+.fifa-sched-row:hover { background: linear-gradient(to right, #1a1a1a, #101010); transform: translateX(1px); }
+.fsr-cal { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 40px; line-height: 1.25; flex-shrink: 0; }
+.fsr-dow { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: var(--ac, #F5C518); letter-spacing: 0.04em; }
+.fsr-dm { font-family: 'Roboto', sans-serif; font-size: 10px; color: var(--ac, #F5C518); opacity: 0.8; margin-top: 1px; }
+.fsr-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.fsr-match { display: flex; align-items: center; justify-content: center; gap: 9px; }
+.fsr-team { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.fsr-flag { display: inline-block; width: 18px; height: 13px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); flex-shrink: 0; }
+.fsr-team b { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; font-weight: 400; color: #e8e8e8; letter-spacing: 0.02em; }
+.fsr-vs { font-family: 'Roboto', sans-serif; font-size: 10px; font-style: italic; color: #555; }
+.fsr-stage { font-family: 'Roboto', sans-serif; font-size: 10.5px; color: #767676; margin-top: 4px; letter-spacing: 0.01em; }
+.fsr-time { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; line-height: 1.2; }
+.fsr-t { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #cfcfcf; font-variant-numeric: tabular-nums; }
+.fsr-tz { font-family: 'Roboto', sans-serif; font-size: 9px; color: #5a5a5a; letter-spacing: 0.02em; margin-top: 1px; }
+.fifa-opinion-head { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: #888; letter-spacing: 0.04em; margin: 13px 0 7px; text-transform: uppercase; }
+.sb-chart { display: flex; align-items: stretch; gap: 4px; height: 52px; }
+.sb-bar { flex: 1; display: flex; flex-direction: column; height: 100%; border-radius: 1px; overflow: hidden; }
+.sb-seg { width: 100%; }
+.sb-axis { display: flex; justify-content: space-between; margin-top: 5px; font-family: 'Roboto', sans-serif; font-size: 10px; color: #444; }
+.sb-legend { display: flex; gap: 14px; margin-top: 8px; font-family: 'Roboto', sans-serif; font-size: 11px; color: #999; }
+.sb-legend span { display: flex; align-items: center; gap: 5px; }
+.sb-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
 .mood-btn { padding: 6px 0; font-size: 10px; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; cursor: pointer; border: 1px solid #333; background: #111; color: #999; border-radius: 0; text-align: center; letter-spacing: 0.02em; position: relative; overflow: hidden; transition: border-color 0.15s, color 0.15s, background 0.15s; }
 .mood-btn:hover { border-color: var(--ac); color: var(--ac); }
 .mood-btn.sel { border-color: var(--ac); color: var(--ac); background: #141414; }
@@ -424,6 +529,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .modal-btn.confirm:hover { filter: brightness(1.2); color: #000; }
 .modal-hint { font-size: 11px; color: #555; margin-top: -8px; margin-bottom: 12px; font-family: 'Roboto', sans-serif; }
 .modal-note { font-size: 11px; color: #666; margin-top: 12px; line-height: 1.5; font-family: 'Roboto', sans-serif; text-align: center; }
+#createModal.edit-mode .modal-note { display: none; } /* editing: drop the "review request" note under SAVE */
+.edit-only { display: none; }
+#createModal.edit-mode .edit-only { display: block; }
 #createModal .modal-btn.cancel { flex: 0 0 auto; padding-left: 22px; padding-right: 22px; }
 #createModal .modal-btn.confirm { flex: 1; }
 .modal-wrap.hidden { display: none !important; }
@@ -966,6 +1074,10 @@ body.is-anon .stats-divider { display: none; }
   .msg.has-tag .msg-troll { float: left; margin-right: 4px; }
   .date-sep { font-size: 13px; }
   .center-title { font-size: 17px; line-height: 1; cursor: pointer; }
+  .center-title-desc { opacity: 0.4; font-size: 12px; letter-spacing: 0.04em; }
+  /* Mobile: one big halftone logo filling the screen behind the chat */
+  .fifa-bg { -webkit-mask-size: auto 64%; mask-size: auto 64%; -webkit-mask-position: center 64%; mask-position: center 64%; }
+  .fifa-bg-dots { opacity: 0.09; }
 
   /* Mobile: general font bump — kill all tiny sizes */
   .section-head { font-size: 14px; min-height: 48px; }
@@ -2265,16 +2377,20 @@ body.is-anon .stats-divider { display: none; }
 
 <!-- CENTER -->
 <div class="center">
+  <!-- FIFA box: dotted (halftone) logo with a brightness wave, sits behind the chat feed -->
+  <div class="fifa-bg" id="fifaBg" aria-hidden="true"><div class="fifa-bg-dots"></div></div>
   <div class="center-head">
     <button class="mobile-back" id="mobileBack">&#8592;</button>
     <span class="center-title" id="center-title">#BTC [BITCOIN]</span>
     <span class="conn-dot conn-head connecting" title="Connecting…"><svg viewBox="0 0 8 8" width="6" height="6" fill="currentColor"><path d="M6 1H7V2H8V6H7V7H6V8H2V7H1V6H0V2H1V1H2V0H6V1Z"/></svg></span>
+    <button class="edit-box-btn hidden" id="editBoxBtn" onclick="openEditBox()">EDIT BOX</button>
     <div class="toggle-row" id="botToggleRow">Show bots <div class="toggle" id="botToggle"><div class="toggle-dot"></div></div> Hide</div>
   </div>
   <div class="box-view-toggle" id="boxViewToggle">
     <button class="bvt-seg active" id="bvtBoxSeg" onclick="setMobileView('chat')">Box</button>
     <button class="bvt-seg" id="bvtTermSeg" onclick="setMobileView('terminal')">Terminal</button>
   </div>
+  <div class="beta-notice hidden" id="betaNotice"><span class="beta-notice-text">Beta release in progress — boxes that don't follow community rules (or for other reasons) may be removed.</span><button class="beta-notice-x" id="betaNoticeX" aria-label="Hide notice">&times;</button></div>
   <div class="announce" id="chatAnnounce"><svg width="9" height="10" viewBox="0 0 9 10" fill="#333" style="vertical-align:-1px;margin-right:4px"><path d="M0 0h1v10H0zM1 0h7L6 2l2 2H1z"/></svg>Any long message about the airdrop or other announcements? Everything's here.</div>
   <!-- My Box: "Following … Edit" sources summary (shown only for My Box chat with sources) -->
   <div class="mybox-bar hidden" id="myboxBar"></div>
@@ -2492,12 +2608,13 @@ body.is-anon .stats-divider { display: none; }
 <div class="modal-wrap hidden" id="createModal">
   <div class="modal">
     <p class="modal-title">create box</p>
-    <div class="modal-rules">Before creating, please read the <a href="#">Box Creation Rules</a></div>
+    <div class="modal-rules">Before publishing, please read the <a href="#">Box Creation Rules</a></div>
     <label>box name</label>
     <div class="boxname-field">
       <span class="boxname-hash">#</span>
       <input type="text" placeholder="PEPECHNE" maxlength="10" id="boxName" />
     </div>
+    <div class="modal-hint edit-only">You can change the box name only once every 24 hours.</div>
     <label>category</label>
     <input type="text" placeholder="e.g. CRYPTO" maxlength="12" id="boxCategory" autocomplete="off" />
     <div class="modal-hint">pick one category — it becomes the box description</div>
@@ -2899,6 +3016,7 @@ const ROOMS = [
   { id:'general', label:'#GENERAL', tag:'', count:3102, ac:'#8CE45A' },
   { id:'mymix', label:'#MY_BOX', tag:'', count:null, ac:'#8CE45A' },
   { id:'btc', label:'#BTC', tag:'[BITCOIN]', count:267, ac:'#f7931a' },
+  { id:'fifa', label:'#FIFA', tag:'[WORLD CUP 2026]', count:12400, ac:'#F5C518' },
   { id:'eth', label:'#ETH', tag:'[ETHEREUM]', count:295, ac:'#627eea' },
   { id:'sol', label:'#SOL', tag:'[SOLANA]', count:211, ac:'#9945ff' },
   { id:'stables', label:'#STABLE', tag:'[STABLECOINS]', count:189, ac:'#26a17b' },
@@ -3166,6 +3284,26 @@ const CHATS = {
 };
 ['eth','sol'].forEach(id => { if(!CHATS[id]) CHATS[id] = CHATS.btc; });
 CHATS.mymix = []; // My Mix is built dynamically from bots the user adds
+CHATS.fifa = [
+  {sys:true, text:'world cup 2026 box is live ⚽', time:'9:00am'},
+  {tag:'#FIFA', author:'goalmachine', bot:false, text:'messi last dance, argentina taking it all 🇦🇷', time:'9:02am'},
+  {tag:'#FIFA', author:'samba_king', bot:false, text:'brazil >>> everyone, mark my words 🇧🇷', time:'9:05am'},
+  {tag:'#FIFA', author:'news_bot', bot:true, text:'48 teams, 12 groups, 3 host nations — biggest World Cup ever', time:'9:10am'},
+  {tag:'#FIFA', author:'three_lions', bot:false, text:'this is the year england stops choking. probably.', time:'9:14am'},
+  {tag:'#FIFA', author:'tifoso', bot:false, text:'host cities looking unreal, can not wait for the opener', time:'9:20am'},
+  {tag:'#FIFA', author:'kyoshee', bot:false, text:'group of death is insane this year, anything can happen', time:'9:26am'},
+  {tag:'#FIFA', author:'news_bot', bot:true, text:'Argentina vs Brazil kicks off in 6h — Group C decider, winner tops the table 🇦🇷🇧🇷', time:'9:31am'},
+  {tag:'#FIFA', author:'la_furia', bot:false, text:'spain quietly building the best squad again 🇪🇸 nobody is talking about us', time:'9:34am'},
+  {tag:'#FIFA', author:'oranje_fan', bot:false, text:'netherlands the dark horse this year, calling it now 🇳🇱', time:'9:38am'},
+  {tag:'#FIFA', author:'goalmachine', bot:false, text:'@samba_king brazil defense is a meme bro, one counter and its over', time:'9:41am'},
+  {tag:'#FIFA', author:'news_bot', bot:true, text:'Mbappé passes fitness test — France confirm he starts vs England 🇫🇷', time:'9:45am'},
+  {tag:'#FIFA', author:'die_mannschaft', bot:false, text:'germany vs spain in the group stage is criminal, that should be a final 🇩🇪', time:'9:49am'},
+  {tag:'#FIFA', author:'samba_king', bot:false, text:'@goalmachine cope. we have the best front line on the planet 🇧🇷', time:'9:53am'},
+  {tag:'#FIFA', author:'usmnt4life', bot:false, text:'home advantage is real, USA making a deep run this time 🇺🇸', time:'9:58am'},
+  {tag:'#FIFA', author:'news_bot', bot:true, text:'Ticket demand breaks records — 24M requests logged for the opening match', time:'10:03am'},
+  {tag:'#FIFA', author:'tifoso', bot:false, text:'italy not even qualifying still hurts man 😭', time:'10:07am'},
+  {tag:'#FIFA', author:'news_bot', bot:true, text:'VAR upgrade live — semi-automated offside calls now under 25 seconds', time:'10:12am'},
+];
 
 // Widget control icons — all 10×10 so the "+/−" and the arrows line up by height.
 const ADD_PLUS_SVG  = `<svg width="10" height="10" viewBox="0 0 10 10" style="image-rendering:pixelated"><rect x="4" y="0" width="2" height="10"/><rect x="0" y="4" width="10" height="2"/></svg>`;
@@ -3366,7 +3504,138 @@ function highlightChatMsg(idx, box){
   }, needSwitch ? 90 : 0);
 }
 
+// ===== FIFA — World Cup 2026 box widgets =====
+// Match start times are fixed once at load (offset from now), so the live countdown is always
+// sensible regardless of the real clock; labels are derived from the same timestamps.
+const _fifaBase = Date.now();
+const FIFA_MATCHES = [
+  { home:'ARGENTINA', away:'BRAZIL',  h3:'ARG', a3:'BRA', hcc:'ar', acc:'br',     grp:'Group C',     ts:_fifaBase + (6*3600+32*60)*1000 },
+  { home:'FRANCE',    away:'ENGLAND', h3:'FRA', a3:'ENG', hcc:'fr', acc:'gb-eng', grp:'Round of 16', ts:_fifaBase + (27*3600+15*60)*1000 },
+  { home:'SPAIN',     away:'GERMANY', h3:'ESP', a3:'GER', hcc:'es', acc:'de',     grp:'Group E',     ts:_fifaBase + (51*3600+5*60)*1000 },
+];
+// Real flag SVGs (flag-icons) instead of OS emoji — these render identically on every platform.
+const FIFA_FLAG_BASE = 'fifa_box/flags/4x3/';
+function fifaFlag(cc, cls){ return `<img class="${cls||'fimg'}" src="${FIFA_FLAG_BASE}${cc}.svg" alt="" loading="lazy" draggable="false">`; }
+let fifaCurrentMatch = 0;
+const _fWD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], _fMO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fifaWhen(ts){ const d=new Date(ts), p=n=>String(n).padStart(2,'0'); return `${_fWD[d.getDay()]} ${d.getDate()} ${_fMO[d.getMonth()]} · ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function fifaShort(ts){ const d=new Date(ts), p=n=>String(n).padStart(2,'0'); return `${_fWD[d.getDay()]} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+// Soonest n matches still in the future (falls back to the first n if all are past).
+function fifaUpcoming(n){ const now=Date.now(); const fut=FIFA_MATCHES.filter(m=>m.ts>now).sort((a,b)=>a.ts-b.ts); return (fut.length?fut:FIFA_MATCHES.slice()).slice(0,n); }
+// Local timezone label shown next to match times, e.g. "GMT+3".
+function fifaTz(){ const o=-new Date().getTimezoneOffset(), s=o>=0?'+':'-', a=Math.abs(o), h=Math.floor(a/60), mm=a%60; return 'GMT'+s+h+(mm?':'+String(mm).padStart(2,'0'):''); }
+// Last 3 news_bot posts from the FIFA chat, newest first — feeds the FIFA NEWS widget.
+// Flex layout so wrapped lines align under the start of the text (not under the bullet).
+function fifaNewsWidget(){
+  const news=(CHATS.fifa||[]).filter(m=>m.bot && m.author==='news_bot').slice(-3).reverse();
+  const rows=news.length
+    ? news.map(m=>`<div class="news-item fnews-item"><span class="news-dot fnews-dot"></span><div class="fnews-body"><span class="news-text">${m.text}</span><div class="news-time">${m.time}</div></div></div>`).join('')
+    : `<div style="font-size:12px;color:#555">No news yet.</div>`;
+  return `<div class="r-block">${rHead('FIFA NEWS')}${rows}</div>`;
+}
+// FACT OF THE DAY — a random historical World Cup / FIFA fact.
+const FIFA_FACTS = [
+  'The first FIFA World Cup was held in 1930 in Uruguay — the hosts won it, beating Argentina 4–2.',
+  'Brazil is the only nation to play in every World Cup, and holds the most titles with 5.',
+  'Just 13 teams entered the 1930 tournament — the 2026 edition expands to 48.',
+  'Germany’s 7–1 win over Brazil in the 2014 semi-final is the heaviest loss a host has ever suffered.',
+  'Norman Whiteside is the youngest World Cup player ever, featuring for Northern Ireland in 1982 aged 17.',
+  'Just one own goal decided a final group game in 1994 — and tragically cost Colombia’s Andrés Escobar his life.',
+  'Miroslav Klose is the World Cup’s all-time top scorer with 16 goals across four tournaments.',
+  'The Jules Rimet Trophy was stolen in 1966 and found wrapped in newspaper by a dog named Pickles.',
+  'Italy and Brazil are the only teams to win the World Cup twice in a row (1934–38 and 1958–62).',
+  'The fastest World Cup goal was scored by Turkey’s Hakan Şükür in 2002 — just 11 seconds in.',
+  '2026 will be the first World Cup hosted by three nations: the USA, Canada and Mexico.',
+  'Just 300 fans watched Romania beat Peru in 1930 — the lowest attendance in World Cup history.',
+];
+function fifaFactWidget(){
+  const fact = FIFA_FACTS[Math.floor(Math.random()*FIFA_FACTS.length)];
+  return `<div class="r-block">${rHead('FACT OF THE DAY')}<div class="fifa-fact">${fact}</div><div class="fifa-fact-foot">⚽ random World Cup fact · new one each day</div></div>`;
+}
+// WHO WILL WIN — clickable community poll. Brazil uses its flag green (#309e3a).
+// You can vote once, then must wait out a 30-min cooldown before changing it.
+const FIFA_ARG_COLOR = '#6CACE4', FIFA_BRA_COLOR = '#309e3a';
+const FIFA_VOTE_COOLDOWN = 30*60*1000; // 30 minutes between votes
+const FIFA_BASE_ARG = 56;
+let fifaPoll = { arg:56, bra:44, voted:null, nextTs:0 };
+function fifaVoteRemain(){ return Math.max(0, fifaPoll.nextTs - Date.now()); }
+function fifaFmtRemain(ms){ const s=Math.ceil(ms/1000), m=Math.floor(s/60), ss=s%60, p=n=>String(n).padStart(2,'0'); return `${p(m)}:${p(ss)}`; }
+function fifaPollHtml(){
+  const p=fifaPoll, m=FIFA_MATCHES[0], cooling = p.voted && fifaVoteRemain()>0;
+  const btn=(side,cc,lbl)=>`<button class="fifa-vote-btn${p.voted===side?' voted':''}" ${cooling?'disabled':''} onclick="fifaVote('${side}')">${fifaFlag(cc,'fvb-flag')}Vote ${lbl}</button>`;
+  return `<div style="font-size:11px;color:#444;margin-bottom:9px">${m.home} vs ${m.away}</div>`
+    + `<div class="fifa-vote${cooling?' cooling':''}">`
+      + btn('arg',m.hcc,m.h3) + btn('bra',m.acc,m.a3)
+      + (cooling?`<div class="fifa-vote-tip">You can change your vote in <span class="fvt-cd">${fifaFmtRemain(fifaVoteRemain())}</span></div>`:'')
+    + `</div>`
+    + (p.voted
+        ? `<div class="fifa-vote-note">✓ Voted ${p.voted==='arg'?m.h3:m.a3}${cooling?'':' — you can change it now'}</div>`
+        : `<div class="fifa-vote-note muted">Tap a team to cast your vote</div>`)
+    + `<div class="poll-row" style="margin-top:10px"><span class="poll-lbl">${m.home}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.arg}%;background:${FIFA_ARG_COLOR}"></div></div><span class="bar-pct">${p.arg}%</span></div>`
+    + `<div class="poll-row"><span class="poll-lbl">${m.away}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.bra}%;background:${FIFA_BRA_COLOR}"></div></div><span class="bar-pct">${p.bra}%</span></div>`;
+}
+function fifaVote(side){
+  if(fifaPoll.voted && fifaVoteRemain()>0) return; // still cooling down
+  fifaPoll.voted=side;
+  fifaPoll.nextTs=Date.now()+FIFA_VOTE_COOLDOWN;
+  fifaPoll.arg = side==='arg' ? Math.min(99,FIFA_BASE_ARG+1) : Math.max(1,FIFA_BASE_ARG-1);
+  fifaPoll.bra = 100-fifaPoll.arg;
+  document.querySelectorAll('.fifa-poll-wrap').forEach(el=>el.innerHTML=fifaPollHtml());
+}
+// Live cooldown: update the tooltip countdown each second, re-enable buttons when it hits 0.
+function tickFifaVote(){
+  if(!fifaPoll.voted) return;
+  const rem=fifaVoteRemain();
+  if(rem>0){ document.querySelectorAll('.fvt-cd').forEach(el=>el.textContent=fifaFmtRemain(rem)); }
+  else if(document.querySelector('.fifa-vote.cooling')){ document.querySelectorAll('.fifa-poll-wrap').forEach(el=>el.innerHTML=fifaPollHtml()); }
+}
+setInterval(tickFifaVote, 1000);
+// "How opinion shifted" — 12 half-hourly community-vote snapshots (ARG share), intentionally
+// wiggly to show the poll refreshing every 30 minutes. Tiny HH:MM labels mark each snapshot.
+function fifaOpinionChart(){
+  const base=FIFA_MATCHES[0].ts, p=n=>String(n).padStart(2,'0');
+  const series=[41,58,45,63,38,60,49,66,43,57,52,56]; // ARG share — wide swings for the demo
+  const tm=i=>{const mb=(series.length-i)*30; const d=new Date(base-mb*60000); return `${p(d.getHours())}:${p(d.getMinutes())}`;};
+  const bars=`<div class="sb-chart sb-chart-12">`+series.map((pa,i)=>`<div class="sb-bar" data-tip="${tm(i)} · ARG ${pa}% / BRA ${100-pa}%"><div class="sb-seg" style="height:${100-pa}%;background:${FIFA_BRA_COLOR}"></div><div class="sb-seg" style="height:${pa}%;background:${FIFA_ARG_COLOR}"></div></div>`).join('')+`</div>`;
+  const ends=`<div class="sb-ends"><span>${tm(0)}</span><span>${tm(series.length-1)}</span></div>`;
+  return bars+ends+`<div class="sb-cap">community vote · updates every 30 min</div>`;
+}
+function fifaCdParts(ts){ let s=Math.max(0,Math.floor((ts-Date.now())/1000)); const d=Math.floor(s/86400);s-=d*86400; const h=Math.floor(s/3600);s-=h*3600; const m=Math.floor(s/60);s-=m*60; const p=n=>String(n).padStart(2,'0'); return {d:p(d),h:p(h),m:p(m),s:p(s)}; }
+function fifaCdCardHtml(i){
+  const m=FIFA_MATCHES[i], p=fifaCdParts(m.ts);
+  const dots=FIFA_MATCHES.map((_,k)=>`<span class="fifa-cd-dot${k===i?' on':''}" onclick="fifaSwitchMatch(${k})"></span>`).join('');
+  return `<div class="fifa-cd-match">${fifaFlag(m.hcc,'fcd-flag')}${m.home} <i>vs</i> ${m.away}${fifaFlag(m.acc,'fcd-flag')}</div>`
+    + `<div class="fifa-cd-when">${m.grp} · ${fifaWhen(m.ts)} <span class="fifa-cd-tz">${fifaTz()}</span></div>`
+    + `<div class="fifa-cd-time" data-ts="${m.ts}"><b class="fcd-d">${p.d}</b><i>d</i><b class="fcd-h">${p.h}</b><i>h</i><b class="fcd-m">${p.m}</b><i>m</i><b class="fcd-s">${p.s}</b><i>s</i></div>`
+    + `<div class="fifa-cd-dots">${dots}</div>`;
+}
+function fifaRenderCd(){ document.querySelectorAll('.fifa-cd').forEach(el=>el.innerHTML=fifaCdCardHtml(fifaCurrentMatch)); }
+function fifaSwitchMatch(k){ fifaCurrentMatch=k; fifaRenderCd(); fifaSlideStart(); } // manual switch resets the auto-timer
+function tickFifaCountdown(){ document.querySelectorAll('.fifa-cd .fifa-cd-time').forEach(t=>{ const p=fifaCdParts(+t.dataset.ts); t.querySelector('.fcd-d').textContent=p.d; t.querySelector('.fcd-h').textContent=p.h; t.querySelector('.fcd-m').textContent=p.m; t.querySelector('.fcd-s').textContent=p.s; }); }
+setInterval(tickFifaCountdown, 1000);
+// NEXT MATCH carousel — auto-advance to the next match every 8s while the FIFA box is open.
+let fifaSlideTimer=null;
+function fifaSlideStart(){
+  clearInterval(fifaSlideTimer);
+  fifaSlideTimer=setInterval(()=>{
+    if(!document.querySelector('.fifa-cd')) return; // FIFA box not visible — idle
+    fifaCurrentMatch=(fifaCurrentMatch+1)%FIFA_MATCHES.length;
+    fifaRenderCd();
+  }, 8000);
+}
+fifaSlideStart();
+function fifaStackedBars(aSeries, colorA, colorB){
+  return `<div class="sb-chart">` + aSeries.map(pa=>`<div class="sb-bar"><div class="sb-seg" style="height:${100-pa}%;background:${colorB}"></div><div class="sb-seg" style="height:${pa}%;background:${colorA}"></div></div>`).join('') + `</div>`;
+}
+
 const PANELS = {
+  fifa: (ac,id)=>`
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">FANS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">12,400 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block">${rHead('COUNTDOWN')}<div class="fifa-cd" id="fifaCd">${fifaCdCardHtml(fifaCurrentMatch)}</div></div>
+    <div class="r-block">${rHead('UPCOMING MATCHES')}<div class="fifa-sched">${fifaUpcoming(3).map(m=>{const d=new Date(m.ts);const p=n=>String(n).padStart(2,'0');const dow=_fWD[d.getDay()].toUpperCase();const dm=`${d.getDate()} ${_fMO[d.getMonth()].toUpperCase()}`;const tm=`${p(d.getHours())}:${p(d.getMinutes())}`;return `<div class="fifa-sched-row"><div class="fsr-cal"><span class="fsr-dow">${dow}</span><span class="fsr-dm">${dm}</span></div><div class="fsr-mid"><div class="fsr-match"><span class="fsr-team">${fifaFlag(m.hcc,'fsr-flag')}<b>${m.h3}</b></span><span class="fsr-vs">vs</span><span class="fsr-team"><b>${m.a3}</b>${fifaFlag(m.acc,'fsr-flag')}</span></div><div class="fsr-stage">${m.grp}</div></div><div class="fsr-time"><span class="fsr-t">${tm}</span><span class="fsr-tz">${fifaTz()}</span></div></div>`;}).join('')}</div></div>
+    <div class="r-block">${rHead('WHO WILL WIN?')}<div class="fifa-poll-wrap">${fifaPollHtml()}</div><div class="fifa-opinion-head">How opinion shifted</div>${fifaOpinionChart()}</div>
+    ${fifaNewsWidget()}
+    ${fifaFactWidget()}`,
   btc: (ac,id)=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE USERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">267 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg> 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
@@ -3442,18 +3711,32 @@ function setRoom(id){
   document.getElementById('root').style.setProperty('--ac',r.ac);
   document.body.style.setProperty('--ac',r.ac);
   // Box name in the header: colour the leading "#" with the box accent, rest stays neutral
-  const _titleFull = window.matchMedia('(max-width: 900px)').matches ? r.label : r.label+(r.tag?' '+r.tag:'');
-  document.getElementById('center-title').innerHTML = _titleFull.replace(/^#/, `<span style="color:${r.ac}">#</span>`);
+  const _isMob = window.matchMedia('(max-width: 900px)').matches;
+  const _titleHash = r.label.replace(/^#/, `<span style="color:${r.ac}">#</span>`);
+  // Mobile: keep the box description in the header but render it as faded, secondary text.
+  document.getElementById('center-title').innerHTML = _isMob
+    ? _titleHash + (r.tag ? ` <span class="center-title-desc">${r.tag}</span>` : '')
+    : (r.label + (r.tag ? ' ' + r.tag : '')).replace(/^#/, `<span style="color:${r.ac}">#</span>`);
   document.getElementById('chat-input').placeholder=`Type to ${r.label}...`;
   const btr = document.getElementById('botToggleRow');
   if (btr) btr.style.display = (id === 'mymix') ? 'none' : '';
+  const own = isMod() && r && r.userCreated;        // moderator viewing their OWN created box
   const ann = document.getElementById('chatAnnounce');
-  if (ann) ann.style.display = (id === 'mymix') ? 'none' : '';
+  if (ann) ann.style.display = (id === 'mymix' || (r && r.userCreated)) ? 'none' : '';
+  const editBtn = document.getElementById('editBoxBtn');
+  if (editBtn) editBtn.classList.toggle('hidden', !own);
+  const beta = document.getElementById('betaNotice');
+  if (beta){
+    let dismissed = false; try { dismissed = localStorage.getItem('tb_beta_dismissed') === '1'; } catch(e){}
+    beta.classList.toggle('hidden', !((r && r.userCreated) && !dismissed));
+  }
   // My Box uses the switcher itself as its header → label it "My Box" and drop the title bar (mobile)
   const bvtSeg = document.getElementById('bvtBoxSeg');
   if (bvtSeg) bvtSeg.textContent = (id === 'mymix') ? 'My Box' : 'Box';
   const ch = document.querySelector('.center-head');
   if (ch) ch.classList.toggle('mybox-head', id === 'mymix');
+  const fbg = document.getElementById('fifaBg');
+  if (fbg) fbg.classList.toggle('on', id === 'fifa');
   renderRooms(); renderChat(); renderRight();
 }
 
@@ -4071,9 +4354,22 @@ function saveWidgetOrder(roomId, order) {
   localStorage.setItem('tb_widget_order_'+roomId, JSON.stringify(order));
 }
 
+// User-created boxes start with an empty terminal; the owner gets an ADD WIDGETS action.
+function renderUserBoxTerminal(r){
+  const rightEl = document.getElementById('right-panel');
+  rightEl.classList.remove('mybox-term');
+  const termLabel = window.matchMedia('(max-width: 900px)').matches ? 'TERMINAL ' + r.label : 'TERMINAL';
+  const owner = isMod() && r.id === userBoxId;
+  const addBtn = owner ? `<button class="add-widgets-btn" onclick="openAddWidgets()">ADD WIDGETS +</button>` : '';
+  rightEl.innerHTML =
+    `<div class="box-view-toggle"><button class="bvt-seg" onclick="setMobileView('chat')">Box</button><button class="bvt-seg active" onclick="setMobileView('terminal')">Terminal</button></div>`
+    + `<div class="section-head"><span>${termLabel}</span>${addBtn}</div>`
+    + `<div class="term-empty">No widgets yet.${owner ? `<br>Use <b style="color:var(--ac)">ADD WIDGETS</b> to set up this box's terminal.` : ''}</div>`;
+}
 function renderRight(){
   if (active === 'mymix') { renderMyMixTerminal(); return; }
   const r=ROOMS.find(r=>r.id===active);
+  if (r && r.userCreated) { renderUserBoxTerminal(r); return; }
   const panelHtml = getPanel(active)(r.ac, active);
   // parse r-blocks from panel html
   const tmp = document.createElement('div');
@@ -4482,6 +4778,49 @@ function initVibes() {
   });
 }
 
+// ── Box moderator mode (Discord login) ──────────────────────────────────────
+// A moderator publishes a box directly (no review) and can edit/manage ONLY their own box.
+let isModerator = false;
+let userBoxId = null;                 // id of the box this moderator created (their own)
+function isMod(){ return isModerator; }
+// Box creation is a HIDDEN, moderator-only feature for launch (kept in the build for the
+// backend hand-off). Reflect the current mod state in the UI: show the "+" create button
+// only to moderators, refresh the list. Dima: replace the hidden entry below with a real
+// backend check (is the logged-in Discord user on the moderator allowlist?).
+function applyModeratorUI(){
+  const btn = document.getElementById('createBoxBtn');
+  if (btn) btn.classList.toggle('hidden', !isMod());
+  if (typeof renderRooms === 'function') renderRooms();
+}
+function enterModerator(){
+  isModerator = true;
+  try { localStorage.setItem('tb_mod','1'); } catch(e){}
+  if (typeof authState !== 'undefined' && authState === 'welcome') setAuthState('auth'); // hidden entry → land straight in
+  applyModeratorUI();
+}
+function exitModerator(){
+  isModerator = false;
+  try { localStorage.removeItem('tb_mod'); } catch(e){}
+  applyModeratorUI();
+}
+function isUserBox(id){ const r = ROOMS.find(x => x.id === id); return !!(r && r.userCreated); }
+function saveUserBoxes(){
+  try {
+    localStorage.setItem('tb_user_boxes', JSON.stringify(ROOMS.filter(r => r.userCreated)));
+    localStorage.setItem('tb_user_box_active', userBoxId || '');
+  } catch(e){}
+}
+function restoreUserBoxes(){
+  try { isModerator = localStorage.getItem('tb_mod') === '1'; } catch(e){}
+  try {
+    JSON.parse(localStorage.getItem('tb_user_boxes') || '[]').forEach(b => {
+      if (b && b.id && !ROOMS.some(r => r.id === b.id)){ ROOMS.push(b); if (!CHATS[b.id]) CHATS[b.id] = []; }
+    });
+    userBoxId = localStorage.getItem('tb_user_box_active') || null;
+  } catch(e){}
+}
+restoreUserBoxes(); // bring any previously-created boxes into ROOMS before the first render
+
 setRoom('general');
 
 // === AUTH STATE MACHINE ===
@@ -4541,7 +4880,7 @@ function setAuthState(state, opts) {
     authBlock.classList.add('hidden');
     chatInputAuth.classList.remove('hidden');
     chatInputAnon.classList.add('hidden');
-    createBoxBtn.classList.remove('hidden');
+    createBoxBtn.classList.toggle('hidden', !isMod()); // box creation = hidden moderator-only feature
   } else {
     profileAuth.classList.add('hidden');
     authBlock.classList.remove('hidden');
@@ -5026,7 +5365,22 @@ function tourStop(){
   tourEl.classList.remove('show'); tourEl.innerHTML = '';
   window.removeEventListener('resize', tourReflow);
 }
-function tourFinish(){ try { localStorage.setItem('onboarded','true'); } catch(e){} tourStop(); }
+function tourFinish(){ try { localStorage.setItem('onboarded','true'); } catch(e){} tourStop(); animateBoxesIn(); }
+// Staggered reveal of the sidebar boxes once the onboarding tour is closed (desktop).
+// Mobile has its own CRT boot-in scan, so skip it there.
+function animateBoxesIn(){
+  if (window.matchMedia('(max-width: 900px)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const list = document.getElementById('rooms-list');
+  if (!list) return;
+  const items = Array.from(list.children); // .rooms-pinned (My Box) + .room-item rows
+  items.forEach((el, i) => {
+    el.style.animation = 'none';
+    void el.offsetWidth;                    // restart the animation if it was applied before
+    el.style.animation = `boxesReveal .4s cubic-bezier(.2,.7,.3,1) ${(i * 0.05).toFixed(2)}s backwards`;
+  });
+  setTimeout(() => items.forEach(el => { el.style.animation = ''; }), 500 + items.length * 50);
+}
 function tourGo(i){
   tourIdx = i;
   renderTour();
@@ -5355,11 +5709,29 @@ document.getElementById('mobileSettingsBack').addEventListener('click', () => {
 const _savedAuth = (function(){ try { return localStorage.getItem('tb_authState'); } catch (e) { return null; } })();
 setAuthState(_savedAuth === 'auth' || _savedAuth === 'anon' ? _savedAuth : 'welcome', { restore: true });
 
+// ── Hidden moderator entry (TEMPORARY frontend gate — Dima: replace with a backend check
+//    that flips this on only for Discord users on the moderator allowlist) ───────────────
+//   Enter:  open the site with  ?mod=1   OR run  enableModerator()  in the console.
+//   Exit:   ?mod=0   OR  disableModerator().   State persists in localStorage (tb_mod).
+window.enableModerator = enterModerator;
+window.disableModerator = exitModerator;
+try {
+  const _m = new URLSearchParams(location.search).get('mod');
+  if (_m === '1') enterModerator();
+  else if (_m === '0') exitModerator();
+  else applyModeratorUI(); // returning moderator (tb_mod restored) → reflect "+" visibility
+} catch(e){}
+
 // Create Box modal
 const createModal = document.getElementById('createModal');
 const boxNameInput = document.getElementById('boxName');
 document.querySelector('.create-box-btn').addEventListener('click', () => {
   if (isAnon()){ showRegwall('create'); return; } // anon: "+" visible, but creating a box → reg-wall
+  editingBoxId = null;                            // fresh create (not edit)
+  boxNameInput.value = ''; document.getElementById('boxCategory').value = '';
+  document.querySelector('#createModal .modal-title').textContent = 'create box';
+  document.getElementById('confirmBox').innerHTML = 'SEND REQUEST &#8594;';
+  createModal.classList.remove('edit-mode');
   createModal.classList.remove('hidden');
   setTimeout(() => boxNameInput.focus(), 50);
 });
@@ -5385,6 +5757,50 @@ function selectBoxColor(c) {
 }
 boxSwatchesEl.querySelectorAll('.box-swatch').forEach(b => b.addEventListener('click', () => selectBoxColor(b.dataset.color)));
 selectBoxColor(selectedBoxColor);
+
+// SEND REQUEST → a moderator publishes the box straight into the sidebar (no review).
+let editingBoxId = null; // set while EDIT BOX reuses this modal for an existing box
+document.getElementById('confirmBox').addEventListener('click', () => {
+  const name = (boxNameInput.value || '').trim();
+  if (!name) { boxNameInput.focus(); return; }
+  const cat = (document.getElementById('boxCategory').value || '').trim().toUpperCase();
+  if (editingBoxId) {                                  // EDIT BOX: update the existing room
+    const r = ROOMS.find(x => x.id === editingBoxId);
+    if (r){ r.label = '#'+name; r.tag = cat ? '['+cat+']' : ''; r.ac = selectedBoxColor; }
+    saveUserBoxes(); createModal.classList.add('hidden'); editingBoxId = null;
+    renderRooms(); setRoom(r ? r.id : active);
+    return;
+  }
+  if (isMod()) {                                       // CREATE: publish a new box
+    const id = 'ub_' + Date.now().toString(36);
+    ROOMS.push({ id, label: '#'+name, tag: cat ? '['+cat+']' : '', count: 1, ac: selectedBoxColor, userCreated: true });
+    if (!CHATS[id]) CHATS[id] = [];
+    userBoxId = id; saveUserBoxes();
+    createModal.classList.add('hidden'); boxNameInput.value = '';
+    renderRooms(); setRoom(id);
+  } else {
+    createModal.classList.add('hidden');               // regular user: request "sent" (stub)
+  }
+});
+// EDIT BOX (own box only) — reuse the create form pre-filled.
+function openEditBox(){
+  const r = ROOMS.find(x => x.id === active); if (!r || !r.userCreated) return;
+  editingBoxId = r.id;
+  boxNameInput.value = r.label.replace(/^#/, '');
+  document.getElementById('boxCategory').value = (r.tag || '').replace(/[\[\]]/g, '');
+  selectBoxColor(r.ac);
+  document.querySelector('#createModal .modal-title').textContent = 'edit box';
+  document.getElementById('confirmBox').innerHTML = 'SAVE &#8594;';
+  createModal.classList.add('edit-mode');
+  createModal.classList.remove('hidden');
+}
+// ADD WIDGETS (moderator, own box terminal) — behaviour TBD; opens the widget setup for now.
+function openAddWidgets(){ document.getElementById('widgetModal').classList.remove('hidden'); }
+// Dismiss the beta notice (remembered).
+document.getElementById('betaNoticeX')?.addEventListener('click', () => {
+  try { localStorage.setItem('tb_beta_dismissed','1'); } catch(e){}
+  document.getElementById('betaNotice').classList.add('hidden');
+});
 
 // Reactions: keep at most 5 emoji (grapheme clusters), preserving spacing
 const boxReactions = document.getElementById('boxReactions');
