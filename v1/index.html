@@ -384,7 +384,7 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 @keyframes fifaWave { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
 /* FIFA upcoming-matches schedule cards */
 .fifa-sched { display: flex; flex-direction: column; gap: 6px; }
-.fifa-sched-row { display: flex; align-items: center; gap: 11px; padding: 8px 11px 8px 9px; background: linear-gradient(to right, #131313, #0d0d0d); border: 1px solid #242424; border-left: 2px solid var(--ac, #F5C518); border-radius: 2px; transition: background .15s, transform .15s; }
+.fifa-sched-row { display: flex; align-items: center; gap: 11px; padding: 8px 11px 8px 9px; background: linear-gradient(to right, #131313, #0d0d0d); border: 1px solid #242424; border-left: 2px solid var(--ac, #F5C518); border-radius: 2px; transition: background .15s, transform .15s, box-shadow .15s; }
 .fifa-sched-row:hover { background: linear-gradient(to right, #1a1a1a, #101010); transform: translateX(1px); }
 .fsr-cal { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 40px; line-height: 1.25; flex-shrink: 0; }
 .fsr-dow { font-family: 'CHNOPixelCodePro', monospace; font-size: 12px; color: var(--ac, #F5C518); letter-spacing: 0.04em; }
@@ -399,6 +399,75 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .fsr-time { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; line-height: 1.2; }
 .fsr-t { font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; color: #cfcfcf; font-variant-numeric: tabular-nums; }
 .fsr-tz { font-family: 'Roboto', sans-serif; font-size: 9px; color: #5a5a5a; letter-spacing: 0.02em; margin-top: 1px; }
+/* MY TEAM — follow picker + pinned fixture card */
+.fmt-prompt { font-family: 'Roboto', sans-serif; font-size: 11.5px; color: #888; line-height: 1.5; margin-bottom: 8px; }
+.fmt-search { width: 100%; box-sizing: border-box; background: #141414; border: 1px solid #383838; border-radius: 3px; color: #e0e0e0; font-family: 'Roboto', sans-serif; font-size: 12px; padding: 7px 9px; outline: none; }
+.fmt-search:focus { border-color: var(--ac, #F5C518); }
+.fmt-search::placeholder { color: #5a5a5a; }
+/* Country list is an overlay: hidden by default, drops over the widget on focus. */
+.fmt-search-wrap { position: relative; }
+.fmt-list { display: none; position: absolute; top: calc(100% + 5px); left: 0; right: 0; z-index: 9; max-height: 200px; overflow-y: auto; flex-direction: column; gap: 3px; padding: 5px; background: #0e0e0e; border: 1px solid #333; border-radius: 4px; box-shadow: 0 8px 22px rgba(0,0,0,0.6); }
+.fmt-search-wrap.open .fmt-list { display: flex; }
+.fmt-pick { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: #121212; border: 1px solid #242424; border-radius: 2px; padding: 7px 9px; cursor: pointer; transition: border-color .15s, background .15s; }
+.fmt-pick:hover { border-color: var(--ac, #F5C518); background: #1a1a1a; }
+.fmt-pick-flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); flex-shrink: 0; }
+.fmt-pick-name { flex: 1; font-family: 'CHNOPixelCodePro', monospace; font-size: 12.5px; color: #e0e0e0; letter-spacing: 0.02em; }
+.fmt-pick-go { font-family: 'Roboto', sans-serif; font-size: 10px; color: #666; flex-shrink: 0; }
+.fmt-pick:hover .fmt-pick-go { color: var(--ac, #F5C518); }
+/* Followed-team chip — sits inline next to the [MY TEAM] header title. */
+.fmt-chip { display: inline-flex; align-items: center; gap: 6px; margin-left: 9px; margin-right: auto; padding: 2px 4px 2px 6px; background: #171717; border: 1px solid #333; border-radius: 11px; }
+.fmt-chip-flag { width: 17px; height: 12px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); }
+.fmt-chip-name { font-family: 'CHNOPixelCodePro', monospace; font-size: 11.5px; color: #e8e8e8; letter-spacing: 0.02em; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fmt-chip-x { background: none; border: none; color: #888; font-size: 12px; line-height: 1; cursor: pointer; padding: 1px 2px; border-radius: 50%; flex-shrink: 0; }
+.fmt-chip-x:hover { color: #fff; background: #3a2222; }
+/* Club crests: contained (logos have transparency), no flag border; badge = fallback. */
+.fclub { object-fit: contain !important; box-shadow: none !important; border-radius: 0 !important; background: transparent; }
+.fbadge { display: inline-flex; align-items: center; justify-content: center; background: var(--bbg,#444); color: var(--bfg,#fff); font-family: 'CHNOPixelCodePro', monospace; font-size: 7px; font-weight: 700; letter-spacing: 0.02em; line-height: 1; border-radius: 2px; overflow: hidden; }
+.fmt-card { background: linear-gradient(to right, #131313, #0d0d0d); border: 1px solid #242424; border-left: 2px solid var(--ac, #F5C518); border-radius: 2px; padding: 11px 12px; }
+.fmt-card.none { color: #666; font-family: 'Roboto', sans-serif; font-size: 12px; line-height: 1.5; border-left-color: #383838; }
+.fmt-status { font-family: 'Roboto', sans-serif; font-size: 10.5px; letter-spacing: 0.06em; color: #888; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.fmt-status i { font-style: normal; }
+.fmt-cd { color: var(--ac, #F5C518); font-family: 'CHNOPixelCodePro', monospace; font-variant-numeric: tabular-nums; font-size: 11px; line-height: 1; }
+/* NEXT MATCH card: label + countdown centre-aligned on one line, stage pushed right. */
+.fmt-next-status { justify-content: space-between; }
+.fmt-next-cd { display: inline-flex; align-items: center; gap: 4px; }
+.fmt-next-grp { color: #6f6f6f; flex-shrink: 0; }
+/* Opponent + accented kickoff date share one row → card is a line shorter. */
+.fmt-next-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 9px; }
+.fmt-next-row .fmt-score.upnext { margin-top: 0; }
+.fmt-next-when { font-family: 'CHNOPixelCodePro', monospace; font-size: 11.5px; color: #d8d8d8; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fmt-card.live { border-left-color: #e2483d; }
+.fmt-card.live .fmt-status, .fmt-card.live .fmt-status i { color: #e2483d; }
+.fmt-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #e2483d; box-shadow: 0 0 6px #e2483d; animation: fifaLivePulse 1.1s ease-in-out infinite; }
+@keyframes fifaLivePulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.fmt-score { margin-top: 7px; font-family: 'CHNOPixelCodePro', monospace; font-size: 22px; color: #e8e8e8; letter-spacing: 0.04em; display: flex; align-items: baseline; gap: 8px; }
+.fmt-score b { color: var(--ac, #F5C518); font-weight: 400; }
+.fmt-card.live .fmt-score b { color: #fff; }
+.fmt-score.upnext { font-size: 16px; color: #cfcfcf; align-items: center; }
+.fmt-score.upnext b { color: #e8e8e8; }
+.fmt-opp-flag { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); }
+.fmt-sub { margin-top: 6px; font-family: 'Roboto', sans-serif; font-size: 11px; color: #777; }
+.fmt-res { font-family: 'CHNOPixelCodePro', monospace; padding: 0 5px; border-radius: 2px; }
+.fmt-res-W { color: #5fbf5f; } .fmt-res-L { color: #e2483d; } .fmt-res-D { color: #c9a13b; }
+/* MATCHES feed — status colouring: live = muted-gold accent + red pulsing minute, upcoming = amber countdown. */
+.fifa-sched-row.live { border-left-color: color-mix(in srgb, var(--ac, #F5C518) 60%, transparent); }
+.fsr-cal-live { gap: 1px; }
+.fsr-cal-live .fsr-dow { color: var(--ac, #F5C518); font-size: 11px; }
+.fsr-cal-live .fsr-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #e2483d; box-shadow: 0 0 5px #e2483d; animation: fifaLivePulse 1.1s ease-in-out infinite; margin-bottom: 2px; }
+.fsr-min { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: #e2483d; font-variant-numeric: tabular-nums; animation: fifaLivePulse 1.1s ease-in-out infinite; }
+.fsr-bigscore { font-family: 'CHNOPixelCodePro', monospace; font-size: 21px; color: #fff; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.fsr-bigscore i { font-style: normal; color: var(--ac, #F5C518); margin: 0 3px; }
+.fsr-cd { font-family: 'CHNOPixelCodePro', monospace; font-size: 14px; color: var(--ac, #F5C518); font-variant-numeric: tabular-nums; }
+.fsr-when { font-family: 'Roboto', sans-serif; font-size: 9.5px; color: #5a5a5a; letter-spacing: 0.02em; margin-top: 1px; }
+.fifa-sched-row.followed { border-left-color: var(--ac, #F5C518); box-shadow: inset 2px 0 0 var(--ac, #F5C518); position: relative; }
+.fsr-fav { position: absolute; top: 5px; right: 7px; font-size: 10px; color: var(--ac, #F5C518); }
+/* MATCHES pagination */
+.fifa-pager { display: flex; align-items: center; justify-content: space-between; margin-top: 3px; }
+.fpg-btn { background: #141414; border: 1px solid #383838; color: #cfcfcf; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; letter-spacing: 0.03em; padding: 5px 11px; border-radius: 3px; cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+.fpg-btn:hover:not(:disabled) { border-color: var(--ac, #F5C518); color: #fff; background: #1a1a1a; }
+.fpg-btn:disabled { opacity: 0.32; cursor: default; }
+.fpg-info { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: var(--ac, #F5C518); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.fpg-info i { font-style: normal; color: #666; }
 .fifa-opinion-head { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: #888; letter-spacing: 0.04em; margin: 13px 0 7px; text-transform: uppercase; }
 .sb-chart { display: flex; align-items: stretch; gap: 4px; height: 52px; }
 .sb-bar { flex: 1; display: flex; flex-direction: column; height: 100%; border-radius: 1px; overflow: hidden; }
@@ -1334,7 +1403,7 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="amber"] .profile-modal-actions { border-top-color: #302818; }
 [data-crt-theme="amber"] .profile-modal-btn { border-color: #504020; color: #b08840; }
 [data-crt-theme="amber"] .profile-modal-btn:hover { border-color: #8a6e3c; color: #ffb347; }
-[data-crt-theme="amber"] .profile-modal-btn.danger { color: #6b5530; border-color: #302818; }
+[data-crt-theme="amber"] .profile-modal-btn.danger { color: #c89656; border-color: #504020; }
 [data-crt-theme="amber"] .profile-modal-btn.danger:hover { color: #ff6b4a; border-color: #ff6b4a; box-shadow: 0 0 10px rgba(255,68,68,0.3); }
 
 /* Settings modal */
@@ -1411,7 +1480,7 @@ body.is-anon .stats-divider { display: none; }
 /* Mobile */
 [data-crt-theme="amber"] .mobile-nav { background: #0d0a05; border-top-color: #302818; }
 [data-crt-theme="amber"] .mobile-nav-item { color: #6b5530; }
-[data-crt-theme="amber"] .mobile-nav-item.active { color: #eaeaea; text-shadow: none; }
+[data-crt-theme="amber"] .mobile-nav-item.active { color: #ffb347; text-shadow: none; }
 [data-crt-theme="amber"] .mobile-settings-view { background: #0d0a05; border-color: #302818; }
 
 /* ── Amber: MISSING OVERRIDES — kill all whites/grays ── */
@@ -1684,7 +1753,7 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="hacker"] .profile-modal-actions { border-top-color: #0a280a; }
 [data-crt-theme="hacker"] .profile-modal-btn { border-color: #0f3f0f; color: #309030; }
 [data-crt-theme="hacker"] .profile-modal-btn:hover { border-color: #258025; color: #00ff41; }
-[data-crt-theme="hacker"] .profile-modal-btn.danger { color: #1a5a1a; border-color: #0a280a; }
+[data-crt-theme="hacker"] .profile-modal-btn.danger { color: #3aa83a; border-color: #0f3f0f; }
 [data-crt-theme="hacker"] .profile-modal-btn.danger:hover { color: #ff3333; border-color: #ff3333; box-shadow: 0 0 10px rgba(255,50,50,0.3); }
 
 /* Settings modal */
@@ -1761,7 +1830,7 @@ body.is-anon .stats-divider { display: none; }
 /* Mobile */
 [data-crt-theme="hacker"] .mobile-nav { background: #030803; border-top-color: #0a280a; }
 [data-crt-theme="hacker"] .mobile-nav-item { color: #1a5a1a; }
-[data-crt-theme="hacker"] .mobile-nav-item.active { color: #eaeaea; text-shadow: none; }
+[data-crt-theme="hacker"] .mobile-nav-item.active { color: #00ff41; text-shadow: none; }
 [data-crt-theme="hacker"] .mobile-settings-view { background: #030803; border-color: #0a280a; }
 
 /* ── Hacker: MISSING OVERRIDES — kill all whites/grays ── */
@@ -2403,6 +2472,319 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="amber"] .pe-swatch.active { border-color: #ffb347; }
 [data-crt-theme="hacker"] .box-swatch.active,
 [data-crt-theme="hacker"] .pe-swatch.active { border-color: #00ff41; }
+/* Edit Profile (pe-*): match theme borders/text instead of default white/grey */
+[data-crt-theme="hacker"] .pe-preview { border-bottom-color: #0a280a; }
+[data-crt-theme="hacker"] .pe-shade { border-color: #0f3f0f; color: #258025; }
+[data-crt-theme="hacker"] .pe-shade.active { background: #030803; border-color: #1a5a1a; color: #50e850; }
+[data-crt-theme="hacker"] .pe-name-input { border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .pe-name-count { color: #1a5a1a; }
+[data-crt-theme="hacker"] .pe-label { color: #258025; }
+[data-crt-theme="hacker"] .pe-save-mobile { border-color: #0f3f0f; color: #258025; }
+[data-crt-theme="hacker"] .pe-save-mobile:hover { border-color: #00ff41; color: #00ff41; }
+[data-crt-theme="amber"] .pe-preview { border-bottom-color: #302818; }
+[data-crt-theme="amber"] .pe-shade { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .pe-shade.active { background: #131008; border-color: #6b5530; color: #d4a54a; }
+[data-crt-theme="amber"] .pe-name-input { border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .pe-name-count { color: #6b5530; }
+[data-crt-theme="amber"] .pe-label { color: #8a6e3c; }
+[data-crt-theme="amber"] .pe-save-mobile { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .pe-save-mobile:hover { border-color: #ffb347; color: #ffb347; }
+[data-crt-theme="snow"] .pe-preview { border-bottom-color: #e0e0e0; }
+[data-crt-theme="snow"] .pe-shade { border-color: #d8d8d8; color: #555; }
+[data-crt-theme="snow"] .pe-shade.active { background: #e8e8e8; border-color: #bbb; color: #1a1a1a; }
+[data-crt-theme="snow"] .pe-save-mobile { border-color: #d8d8d8; color: #555; }
+[data-crt-theme="snow"] .pe-save-mobile:hover { border-color: var(--ac); color: var(--ac); }
+[data-crt-theme="aurora"] .pe-shade { border-color: rgba(255,255,255,0.08); color: #a8a8a8; font-family: 'Inter', sans-serif; }
+[data-crt-theme="aurora"] .pe-shade.active { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #fff; }
+[data-crt-theme="aurora"] .pe-name-input { border-color: rgba(255,255,255,0.08); color: #fff; font-family: 'Inter', sans-serif; }
+[data-crt-theme="aurora"] .pe-save-mobile { border-color: rgba(255,255,255,0.08); color: #fff; font-family: 'Inter', sans-serif; }
+/* Badges toggle "off" track — themed muted colour instead of default grey */
+[data-crt-theme="hacker"] .pe-switch { background: #0f3f0f; }
+[data-crt-theme="amber"] .pe-switch { background: #504020; }
+[data-crt-theme="snow"] .pe-switch { background: #c8c8c8; }
+[data-crt-theme="aurora"] .pe-switch { background: rgba(255,255,255,0.12); }
+/* Modal/section headings & labels — theme colour instead of default white/grey (one rule per theme) */
+[data-crt-theme="hacker"] #profileEditModal .pe-title-mobile,
+[data-crt-theme="hacker"] .pe-title-desktop,
+[data-crt-theme="hacker"] .modal-title { color: #50e850; }
+[data-crt-theme="hacker"] .settings-section-title,
+[data-crt-theme="hacker"] .settings-row-label,
+[data-crt-theme="hacker"] .auth-label,
+[data-crt-theme="hacker"] .welcome-label { color: #258025; }
+[data-crt-theme="amber"] #profileEditModal .pe-title-mobile,
+[data-crt-theme="amber"] .pe-title-desktop,
+[data-crt-theme="amber"] .modal-title { color: #d4a54a; }
+[data-crt-theme="amber"] .settings-section-title,
+[data-crt-theme="amber"] .settings-row-label,
+[data-crt-theme="amber"] .auth-label,
+[data-crt-theme="amber"] .welcome-label { color: #8a6e3c; }
+[data-crt-theme="snow"] #profileEditModal .pe-title-mobile,
+[data-crt-theme="snow"] .pe-title-desktop,
+[data-crt-theme="snow"] .modal-title,
+[data-crt-theme="snow"] .settings-row-label { color: #1a1a1a; }
+[data-crt-theme="snow"] .settings-section-title,
+[data-crt-theme="snow"] .auth-label,
+[data-crt-theme="snow"] .welcome-label { color: #555; }
+[data-crt-theme="aurora"] #profileEditModal .pe-title-mobile,
+[data-crt-theme="aurora"] .pe-title-desktop,
+[data-crt-theme="aurora"] .modal-title { color: #fff; }
+/* amber/hacker: replace remaining grey borders/dividers with themed colours
+   (thin dividers → dark theme tint, element outlines → mid theme tint) */
+[data-crt-theme="amber"] .profile-modal-head,
+[data-crt-theme="amber"] .profile-modal-actions,
+[data-crt-theme="amber"] .profile-modal-divider,
+[data-crt-theme="amber"] .stats-divider,
+[data-crt-theme="amber"] .profile-modal-row,
+[data-crt-theme="amber"] .score-row,
+[data-crt-theme="amber"] .trend-row,
+[data-crt-theme="amber"] .news-item,
+[data-crt-theme="amber"] .r-block,
+[data-crt-theme="amber"] .announce,
+[data-crt-theme="amber"] .beta-notice,
+[data-crt-theme="amber"] .msg-popup-emojis,
+[data-crt-theme="amber"] .msg-popup-action,
+[data-crt-theme="amber"] .settings-row,
+[data-crt-theme="amber"] .settings-section,
+[data-crt-theme="amber"] .pf-msg { border-color: #302818; }
+[data-crt-theme="amber"] .profile-stat,
+[data-crt-theme="amber"] .profile-badge,
+[data-crt-theme="amber"] .mood-btn,
+[data-crt-theme="amber"] .tag-pill,
+[data-crt-theme="amber"] .msg-reaction,
+[data-crt-theme="amber"] .msg-popup,
+[data-crt-theme="amber"] .msg-popup-emoji,
+[data-crt-theme="amber"] .data-tip-pop,
+[data-crt-theme="amber"] .fifa-vote-tip,
+[data-crt-theme="amber"] .add-widgets-btn,
+[data-crt-theme="amber"] .edit-box-btn,
+[data-crt-theme="amber"] .pf-box-chip,
+[data-crt-theme="amber"] .pf-msg-box { border-color: #504020; }
+[data-crt-theme="hacker"] .profile-modal-head,
+[data-crt-theme="hacker"] .profile-modal-actions,
+[data-crt-theme="hacker"] .profile-modal-divider,
+[data-crt-theme="hacker"] .stats-divider,
+[data-crt-theme="hacker"] .profile-modal-row,
+[data-crt-theme="hacker"] .score-row,
+[data-crt-theme="hacker"] .trend-row,
+[data-crt-theme="hacker"] .news-item,
+[data-crt-theme="hacker"] .r-block,
+[data-crt-theme="hacker"] .announce,
+[data-crt-theme="hacker"] .beta-notice,
+[data-crt-theme="hacker"] .msg-popup-emojis,
+[data-crt-theme="hacker"] .msg-popup-action,
+[data-crt-theme="hacker"] .settings-row,
+[data-crt-theme="hacker"] .settings-section,
+[data-crt-theme="hacker"] .pf-msg { border-color: #0a280a; }
+[data-crt-theme="hacker"] .profile-stat,
+[data-crt-theme="hacker"] .profile-badge,
+[data-crt-theme="hacker"] .mood-btn,
+[data-crt-theme="hacker"] .tag-pill,
+[data-crt-theme="hacker"] .msg-reaction,
+[data-crt-theme="hacker"] .msg-popup,
+[data-crt-theme="hacker"] .msg-popup-emoji,
+[data-crt-theme="hacker"] .data-tip-pop,
+[data-crt-theme="hacker"] .fifa-vote-tip,
+[data-crt-theme="hacker"] .add-widgets-btn,
+[data-crt-theme="hacker"] .edit-box-btn,
+[data-crt-theme="hacker"] .pf-box-chip,
+[data-crt-theme="hacker"] .pf-msg-box { border-color: #0f3f0f; }
+/* amber: scrollbar, back icons, widget controls, My Box buttons, widget-add list, profile bg */
+[data-crt-theme="amber"] .profile-modal-body::-webkit-scrollbar-thumb,
+[data-crt-theme="amber"] .pe-body::-webkit-scrollbar-thumb,
+[data-crt-theme="amber"] .mobile-settings-content::-webkit-scrollbar-thumb,
+[data-crt-theme="amber"] .settings-modal-body::-webkit-scrollbar-thumb,
+[data-crt-theme="amber"] #mobileTermMount::-webkit-scrollbar-thumb { background: #504020; }
+[data-crt-theme="amber"] .settings-modal-body { scrollbar-color: #504020 #131008; }
+[data-crt-theme="amber"] .users-list-back,
+[data-crt-theme="amber"] .mobile-back,
+[data-crt-theme="amber"] .pe-back { color: #d4a54a; }
+[data-crt-theme="amber"] .r-icons,
+[data-crt-theme="amber"] .r-arrow,
+[data-crt-theme="amber"] .r-arrow.r-add { color: #b08840; }
+[data-crt-theme="amber"] .mybox-btn { border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .mybox-btn-icon { fill: #8a6e3c; }
+[data-crt-theme="amber"] .mybox-btn-preview { color: #8a6e3c; }
+[data-crt-theme="amber"] .mybox-btn-count { background: #2a2012; color: #b08840; }
+[data-crt-theme="amber"] .mbb-edit { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .mbt-chip { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .ms-list { background: #131008; border-color: #504020; }
+[data-crt-theme="amber"] #widgetModal select,
+[data-crt-theme="amber"] #widgetModal input { border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] #widgetModal label { color: #8a6e3c; }
+[data-crt-theme="amber"] .mobile-profile-view,
+[data-crt-theme="amber"] #mobileProfileView { background: #0d0a05; }
+/* hacker: same set */
+[data-crt-theme="hacker"] .profile-modal-body::-webkit-scrollbar-thumb,
+[data-crt-theme="hacker"] .pe-body::-webkit-scrollbar-thumb,
+[data-crt-theme="hacker"] .mobile-settings-content::-webkit-scrollbar-thumb,
+[data-crt-theme="hacker"] .settings-modal-body::-webkit-scrollbar-thumb,
+[data-crt-theme="hacker"] #mobileTermMount::-webkit-scrollbar-thumb { background: #0f3f0f; }
+[data-crt-theme="hacker"] .settings-modal-body { scrollbar-color: #0f3f0f #030803; }
+[data-crt-theme="hacker"] .users-list-back,
+[data-crt-theme="hacker"] .mobile-back,
+[data-crt-theme="hacker"] .pe-back { color: #50e850; }
+[data-crt-theme="hacker"] .r-icons,
+[data-crt-theme="hacker"] .r-arrow,
+[data-crt-theme="hacker"] .r-arrow.r-add { color: #309030; }
+[data-crt-theme="hacker"] .mybox-btn { border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .mybox-btn-icon { fill: #309030; }
+[data-crt-theme="hacker"] .mybox-btn-preview { color: #309030; }
+[data-crt-theme="hacker"] .mybox-btn-count { background: #0a1f0a; color: #40c840; }
+[data-crt-theme="hacker"] .mbb-edit { border-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] .mbt-chip { border-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] .ms-list { background: #030803; border-color: #0f3f0f; }
+[data-crt-theme="hacker"] #widgetModal select,
+[data-crt-theme="hacker"] #widgetModal input { border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] #widgetModal label { color: #309030; }
+[data-crt-theme="hacker"] .mobile-profile-view,
+[data-crt-theme="hacker"] #mobileProfileView { background: #030803; }
+/* Aurora: round corners in My Box centre (empty-state) + ADD TO MY BOX picker */
+[data-crt-theme="aurora"] .mix-empty-cta,
+[data-crt-theme="aurora"] .mix-empty-chip,
+[data-crt-theme="aurora"] .mix-empty-bot,
+[data-crt-theme="aurora"] .mix-picker-search,
+[data-crt-theme="aurora"] .modal-btn { border-radius: 10px; }
+[data-crt-theme="aurora"] .mix-tabs { border-radius: 10px; overflow: hidden; }
+[data-crt-theme="aurora"] .mix-picker-body { border-radius: 12px; }
+/* amber/hacker: search caret matches the message-input caret (thin) */
+[data-crt-theme="amber"] .search-cursor,
+[data-crt-theme="hacker"] .search-cursor { width: 4px; }
+/* Profile modal: column divider (avatar↔body) → themed instead of grey */
+[data-crt-theme="amber"] #profileModal .profile-modal-avatar,
+[data-crt-theme="amber"] #profileEditModal .pe-preview { border-right-color: #302818; }
+[data-crt-theme="hacker"] #profileModal .profile-modal-avatar,
+[data-crt-theme="hacker"] #profileEditModal .pe-preview { border-right-color: #0a280a; }
+/* Widget tooltip (data-tip-pop) — themed text/bg instead of white/grey */
+[data-crt-theme="amber"] .data-tip-pop { color: #ffb347; background: #131008; }
+[data-crt-theme="hacker"] .data-tip-pop { color: #00ff41; background: #030803; }
+/* My Box empty-state (BUILD YOUR FEED) — amber/hacker, was white/grey */
+[data-crt-theme="amber"] .mix-empty-title { color: #d4a54a; }
+[data-crt-theme="amber"] .mix-empty-text { color: #8a6e3c; }
+[data-crt-theme="amber"] .mix-empty-steps { color: #8a6e3c; }
+[data-crt-theme="amber"] .mix-empty-hint { color: #6b5530; }
+[data-crt-theme="amber"] .mix-empty-cta { border-color: #d4a54a; color: #d4a54a; }
+[data-crt-theme="amber"] .mix-empty-chip { border-color: #504020; color: #b08840; }
+[data-crt-theme="amber"] .mix-empty-bot { border-color: #504020; }
+[data-crt-theme="amber"] .mix-empty-bot span { color: #b08840; }
+[data-crt-theme="amber"] .mix-empty-chip:hover,
+[data-crt-theme="amber"] .mix-empty-bot:hover { background: #1a140a; border-color: #6b5530; }
+[data-crt-theme="hacker"] .mix-empty-title { color: #50e850; }
+[data-crt-theme="hacker"] .mix-empty-text { color: #258025; }
+[data-crt-theme="hacker"] .mix-empty-steps { color: #258025; }
+[data-crt-theme="hacker"] .mix-empty-hint { color: #1a5a1a; }
+[data-crt-theme="hacker"] .mix-empty-cta { border-color: #50e850; color: #50e850; }
+[data-crt-theme="hacker"] .mix-empty-chip { border-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] .mix-empty-bot { border-color: #0f3f0f; }
+[data-crt-theme="hacker"] .mix-empty-bot span { color: #309030; }
+[data-crt-theme="hacker"] .mix-empty-chip:hover,
+[data-crt-theme="hacker"] .mix-empty-bot:hover { background: #061206; border-color: #1a5a1a; }
+/* FIFA box widgets (amber/hacker) — COUNTDOWN texts, UPCOMING cards, WHO WILL WIN buttons */
+[data-crt-theme="amber"] .fifa-cd-when { color: #8a6e3c; }
+[data-crt-theme="amber"] .fifa-cd-tz,
+[data-crt-theme="amber"] .fifa-cd-match i,
+[data-crt-theme="amber"] .fifa-cd-time i { color: #6b5530; }
+[data-crt-theme="amber"] .fifa-cd-dot { background: #504020; }
+[data-crt-theme="amber"] .fifa-sched-row { background: linear-gradient(to right, #1a140a, #0d0a05); border-color: #302818; }
+[data-crt-theme="amber"] .fifa-sched-row:hover { background: linear-gradient(to right, #221a0e, #120e07); }
+[data-crt-theme="amber"] .fsr-stage { color: #8a6e3c; }
+[data-crt-theme="amber"] .fsr-vs, [data-crt-theme="amber"] .fsr-tz { color: #6b5530; }
+[data-crt-theme="amber"] .fsr-t, [data-crt-theme="amber"] .fsr-team b { color: #d4a54a; }
+[data-crt-theme="amber"] .fifa-vote-btn { background: #131008; border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .fpg-btn { background: #131008; border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .fifa-vote-tip { background: #1a140a; border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .fifa-vote-tip::after { border-top-color: #1a140a; }
+[data-crt-theme="amber"] .fifa-opinion-head { color: #8a6e3c; }
+[data-crt-theme="amber"] .sb-ends, [data-crt-theme="amber"] .sb-cap { color: #6b5530; }
+[data-crt-theme="hacker"] .fifa-cd-when { color: #258025; }
+[data-crt-theme="hacker"] .fifa-cd-tz,
+[data-crt-theme="hacker"] .fifa-cd-match i,
+[data-crt-theme="hacker"] .fifa-cd-time i { color: #1a5a1a; }
+[data-crt-theme="hacker"] .fifa-cd-dot { background: #0f3f0f; }
+[data-crt-theme="hacker"] .fifa-sched-row { background: linear-gradient(to right, #061206, #030803); border-color: #0a280a; }
+[data-crt-theme="hacker"] .fifa-sched-row:hover { background: linear-gradient(to right, #0a1f0a, #051005); }
+[data-crt-theme="hacker"] .fsr-stage { color: #258025; }
+[data-crt-theme="hacker"] .fsr-vs, [data-crt-theme="hacker"] .fsr-tz { color: #1a5a1a; }
+[data-crt-theme="hacker"] .fsr-t, [data-crt-theme="hacker"] .fsr-team b { color: #50e850; }
+[data-crt-theme="hacker"] .fifa-vote-btn { background: #030803; border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .fpg-btn { background: #030803; border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .fifa-vote-tip { background: #061206; border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .fifa-vote-tip::after { border-top-color: #061206; }
+[data-crt-theme="hacker"] .fifa-opinion-head { color: #258025; }
+[data-crt-theme="hacker"] .sb-ends, [data-crt-theme="hacker"] .sb-cap { color: #1a5a1a; }
+/* MY TEAM — amber/hacker parity */
+[data-crt-theme="amber"] .fmt-search { background: #131008; border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] .fmt-pick { background: #131008; border-color: #302818; }
+[data-crt-theme="amber"] .fmt-pick-name, [data-crt-theme="amber"] .fmt-chip-name { color: #d4a54a; }
+[data-crt-theme="amber"] .fmt-chip { background: #131008; border-color: #302818; }
+[data-crt-theme="amber"] .fmt-list { background: #100c06; border-color: #302818; }
+[data-crt-theme="amber"] .fmt-prompt, [data-crt-theme="amber"] .fmt-sub, [data-crt-theme="amber"] .fmt-status { color: #8a6e3c; }
+[data-crt-theme="amber"] .fmt-next-when { color: #d4a54a; }
+[data-crt-theme="amber"] .fmt-card { background: linear-gradient(to right, #1a140a, #0d0a05); border-color: #302818; }
+[data-crt-theme="amber"] .fmt-score { color: #d4a54a; }
+[data-crt-theme="hacker"] .fmt-search { background: #030803; border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] .fmt-pick { background: #030803; border-color: #0a280a; }
+[data-crt-theme="hacker"] .fmt-pick-name, [data-crt-theme="hacker"] .fmt-chip-name { color: #50e850; }
+[data-crt-theme="hacker"] .fmt-chip { background: #030803; border-color: #0a280a; }
+[data-crt-theme="hacker"] .fmt-list { background: #020602; border-color: #0a280a; }
+[data-crt-theme="hacker"] .fmt-prompt, [data-crt-theme="hacker"] .fmt-sub, [data-crt-theme="hacker"] .fmt-status { color: #258025; }
+[data-crt-theme="hacker"] .fmt-next-when { color: #50e850; }
+[data-crt-theme="hacker"] .fmt-card { background: linear-gradient(to right, #061206, #030803); border-color: #0a280a; }
+[data-crt-theme="hacker"] .fmt-score { color: #50e850; }
+/* Left column: collapse button, My Box empty text, My Box→list divider → themed */
+[data-crt-theme="amber"] .left-collapse-btn { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .left-collapse-btn:hover { border-color: #6b5530; color: #d4a54a; }
+[data-crt-theme="amber"] .mybox-btn-empty { color: #8a6e3c; }
+[data-crt-theme="amber"] .rooms-pinned + .room-item { border-top-color: #302818; }
+[data-crt-theme="hacker"] .left-collapse-btn { border-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] .left-collapse-btn:hover { border-color: #1a5a1a; color: #50e850; }
+[data-crt-theme="hacker"] .mybox-btn-empty { color: #309030; }
+[data-crt-theme="hacker"] .rooms-pinned + .room-item { border-top-color: #0a280a; }
+/* Create/Edit Box modal: input text + ACCESS select → themed (were white/grey) */
+[data-crt-theme="amber"] .modal input,
+[data-crt-theme="amber"] .modal select,
+[data-crt-theme="amber"] .modal-select { color: #d4a54a; }
+[data-crt-theme="amber"] .modal-select { border-color: #504020; background: #131008; }
+[data-crt-theme="amber"] .modal input,
+[data-crt-theme="amber"] .modal select { background: #131008; }
+[data-crt-theme="amber"] .modal input::placeholder { color: #6b5530; }
+[data-crt-theme="hacker"] .modal input,
+[data-crt-theme="hacker"] .modal select,
+[data-crt-theme="hacker"] .modal-select { color: #50e850; }
+[data-crt-theme="hacker"] .modal-select { border-color: #0f3f0f; background: #030803; }
+[data-crt-theme="hacker"] .modal input,
+[data-crt-theme="hacker"] .modal select { background: #030803; }
+[data-crt-theme="hacker"] .modal input::placeholder { color: #1a5a1a; }
+[data-crt-theme="amber"] #createModal #boxName { color: #e8c060; }
+[data-crt-theme="hacker"] #createModal #boxName { color: #50e850; }
+/* Chat header EDIT BOX + BOX/TERMINAL toggle → themed text instead of grey */
+[data-crt-theme="amber"] .edit-box-btn { color: #8a6e3c; }
+[data-crt-theme="hacker"] .edit-box-btn { color: #258025; }
+[data-crt-theme="amber"] .bvt-seg { color: #8a6e3c; border-right-color: #302818; }
+[data-crt-theme="hacker"] .bvt-seg { color: #258025; border-right-color: #0a280a; }
+/* Box last-message preview (mobile list) → themed instead of grey */
+[data-crt-theme="amber"] .room-preview { color: #8a6e3c; }
+[data-crt-theme="amber"] .room-preview .rp-nick { color: #b08840; }
+[data-crt-theme="hacker"] .room-preview { color: #258025; }
+[data-crt-theme="hacker"] .room-preview .rp-nick { color: #309030; }
+[data-crt-theme="snow"] .room-preview { color: #777; }
+[data-crt-theme="snow"] .room-preview .rp-nick { color: #555; }
+/* amber/hacker: remaining grey widget texts → themed */
+[data-crt-theme="amber"] .si-label { color: #8a6e3c; }
+[data-crt-theme="amber"] .si-val, [data-crt-theme="amber"] .budget-row, [data-crt-theme="amber"] .budget-msg { color: #c89656; }
+[data-crt-theme="hacker"] .si-label { color: #258025; }
+[data-crt-theme="hacker"] .si-val, [data-crt-theme="hacker"] .budget-row, [data-crt-theme="hacker"] .budget-msg { color: #40c840; }
+/* Mobile full-screen Edit Profile: themed background instead of the grey #0a0a0a */
+@media (max-width: 900px) {
+  [data-crt-theme="hacker"] #profileEditModal,
+  [data-crt-theme="hacker"] #profileEditModal .pe-modal { background: #030803; }
+  [data-crt-theme="hacker"] #profileEditModal { border-color: #0f3f0f; }
+  [data-crt-theme="amber"] #profileEditModal,
+  [data-crt-theme="amber"] #profileEditModal .pe-modal { background: #131008; }
+  [data-crt-theme="amber"] #profileEditModal { border-color: #504020; }
+  [data-crt-theme="snow"] #profileEditModal,
+  [data-crt-theme="snow"] #profileEditModal .pe-modal { background: #fafafa; }
+  [data-crt-theme="snow"] #profileEditModal { border-color: #d8d8d8; }
+}
 </style>
 </head>
 <body>
@@ -3603,14 +3985,75 @@ function highlightChatMsg(idx, box){
 // Match start times are fixed once at load (offset from now), so the live countdown is always
 // sensible regardless of the real clock; labels are derived from the same timestamps.
 const _fifaBase = Date.now();
-const FIFA_MATCHES = [
-  { home:'ARGENTINA', away:'BRAZIL',  h3:'ARG', a3:'BRA', hcc:'ar', acc:'br',     grp:'Group C',     ts:_fifaBase + (6*3600+32*60)*1000 },
-  { home:'FRANCE',    away:'ENGLAND', h3:'FRA', a3:'ENG', hcc:'fr', acc:'gb-eng', grp:'Round of 16', ts:_fifaBase + (27*3600+15*60)*1000 },
-  { home:'SPAIN',     away:'GERMANY', h3:'ESP', a3:'GER', hcc:'es', acc:'de',     grp:'Group E',     ts:_fifaBase + (51*3600+5*60)*1000 },
+// Master fixtures list. status: 'live' | 'upcoming' | 'finished'.
+//   live     → hs/as = current score, min = current minute.
+//   finished → hs/as = full-time score.
+//   upcoming → ts drives the countdown.
+// A fan can follow ANY team here (see MY TEAM) — both national sides (rendered with
+// local flag-icons SVGs) AND clubs (Club World Cup), whose crests load from
+// football-logos.cc with a coloured initials-badge fallback if the image fails.
+// The list spans more teams than fit the widgets — incl. a match a week out
+// (TÜRKİYE) and matches in play right now, to prove out every scenario.
+// Club registry: id → display data + remote crest + fallback badge colours.
+// A side whose hcc/acc is one of these ids renders the club logo instead of a flag.
+const FIFA_CLUB_LOGO = 'https://assets.football-logos.cc/logos/';
+const FIFA_CLUBS = {
+  'chelsea':      { name:'CHELSEA',             t3:'CHE', logo:FIFA_CLUB_LOGO+'england/1500x1500/chelsea.2cba05ff.png',             bg:'#034694', fg:'#ffffff' },
+  'man-city':     { name:'MANCHESTER CITY',     t3:'MCI', logo:FIFA_CLUB_LOGO+'england/1500x1500/manchester-city.8d2b6688.png',     bg:'#6CABDD', fg:'#ffffff' },
+  'real-madrid':  { name:'REAL MADRID',         t3:'RMA', logo:FIFA_CLUB_LOGO+'spain/1500x1500/real-madrid.e34f5ba5.png',           bg:'#FEBE10', fg:'#00529F' },
+  'psg':          { name:'PARIS SAINT-GERMAIN', t3:'PSG', logo:FIFA_CLUB_LOGO+'france/1500x1500/paris-saint-germain.3259f37e.png',   bg:'#004170', fg:'#ffffff' },
+  'bayern':       { name:'BAYERN MÜNCHEN',      t3:'FCB', logo:FIFA_CLUB_LOGO+'germany/1500x1500/bayern-munchen.1eac18e8.png',       bg:'#DC052D', fg:'#ffffff' },
+  'palmeiras':    { name:'PALMEIRAS',           t3:'PAL', logo:FIFA_CLUB_LOGO+'brazil/1500x1500/palmeiras.e2be744c.png',             bg:'#006437', fg:'#ffffff' },
+};
+const FIFA_FIXTURES = [
+  { home:'PORTUGAL',  away:'URUGUAY', h3:'POR', a3:'URU', hcc:'pt', acc:'uy',     grp:'Group H',     status:'live',     min:67, hs:2, as:1, ts:_fifaBase - 67*60*1000 },
+  { home:'CHELSEA',   away:'PALMEIRAS', h3:'CHE', a3:'PAL', hcc:'chelsea', acc:'palmeiras',          grp:'Club WC · QF',   status:'live',     min:54, hs:1, as:0, ts:_fifaBase - 54*60*1000 },
+  { home:'ARGENTINA', away:'BRAZIL',  h3:'ARG', a3:'BRA', hcc:'ar', acc:'br',     grp:'Group C',     status:'upcoming', ts:_fifaBase + (6*3600+32*60)*1000 },
+  { home:'REAL MADRID', away:'MANCHESTER CITY', h3:'RMA', a3:'MCI', hcc:'real-madrid', acc:'man-city', grp:'Club WC · SF', status:'upcoming', ts:_fifaBase + (14*3600+40*60)*1000 },
+  { home:'FRANCE',    away:'ENGLAND', h3:'FRA', a3:'ENG', hcc:'fr', acc:'gb-eng', grp:'Round of 16', status:'upcoming', ts:_fifaBase + (27*3600+15*60)*1000 },
+  { home:'PARIS SAINT-GERMAIN', away:'BAYERN MÜNCHEN', h3:'PSG', a3:'FCB', hcc:'psg', acc:'bayern',  grp:'Club WC · SF', status:'upcoming', ts:_fifaBase + (38*3600+20*60)*1000 },
+  { home:'SPAIN',     away:'GERMANY', h3:'ESP', a3:'GER', hcc:'es', acc:'de',     grp:'Group E',     status:'upcoming', ts:_fifaBase + (51*3600+5*60)*1000 },
+  { home:'TÜRKİYE',   away:'ITALY',   h3:'TUR', a3:'ITA', hcc:'tr', acc:'it',     grp:'Group D',     status:'upcoming', ts:_fifaBase + (6*24+4)*3600*1000 },
+  // Fuller schedule so the MATCHES feed pages across many fixtures (national sides, local flags).
+  { home:'NETHERLANDS', away:'MEXICO',      h3:'NED', a3:'MEX', hcc:'nl', acc:'mx',     grp:'Group A', status:'upcoming', ts:_fifaBase + (60*3600)*1000 },
+  { home:'USA',         away:'SWEDEN',      h3:'USA', a3:'SWE', hcc:'us', acc:'se',     grp:'Group B', status:'upcoming', ts:_fifaBase + (63*3600)*1000 },
+  { home:'JAPAN',       away:'SOUTH KOREA', h3:'JPN', a3:'KOR', hcc:'jp', acc:'kr',     grp:'Group I', status:'upcoming', ts:_fifaBase + (75*3600)*1000 },
+  { home:'BELGIUM',     away:'SWITZERLAND', h3:'BEL', a3:'SUI', hcc:'be', acc:'ch',     grp:'Group J', status:'upcoming', ts:_fifaBase + (78*3600)*1000 },
+  { home:'COLOMBIA',    away:'SENEGAL',     h3:'COL', a3:'SEN', hcc:'co', acc:'sn',     grp:'Group K', status:'upcoming', ts:_fifaBase + (90*3600)*1000 },
+  { home:'CANADA',      away:'AUSTRALIA',   h3:'CAN', a3:'AUS', hcc:'ca', acc:'au',     grp:'Group L', status:'upcoming', ts:_fifaBase + (93*3600)*1000 },
+  { home:'NIGERIA',     away:'DENMARK',     h3:'NGA', a3:'DEN', hcc:'ng', acc:'dk',     grp:'Group A', status:'upcoming', ts:_fifaBase + (102*3600)*1000 },
+  { home:'CHILE',       away:'POLAND',      h3:'CHI', a3:'POL', hcc:'cl', acc:'pl',     grp:'Group B', status:'upcoming', ts:_fifaBase + (105*3600)*1000 },
+  { home:'EGYPT',       away:'GHANA',       h3:'EGY', a3:'GHA', hcc:'eg', acc:'gh',     grp:'Group G', status:'upcoming', ts:_fifaBase + (120*3600)*1000 },
+  { home:'ECUADOR',     away:'QATAR',       h3:'ECU', a3:'QAT', hcc:'ec', acc:'qa',     grp:'Group H', status:'upcoming', ts:_fifaBase + (123*3600)*1000 },
+  { home:'SCOTLAND',    away:'WALES',       h3:'SCO', a3:'WAL', hcc:'gb-sct', acc:'gb-wls', grp:'Group E', status:'upcoming', ts:_fifaBase + (135*3600)*1000 },
+  { home:'SERBIA',      away:'CAMEROON',    h3:'SRB', a3:'CMR', hcc:'rs', acc:'cm',     grp:'Group F', status:'upcoming', ts:_fifaBase + (138*3600)*1000 },
+  { home:'MOROCCO',   away:'CROATIA', h3:'MAR', a3:'CRO', hcc:'ma', acc:'hr',     grp:'Group F',     status:'finished', hs:2, as:0, ts:_fifaBase - 20*3600*1000 },
 ];
+// COUNTDOWN / UPCOMING / WHO WILL WIN only ever care about not-yet-kicked-off
+// matches — derive that subset so all the existing widget code keeps working
+// unchanged (same object refs, so feed dedup by identity still works).
+const FIFA_MATCHES = FIFA_FIXTURES.filter(m=>m.status==='upcoming').sort((a,b)=>a.ts-b.ts);
+// MY TEAM — the nation the fan follows (persisted across reloads). null = none yet.
+let fifaFollow = null; try { fifaFollow = localStorage.getItem('fifaFollow') || null; } catch(e){}
 // Real flag SVGs (flag-icons) instead of OS emoji — these render identically on every platform.
 const FIFA_FLAG_BASE = 'fifa_box/flags/4x3/';
-function fifaFlag(cc, cls){ return `<img class="${cls||'fimg'}" src="${FIFA_FLAG_BASE}${cc}.svg" alt="" loading="lazy" draggable="false">`; }
+// Render a team badge by key: a club id → remote crest (initials-badge fallback),
+// anything else → a local flag-icons SVG. All call sites pass m.hcc / m.acc / t.cc,
+// so clubs and nations both flow through unchanged.
+function fifaFlag(key, cls){
+  const club = FIFA_CLUBS[key];
+  if(club) return `<img class="${cls||'fimg'} fclub" data-tk="${key}" src="${club.logo}" alt="${club.name}" loading="lazy" draggable="false" onerror="fifaLogoFail(this)">`;
+  return `<img class="${cls||'fimg'}" src="${FIFA_FLAG_BASE}${key}.svg" alt="" loading="lazy" draggable="false">`;
+}
+// Crest failed to load (offline / hash rotated) → swap in a coloured initials badge.
+function fifaLogoFail(img){
+  const c = FIFA_CLUBS[img.dataset.tk]; if(!c) return;
+  const span = document.createElement('span');
+  span.className = (img.className.replace('fclub','').trim()) + ' fbadge';
+  span.style.setProperty('--bbg', c.bg); span.style.setProperty('--bfg', c.fg);
+  span.textContent = c.t3;
+  img.replaceWith(span);
+}
 let fifaCurrentMatch = 0;
 const _fWD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], _fMO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function fifaWhen(ts){ const d=new Date(ts), p=n=>String(n).padStart(2,'0'); return `${_fWD[d.getDay()]} ${d.getDate()} ${_fMO[d.getMonth()]} · ${p(d.getHours())}:${p(d.getMinutes())}`; }
@@ -3619,6 +4062,126 @@ function fifaShort(ts){ const d=new Date(ts), p=n=>String(n).padStart(2,'0'); re
 function fifaUpcoming(n){ const now=Date.now(); const fut=FIFA_MATCHES.filter(m=>m.ts>now).sort((a,b)=>a.ts-b.ts); return (fut.length?fut:FIFA_MATCHES.slice()).slice(0,n); }
 // Local timezone label shown next to match times, e.g. "GMT+3".
 function fifaTz(){ const o=-new Date().getTimezoneOffset(), s=o>=0?'+':'-', a=Math.abs(o), h=Math.floor(a/60), mm=a%60; return 'GMT'+s+h+(mm?':'+String(mm).padStart(2,'0'):''); }
+
+// ===== MY TEAM — follow your nation, pin it to the top, see its live score =====
+// Compact "6d 04h" style countdown for the followed-team card (vs the big digit one).
+function fifaCdShort(ts){ const p=fifaCdParts(ts); if(+p.d>0) return `${+p.d}d ${p.h}h`; if(+p.h>0) return `${+p.h}h ${p.m}m`; return `${+p.m}m ${p.s}s`; }
+// Every distinct nation appearing in the fixtures, alpha-sorted — the follow picker.
+function fifaAllTeams(){ const seen={}, out=[]; FIFA_FIXTURES.forEach(m=>{ [[m.hcc,m.home,m.h3],[m.acc,m.away,m.a3]].forEach(([cc,nm,t3])=>{ if(!seen[cc]){ seen[cc]=1; out.push({cc,nm,t3}); } }); }); return out.sort((a,b)=>a.nm.localeCompare(b.nm)); }
+function fifaTeamMeta(cc){ return fifaAllTeams().find(t=>t.cc===cc) || null; }
+// The fixture worth surfacing for a followed team: live now > soonest upcoming > most recent finished.
+function fifaTeamFixture(cc){ const ms=FIFA_FIXTURES.filter(m=>m.hcc===cc||m.acc===cc); return ms.find(m=>m.status==='live') || ms.filter(m=>m.status==='upcoming').sort((a,b)=>a.ts-b.ts)[0] || ms.filter(m=>m.status==='finished').sort((a,b)=>b.ts-a.ts)[0] || null; }
+// Resolve a fixture from the followed team's POV: own score + the opponent's facts.
+function fifaOpponent(m, cc){ const home=m.hcc===cc; return { own: home?m.hs:m.as, score: home?m.as:m.hs, name: home?m.away:m.home, t3: home?m.a3:m.h3, cc: home?m.acc:m.hcc }; }
+// Section header for MY TEAM — once a team is followed, its flag + name + ✕ chip
+// sits inline next to the [MY TEAM] title (the ✕ clears it and reopens the picker).
+function fifaMyTeamHead(){
+  let h = rHead('MY TEAM');
+  if(fifaFollow){
+    const t=fifaTeamMeta(fifaFollow)||{nm:fifaFollow.toUpperCase()};
+    const chip=`<span class="fmt-chip">${fifaFlag(fifaFollow,'fmt-chip-flag')}<span class="fmt-chip-name">${t.nm}</span>`
+      + `<button class="fmt-chip-x" onclick="fifaSetFollow(null)" title="Remove / change team" aria-label="Remove team">✕</button></span>`;
+    h = h.replace('</span><div class="r-icons">', '</span>'+chip+'<div class="r-icons">');
+  }
+  return h;
+}
+function fifaMyTeamHtml(){
+  if(fifaFollow){
+    const cc=fifaFollow, t=fifaTeamMeta(cc)||{nm:cc.toUpperCase(),t3:cc.toUpperCase()}, fx=fifaTeamFixture(cc);
+    if(!fx) return `<div class="fmt-card none">No fixtures scheduled yet — we'll surface the next one here.</div>`;
+    const o=fifaOpponent(fx,cc);
+    if(fx.status==='live'){
+      return `<div class="fmt-card live"><div class="fmt-status"><span class="fmt-live-dot"></span>LIVE <i>${fx.min}'</i></div>`
+        + `<div class="fmt-score">${t.t3} <b>${o.own}</b> : <b>${o.score}</b> ${o.t3}</div>`
+        + `<div class="fmt-sub">${fx.grp} · vs ${o.name}</div></div>`;
+    }
+    if(fx.status==='finished'){
+      const res = o.own>o.score?'W':(o.own<o.score?'L':'D');
+      return `<div class="fmt-card fin"><div class="fmt-status">FULL TIME <span class="fmt-res fmt-res-${res}">${res}</span></div>`
+        + `<div class="fmt-score">${t.t3} <b>${o.own}</b> : <b>${o.score}</b> ${o.t3}</div>`
+        + `<div class="fmt-sub">${fx.grp} · vs ${o.name}</div></div>`;
+    }
+    return `<div class="fmt-card up">`
+      + `<div class="fmt-status fmt-next-status"><span class="fmt-next-cd">NEXT MATCH IN <i class="fmt-cd" data-ts="${fx.ts}">${fifaCdShort(fx.ts)}</i></span><span class="fmt-next-grp">${fx.grp}</span></div>`
+      + `<div class="fmt-next-row"><span class="fmt-score upnext">vs <b>${o.t3}</b> ${fifaFlag(o.cc,'fmt-opp-flag')}</span><span class="fmt-next-when">${fifaShort(fx.ts)} ${fifaTz()}</span></div></div>`;
+  }
+  // Not following — just a search field. The country list stays hidden until the
+  // field is focused, then drops over the widget as an overlay (no clutter by default).
+  const rows = fifaAllTeams().map(t=>`<button class="fmt-pick" data-name="${fifaFold(t.nm)} ${t.cc} ${t.t3.toLowerCase()}" onmousedown="fifaSetFollow('${t.cc}')">${fifaFlag(t.cc,'fmt-pick-flag')}<span class="fmt-pick-name">${t.nm}</span><span class="fmt-pick-go">★ follow</span></button>`).join('');
+  return `<div class="fmt-prompt">Pick your national team — we'll pin it to the top<br>and show its live score.</div>`
+    + `<div class="fmt-search-wrap">`
+      + `<input class="fmt-search" type="text" placeholder="Search your team…" oninput="fifaPickFilter(this.value)" onfocus="fifaPickOpen(true)" onblur="fifaPickOpen(false)" aria-label="Search team">`
+      + `<div class="fmt-list" id="fmtList">${rows}</div>`
+    + `</div>`;
+}
+// Show/hide the picker overlay (blur is delayed so a click on a row still registers).
+function fifaPickOpen(o){ const w=document.querySelector('.fmt-search-wrap'); if(!w) return; if(o){ w.classList.add('open'); } else { setTimeout(()=>w.classList.remove('open'),150); } }
+// Fold to lowercase ASCII so "tur" matches "TÜRKİYE" (strip diacritics + combining marks).
+function fifaFold(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
+// Filter the picker list as the fan types (matches team name, country code or 3-letter tag).
+function fifaPickFilter(q){ q=fifaFold(q).trim(); document.querySelectorAll('#fmtList .fmt-pick').forEach(b=>{ b.style.display = (b.dataset.name||'').includes(q)?'':'none'; }); }
+// Follow / unfollow (cc=null), persist, and refresh the header chip, the card and the MATCHES feed.
+function fifaSetFollow(cc){ fifaFollow=cc||null; try{ cc?localStorage.setItem('fifaFollow',cc):localStorage.removeItem('fifaFollow'); }catch(e){} fifaRerenderFollow(); }
+function fifaRerenderFollow(){
+  document.querySelectorAll('.fifa-myteam-head').forEach(el=>el.innerHTML=fifaMyTeamHead());
+  document.querySelectorAll('.fifa-myteam-wrap').forEach(el=>el.innerHTML=fifaMyTeamHtml());
+  document.querySelectorAll('.fifa-sched').forEach(el=>el.innerHTML=fifaMatchesFeed());
+  document.querySelectorAll('#fifaWww').forEach(el=>el.innerHTML=fifaWwwInner());
+}
+// Stable per-fixture key (used to bind a MATCHES row to its WHO WILL WIN poll).
+function fifaMatchKey(m){ return `${m.hcc}_${m.acc}_${m.ts}`; }
+function fifaFindMatch(key){ return FIFA_FIXTURES.find(m=>fifaMatchKey(m)===key) || null; }
+// Full feed order (live on top, then the followed team's upcoming pinned, then by kickoff).
+// FINISHED is intentionally excluded — this feed is live + upcoming only.
+function fifaFeedMatches(){
+  const isFollowed = m => !!fifaFollow && (m.hcc===fifaFollow || m.acc===fifaFollow);
+  const live = FIFA_FIXTURES.filter(m=>m.status==='live').sort((a,b)=>a.ts-b.ts);
+  const up   = FIFA_FIXTURES.filter(m=>m.status==='upcoming').sort((a,b)=>a.ts-b.ts);
+  const out=[], seen=new Set(), push=m=>{ if(!seen.has(m)){ out.push(m); seen.add(m); } };
+  live.forEach(push);
+  if(fifaFollow){ const f=up.find(isFollowed); if(f) push(f); }
+  up.forEach(push);
+  return out;
+}
+// WHO WILL WIN always polls the top (freshest / nearest) match in the feed.
+function fifaSelectedKey(){ const feed=fifaFeedMatches(); return feed.length?fifaMatchKey(feed[0]):null; }
+// MATCHES pagination — page through the whole schedule, 6 rows at a time.
+const FIFA_PAGE_SIZE = 6;
+let fifaPage = 0;
+function fifaPageCount(){ return Math.max(1, Math.ceil(fifaFeedMatches().length / FIFA_PAGE_SIZE)); }
+function fifaSetPage(n){ fifaPage = Math.max(0, Math.min(fifaPageCount()-1, n)); document.querySelectorAll('.fifa-sched').forEach(el=>el.innerHTML=fifaMatchesFeed()); }
+// One MATCHES-feed row. live → big score + pulsing minute; upcoming → compact in-row countdown.
+// `followed` pins + marks the fan's team. (FINISHED is intentionally not shown in this feed.)
+function fifaMatchRow(m, followed){
+  const live=m.status==='live', d=new Date(m.ts), key=fifaMatchKey(m);
+  const dow=_fWD[d.getDay()].toUpperCase(), dm=`${d.getDate()} ${_fMO[d.getMonth()].toUpperCase()}`;
+  const cal = live
+    ? `<div class="fsr-cal fsr-cal-live"><span class="fsr-live-dot"></span><span class="fsr-dow">LIVE</span><span class="fsr-min">${m.min}'</span></div>`
+    : `<div class="fsr-cal"><span class="fsr-dow">${dow}</span><span class="fsr-dm">${dm}</span></div>`;
+  const right = live
+    ? `<div class="fsr-time"><span class="fsr-bigscore">${m.hs}<i>:</i>${m.as}</span></div>`
+    : `<div class="fsr-time"><span class="fsr-cd" data-ts="${m.ts}">${fifaCdShort(m.ts)}</span><span class="fsr-when">${fifaShort(m.ts)}</span></div>`;
+  return `<div class="fifa-sched-row${live?' live':''}${followed?' followed':''}" data-mk="${key}">${followed?'<span class="fsr-fav">★</span>':''}${cal}`
+    + `<div class="fsr-mid"><div class="fsr-match"><span class="fsr-team">${fifaFlag(m.hcc,'fsr-flag')}<b>${m.h3}</b></span><span class="fsr-vs">vs</span><span class="fsr-team"><b>${m.a3}</b>${fifaFlag(m.acc,'fsr-flag')}</span></div>`
+    + `<div class="fsr-stage">${m.grp}${followed?' · following':''}</div></div>${right}</div>`;
+}
+function fifaMatchesFeed(){
+  const isFollowed = m => !!fifaFollow && (m.hcc===fifaFollow || m.acc===fifaFollow);
+  const all = fifaFeedMatches(), pc = Math.max(1, Math.ceil(all.length/FIFA_PAGE_SIZE));
+  if(fifaPage > pc-1) fifaPage = pc-1;                 // clamp if the list shrank
+  const start = fifaPage*FIFA_PAGE_SIZE;
+  const rows = all.slice(start, start+FIFA_PAGE_SIZE).map(m=>fifaMatchRow(m, isFollowed(m))).join('');
+  return rows + fifaPager(all.length, pc);
+}
+// Prev / next pager with a "page X / N · T matches" readout. Hidden when it all fits on one page.
+function fifaPager(total, pc){
+  if(pc <= 1) return '';
+  return `<div class="fifa-pager">`
+    + `<button class="fpg-btn" ${fifaPage===0?'disabled':''} onclick="fifaSetPage(${fifaPage-1})" aria-label="Previous page">‹ prev</button>`
+    + `<span class="fpg-info">${fifaPage+1} / ${pc} <i>· ${total} matches</i></span>`
+    + `<button class="fpg-btn" ${fifaPage>=pc-1?'disabled':''} onclick="fifaSetPage(${fifaPage+1})" aria-label="Next page">next ›</button>`
+    + `</div>`;
+}
 // Last 3 news_bot posts from the FIFA chat, newest first — feeds the FIFA NEWS widget.
 // Flex layout so wrapped lines align under the start of the text (not under the bullet).
 function fifaNewsWidget(){
@@ -3647,53 +4210,82 @@ function fifaFactWidget(){
   const fact = FIFA_FACTS[Math.floor(Math.random()*FIFA_FACTS.length)];
   return `<div class="r-block">${rHead('FACT OF THE DAY')}<div class="fifa-fact">${fact}</div><div class="fifa-fact-foot">⚽ random World Cup fact · new one each day</div></div>`;
 }
-// WHO WILL WIN — clickable community poll. Brazil uses its flag green (#309e3a).
-// You can vote once, then must wait out a 30-min cooldown before changing it.
-const FIFA_ARG_COLOR = '#6CACE4', FIFA_BRA_COLOR = '#309e3a';
+// WHO WILL WIN — a single community poll bound to whichever MATCHES card is selected
+// (the first one by default; click another card to switch). Each side's bar takes its
+// team's primary colour (flag-derived for nations, crest colour for clubs) so the poll
+// reflects whoever's playing. Vote once, then wait out a 30-min cooldown before changing
+// it. Poll state is keyed per match, so each match keeps its own vote between clicks.
+// Primary flag colour per nation code (only those appearing in fixtures need entries).
+const FIFA_TEAM_COLOR = {
+  pt:'#D52B1E', uy:'#4C9BD6', ar:'#75AADB', br:'#009C3B', fr:'#0055A4', 'gb-eng':'#CE1124',
+  es:'#C60B1E', de:'#FFCE00', tr:'#E30A17', it:'#0066CC', ma:'#C1272D', hr:'#1268B3',
+  nl:'#FF6200', mx:'#006847', us:'#3C3B6E', se:'#FECC02', jp:'#BC002D', kr:'#003478',
+  be:'#FDDA24', ch:'#D52B1E', co:'#FCD116', sn:'#00853F', ca:'#FF0000', au:'#00843D',
+  ng:'#008751', dk:'#C8102E', cl:'#0039A6', pl:'#DC143C', eg:'#C8102E', gh:'#006B3F',
+  ec:'#FFDD00', qa:'#8A1538', 'gb-sct':'#0065BF', 'gb-wls':'#C8102E', rs:'#C6363C', cm:'#007A5E',
+};
+// Resolve a team's bar colour: clubs use their crest colour, nations their flag colour.
+function fifaTeamColor(key){ return (FIFA_CLUBS[key] && FIFA_CLUBS[key].bg) || FIFA_TEAM_COLOR[key] || '#6CACE4'; }
 const FIFA_VOTE_COOLDOWN = 30*60*1000; // 30 minutes between votes
-const FIFA_BASE_ARG = 56;
-let fifaPoll = { arg:56, bra:44, voted:null, nextTs:0 };
-function fifaVoteRemain(){ return Math.max(0, fifaPoll.nextTs - Date.now()); }
+const fifaPolls = {}; // keyed by fifaMatchKey(m)
+function _fifaHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h; }
+function fifaPollState(key){ if(!fifaPolls[key]){ const baseA = 45 + (_fifaHash(key)%13); fifaPolls[key] = { a:baseA, b:100-baseA, voted:null, nextTs:0, baseA }; } return fifaPolls[key]; }
+function fifaVoteRemain(p){ return Math.max(0, p.nextTs - Date.now()); }
 function fifaFmtRemain(ms){ const s=Math.ceil(ms/1000), m=Math.floor(s/60), ss=s%60, p=n=>String(n).padStart(2,'0'); return `${p(m)}:${p(ss)}`; }
-function fifaPollHtml(){
-  const p=fifaPoll, m=FIFA_MATCHES[0], cooling = p.voted && fifaVoteRemain()>0;
-  const btn=(side,cc,lbl)=>`<button class="fifa-vote-btn${p.voted===side?' voted':''}" ${cooling?'disabled':''} onclick="fifaVote('${side}')">${fifaFlag(cc,'fvb-flag')}Vote ${lbl}</button>`;
+function fifaPollHtml(key){
+  const m=fifaFindMatch(key); if(!m) return '';
+  const p=fifaPollState(key), cooling = p.voted && fifaVoteRemain(p)>0;
+  const cHome=fifaTeamColor(m.hcc), cAway=fifaTeamColor(m.acc);
+  const btn=(side,cc,lbl)=>`<button class="fifa-vote-btn${p.voted===side?' voted':''}" ${cooling?'disabled':''} onclick="fifaVote('${side}','${key}')">${fifaFlag(cc,'fvb-flag')}Vote ${lbl}</button>`;
   return `<div style="font-size:11px;color:#444;margin-bottom:9px">${m.home} vs ${m.away}</div>`
     + `<div class="fifa-vote${cooling?' cooling':''}">`
-      + btn('arg',m.hcc,m.h3) + btn('bra',m.acc,m.a3)
-      + (cooling?`<div class="fifa-vote-tip">You can change your vote in <span class="fvt-cd">${fifaFmtRemain(fifaVoteRemain())}</span></div>`:'')
+      + btn('home',m.hcc,m.h3) + btn('away',m.acc,m.a3)
+      + (cooling?`<div class="fifa-vote-tip">You can change your vote in <span class="fvt-cd">${fifaFmtRemain(fifaVoteRemain(p))}</span></div>`:'')
     + `</div>`
     + (p.voted
-        ? `<div class="fifa-vote-note">✓ Voted ${p.voted==='arg'?m.h3:m.a3}${cooling?'':' — you can change it now'}</div>`
+        ? `<div class="fifa-vote-note">✓ Voted ${p.voted==='home'?m.h3:m.a3}${cooling?'':' — you can change it now'}</div>`
         : `<div class="fifa-vote-note muted">Tap a team to cast your vote</div>`)
-    + `<div class="poll-row" style="margin-top:10px"><span class="poll-lbl">${m.home}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.arg}%;background:${FIFA_ARG_COLOR}"></div></div><span class="bar-pct">${p.arg}%</span></div>`
-    + `<div class="poll-row"><span class="poll-lbl">${m.away}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.bra}%;background:${FIFA_BRA_COLOR}"></div></div><span class="bar-pct">${p.bra}%</span></div>`;
+    + `<div class="poll-row" style="margin-top:10px"><span class="poll-lbl">${m.home}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.a}%;background:${cHome}"></div></div><span class="bar-pct">${p.a}%</span></div>`
+    + `<div class="poll-row"><span class="poll-lbl">${m.away}</span><div class="bar-bg"><div class="bar-fg" style="width:${p.b}%;background:${cAway}"></div></div><span class="bar-pct">${p.b}%</span></div>`;
 }
-function fifaVote(side){
-  if(fifaPoll.voted && fifaVoteRemain()>0) return; // still cooling down
-  fifaPoll.voted=side;
-  fifaPoll.nextTs=Date.now()+FIFA_VOTE_COOLDOWN;
-  fifaPoll.arg = side==='arg' ? Math.min(99,FIFA_BASE_ARG+1) : Math.max(1,FIFA_BASE_ARG-1);
-  fifaPoll.bra = 100-fifaPoll.arg;
-  document.querySelectorAll('.fifa-poll-wrap').forEach(el=>el.innerHTML=fifaPollHtml());
+function fifaVote(side,key){
+  const p=fifaPollState(key);
+  if(p.voted && fifaVoteRemain(p)>0) return; // still cooling down
+  p.voted=side; p.nextTs=Date.now()+FIFA_VOTE_COOLDOWN;
+  p.a = side==='home' ? Math.min(99,p.baseA+1) : Math.max(1,p.baseA-1);
+  p.b = 100-p.a;
+  document.querySelectorAll(`.fifa-poll-wrap[data-mk="${key}"]`).forEach(el=>el.innerHTML=fifaPollHtml(key));
 }
-// Live cooldown: update the tooltip countdown each second, re-enable buttons when it hits 0.
+// Live cooldown: update the visible poll's tooltip countdown, re-enable when it hits 0.
 function tickFifaVote(){
-  if(!fifaPoll.voted) return;
-  const rem=fifaVoteRemain();
-  if(rem>0){ document.querySelectorAll('.fvt-cd').forEach(el=>el.textContent=fifaFmtRemain(rem)); }
-  else if(document.querySelector('.fifa-vote.cooling')){ document.querySelectorAll('.fifa-poll-wrap').forEach(el=>el.innerHTML=fifaPollHtml()); }
+  Object.keys(fifaPolls).forEach(key=>{
+    const p=fifaPolls[key]; if(!p.voted) return;
+    const sel=`.fifa-poll-wrap[data-mk="${key}"]`, rem=fifaVoteRemain(p);
+    if(rem>0){ document.querySelectorAll(`${sel} .fvt-cd`).forEach(el=>el.textContent=fifaFmtRemain(rem)); }
+    else if(document.querySelector(`${sel} .fifa-vote.cooling`)){ document.querySelectorAll(sel).forEach(el=>el.innerHTML=fifaPollHtml(key)); }
+  });
 }
 setInterval(tickFifaVote, 1000);
-// "How opinion shifted" — 12 half-hourly community-vote snapshots (ARG share), intentionally
+// "How opinion shifted" — 12 half-hourly community-vote snapshots (home share), intentionally
 // wiggly to show the poll refreshing every 30 minutes. Tiny HH:MM labels mark each snapshot.
-function fifaOpinionChart(){
-  const base=FIFA_MATCHES[0].ts, p=n=>String(n).padStart(2,'0');
-  const series=[41,58,45,63,38,60,49,66,43,57,52,56]; // ARG share — wide swings for the demo
-  const tm=i=>{const mb=(series.length-i)*30; const d=new Date(base-mb*60000); return `${p(d.getHours())}:${p(d.getMinutes())}`;};
-  const bars=`<div class="sb-chart sb-chart-12">`+series.map((pa,i)=>`<div class="sb-bar" data-tip="${tm(i)} · ARG ${pa}% / BRA ${100-pa}%"><div class="sb-seg" style="height:${100-pa}%;background:${FIFA_BRA_COLOR}"></div><div class="sb-seg" style="height:${pa}%;background:${FIFA_ARG_COLOR}"></div></div>`).join('')+`</div>`;
+const FIFA_OPINION_SERIES = [[41,58,45,63,38,60,49,66,43,57,52,56],[52,44,57,49,61,46,55,42,58,47,53,48],[48,55,43,60,46,58,50,44,57,49,54,51]];
+function fifaOpinionChart(key){
+  const m=fifaFindMatch(key); if(!m) return '';
+  const base=m.ts, p=n=>String(n).padStart(2,'0');
+  const series = FIFA_OPINION_SERIES[_fifaHash(key)%FIFA_OPINION_SERIES.length];
+  const cHome=fifaTeamColor(m.hcc), cAway=fifaTeamColor(m.acc);
+  const tm=k=>{const mb=(series.length-k)*30; const d=new Date(base-mb*60000); return `${p(d.getHours())}:${p(d.getMinutes())}`;};
+  const bars=`<div class="sb-chart sb-chart-12">`+series.map((pa,k)=>`<div class="sb-bar" data-tip="${tm(k)} · ${m.h3} ${pa}% / ${m.a3} ${100-pa}%"><div class="sb-seg" style="height:${100-pa}%;background:${cAway}"></div><div class="sb-seg" style="height:${pa}%;background:${cHome}"></div></div>`).join('')+`</div>`;
   const ends=`<div class="sb-ends"><span>${tm(0)}</span><span>${tm(series.length-1)}</span></div>`;
   return bars+ends+`<div class="sb-cap">community vote · updates every 30 min</div>`;
+}
+// The single WHO WILL WIN widget; its inner content tracks the selected MATCHES card.
+function fifaWwwInner(){
+  const key=fifaSelectedKey(); if(!key) return '';
+  return `<div class="fifa-poll-wrap" data-mk="${key}">${fifaPollHtml(key)}</div><div class="fifa-opinion-head">How opinion shifted</div>${fifaOpinionChart(key)}`;
+}
+function fifaWhoWillWin(){
+  return `<div class="r-block">${rHead('TOP MATCH — WHO WINS?')}<div class="fifa-www" id="fifaWww">${fifaWwwInner()}</div></div>`;
 }
 function fifaCdParts(ts){ let s=Math.max(0,Math.floor((ts-Date.now())/1000)); const d=Math.floor(s/86400);s-=d*86400; const h=Math.floor(s/3600);s-=h*3600; const m=Math.floor(s/60);s-=m*60; const p=n=>String(n).padStart(2,'0'); return {d:p(d),h:p(h),m:p(m),s:p(s)}; }
 function fifaCdCardHtml(i){
@@ -3706,7 +4298,7 @@ function fifaCdCardHtml(i){
 }
 function fifaRenderCd(){ document.querySelectorAll('.fifa-cd').forEach(el=>el.innerHTML=fifaCdCardHtml(fifaCurrentMatch)); }
 function fifaSwitchMatch(k){ fifaCurrentMatch=k; fifaRenderCd(); fifaSlideStart(); } // manual switch resets the auto-timer
-function tickFifaCountdown(){ document.querySelectorAll('.fifa-cd .fifa-cd-time').forEach(t=>{ const p=fifaCdParts(+t.dataset.ts); t.querySelector('.fcd-d').textContent=p.d; t.querySelector('.fcd-h').textContent=p.h; t.querySelector('.fcd-m').textContent=p.m; t.querySelector('.fcd-s').textContent=p.s; }); }
+function tickFifaCountdown(){ document.querySelectorAll('.fifa-cd .fifa-cd-time').forEach(t=>{ const p=fifaCdParts(+t.dataset.ts); t.querySelector('.fcd-d').textContent=p.d; t.querySelector('.fcd-h').textContent=p.h; t.querySelector('.fcd-m').textContent=p.m; t.querySelector('.fcd-s').textContent=p.s; }); document.querySelectorAll('.fmt-cd, .fsr-cd').forEach(t=>{ t.textContent=fifaCdShort(+t.dataset.ts); }); }
 setInterval(tickFifaCountdown, 1000);
 // NEXT MATCH carousel — auto-advance to the next match every 8s while the FIFA box is open.
 let fifaSlideTimer=null;
@@ -3726,9 +4318,9 @@ function fifaStackedBars(aSeries, colorA, colorB){
 const PANELS = {
   fifa: (ac,id)=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">FANS ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">12,400 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
-    <div class="r-block">${rHead('COUNTDOWN')}<div class="fifa-cd" id="fifaCd">${fifaCdCardHtml(fifaCurrentMatch)}</div></div>
-    <div class="r-block">${rHead('UPCOMING MATCHES')}<div class="fifa-sched">${fifaUpcoming(3).map(m=>{const d=new Date(m.ts);const p=n=>String(n).padStart(2,'0');const dow=_fWD[d.getDay()].toUpperCase();const dm=`${d.getDate()} ${_fMO[d.getMonth()].toUpperCase()}`;const tm=`${p(d.getHours())}:${p(d.getMinutes())}`;return `<div class="fifa-sched-row"><div class="fsr-cal"><span class="fsr-dow">${dow}</span><span class="fsr-dm">${dm}</span></div><div class="fsr-mid"><div class="fsr-match"><span class="fsr-team">${fifaFlag(m.hcc,'fsr-flag')}<b>${m.h3}</b></span><span class="fsr-vs">vs</span><span class="fsr-team"><b>${m.a3}</b>${fifaFlag(m.acc,'fsr-flag')}</span></div><div class="fsr-stage">${m.grp}</div></div><div class="fsr-time"><span class="fsr-t">${tm}</span><span class="fsr-tz">${fifaTz()}</span></div></div>`;}).join('')}</div></div>
-    <div class="r-block">${rHead('WHO WILL WIN?')}<div class="fifa-poll-wrap">${fifaPollHtml()}</div><div class="fifa-opinion-head">How opinion shifted</div>${fifaOpinionChart()}</div>
+    <div class="r-block"><div class="fifa-myteam-head">${fifaMyTeamHead()}</div><div class="fifa-myteam-wrap">${fifaMyTeamHtml()}</div></div>
+    <div class="r-block">${rHead('MATCHES')}<div class="fifa-sched">${fifaMatchesFeed()}</div></div>
+    ${fifaWhoWillWin()}
     ${fifaNewsWidget()}
     ${fifaFactWidget()}`,
   btc: (ac,id)=>`
