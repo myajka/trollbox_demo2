@@ -2347,6 +2347,62 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="aurora"] .users-list-item:hover { background: rgba(255,255,255,0.03); }
 [data-crt-theme="aurora"] .users-list-name { font-family: 'Inter', sans-serif; font-weight: 500; }
 [data-crt-theme="aurora"] .users-list-status { font-family: 'Inter', sans-serif; color: #6b6b6b; }
+/* Aurora: round off the remaining square elements to match the soft glass look (pixel avatars excluded) */
+[data-crt-theme="aurora"] .send-btn,
+[data-crt-theme="aurora"] .welcome-auth-btn,
+[data-crt-theme="aurora"] .auth-btn,
+[data-crt-theme="aurora"] .modal-btn,
+[data-crt-theme="aurora"] .profile-modal-btn,
+[data-crt-theme="aurora"] .create-box-btn,
+[data-crt-theme="aurora"] .edit-box-btn,
+[data-crt-theme="aurora"] .add-widgets-btn,
+[data-crt-theme="aurora"] .mood-btn,
+[data-crt-theme="aurora"] .auth-input,
+[data-crt-theme="aurora"] .pe-name-input,
+[data-crt-theme="aurora"] .search-box,
+[data-crt-theme="aurora"] #boxCategory,
+[data-crt-theme="aurora"] #boxName,
+[data-crt-theme="aurora"] .mybox-btn,
+[data-crt-theme="aurora"] .room-item.active,
+[data-crt-theme="aurora"] .profile-stat,
+[data-crt-theme="aurora"] .r-block,
+[data-crt-theme="aurora"] .pe-preview,
+[data-crt-theme="aurora"] .term-empty,
+[data-crt-theme="aurora"] .profile-modal-avatar { border-radius: 12px; }
+[data-crt-theme="aurora"] .profile-badge,
+[data-crt-theme="aurora"] .msg-reaction,
+[data-crt-theme="aurora"] .soon-badge,
+[data-crt-theme="aurora"] .box-swatch,
+[data-crt-theme="aurora"] .pe-swatch,
+[data-crt-theme="aurora"] .news-item,
+[data-crt-theme="aurora"] .msg-popup-emoji,
+[data-crt-theme="aurora"] .mbt-chip,
+[data-crt-theme="aurora"] .bvt-seg { border-radius: 8px; }
+[data-crt-theme="aurora"] .bar-bg,
+[data-crt-theme="aurora"] .bar-fg,
+[data-crt-theme="aurora"] .sb-bar,
+[data-crt-theme="aurora"] .sk-col,
+[data-crt-theme="aurora"] .sk-bar,
+[data-crt-theme="aurora"] .sk-widget,
+[data-crt-theme="aurora"] .sk-mybox,
+[data-crt-theme="aurora"] .sk-avatar { border-radius: 8px; }
+
+/* ── Theme review fixes (default theme as the baseline) ── */
+/* snow: dark text where the base colour was light (no light-on-light) */
+[data-crt-theme="snow"] .pe-name-input { color: #2a2a2a; background: #f0f0f0; border-color: #d8d8d8; }
+[data-crt-theme="snow"] .pe-name-input::placeholder { color: #aaa; }
+[data-crt-theme="snow"] .pe-label { color: #555; }
+[data-crt-theme="snow"] .pe-name-count { color: #999; }
+[data-crt-theme="snow"] .mybox-btn { color: #2a2a2a; border-color: #d8d8d8; }
+[data-crt-theme="snow"] .mybox-btn .mybox-btn-label,
+[data-crt-theme="snow"] .mybox-btn .mbb-nick { color: #2a2a2a !important; }
+[data-crt-theme="snow"] .box-swatch.active,
+[data-crt-theme="snow"] .pe-swatch.active { border-color: #555; box-shadow: inset 0 0 0 3px #fff; }
+/* amber / hacker: active colour-swatch ring uses the theme accent, not white */
+[data-crt-theme="amber"] .box-swatch.active,
+[data-crt-theme="amber"] .pe-swatch.active { border-color: #ffb347; }
+[data-crt-theme="hacker"] .box-swatch.active,
+[data-crt-theme="hacker"] .pe-swatch.active { border-color: #00ff41; }
 </style>
 </head>
 <body>
