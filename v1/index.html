@@ -5769,8 +5769,10 @@ boxNameInput.addEventListener('input', () => {
 
 // Box accent palette: 7 existing (from PE_COLORS) + 7 brighter extras (placeholder — replace later)
 const BOX_COLORS = [
+  // Row 1 — kept as is
   '#F44336', '#FF7A3D', '#F5C518', '#54D6A6', '#33C6E0', '#5C8AFF', '#B56FD4',
-  '#A3E635', '#2DD4BF', '#38BDF8', '#A78BFA', '#E879F9', '#FB7185', '#FBBF24'
+  // Row 2 — reworked to be distinct from row 1 (no near-duplicate yellow/blue/purple)
+  '#A3E635', '#22C55E', '#14B8A6', '#6366F1', '#D946EF', '#EC4899', '#B45309'
 ];
 const boxSwatchesEl = document.getElementById('boxSwatches');
 let selectedBoxColor = BOX_COLORS[0];
