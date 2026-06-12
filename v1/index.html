@@ -2333,7 +2333,7 @@ body.is-anon .stats-divider { display: none; }
   <div class="welcome-auth">
     <div class="welcome-auth-col">
       <button class="welcome-auth-btn" onclick="setAuthState('auth')">𝕏</button>
-      <button class="welcome-auth-btn" onclick="setAuthState('auth')">DISCORD</button>
+      <button class="welcome-auth-btn" onclick="enterModerator()">DISCORD</button>
     </div>
     <div class="welcome-auth-col">
       <button class="welcome-auth-btn" onclick="setAuthState('auth')">TELEGRAM</button>
@@ -4807,7 +4807,8 @@ function applyModeratorUI(){
 function enterModerator(){
   isModerator = true;
   try { localStorage.setItem('tb_mod','1'); } catch(e){}
-  if (typeof authState !== 'undefined' && authState === 'welcome') setAuthState('auth'); // hidden entry → land straight in
+  // Discord login → moderator. Land straight into the app from welcome or upgrade from anon.
+  if (typeof authState !== 'undefined' && (authState === 'welcome' || authState === 'anon')) setAuthState('auth');
   applyModeratorUI();
 }
 function exitModerator(){
@@ -5112,7 +5113,11 @@ document.getElementById('anonSignupLink').addEventListener('click', () => {
   document.getElementById('regwallClose').addEventListener('click', close);
   document.getElementById('regwallModal').addEventListener('click', e => { if (e.target.id === 'regwallModal') close(); });
   const enter = () => { hideRegwall(); setAuthState('auth'); };
-  document.querySelectorAll('#regwallModal .regwall-provider').forEach(btn => btn.addEventListener('click', enter));
+  document.querySelectorAll('#regwallModal .regwall-provider').forEach(btn => btn.addEventListener('click', () => {
+    hideRegwall();
+    if (/discord/i.test(btn.textContent)) enterModerator(); // Discord → moderator
+    else setAuthState('auth');
+  }));
 })();
 
 // Logout → back to the welcome screen (clears saved login + resets anon limit)
