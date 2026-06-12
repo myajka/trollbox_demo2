@@ -18,6 +18,30 @@
 html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; }
 body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%); }
 .app { display: grid; grid-template-columns: clamp(240px, 26vw, 360px) 1fr clamp(240px, 26vw, 360px); height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: 'Roboto', sans-serif; font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 12px; gap: 10px; }
+/* ── Loading skeleton (shown right after sign-in until content is ready) ── */
+.skeleton-screen { position: absolute; inset: 12px; z-index: 40; display: grid; grid-template-columns: clamp(240px, 26vw, 360px) 1fr clamp(240px, 26vw, 360px); gap: 10px; background: #050505; transition: opacity .35s ease; }
+.skeleton-screen.hidden { display: none; }
+.skeleton-screen.fade { opacity: 0; pointer-events: none; }
+.skeleton-screen .sk-col { background: #0a0a0a; border: 1px solid #1f1f1f; padding: 12px; overflow: hidden; }
+.sk-bar, .sk-dot, .sk-avatar, .sk-mybox, .sk-widget { background: linear-gradient(90deg, #141414 25%, #202020 37%, #141414 63%); background-size: 400% 100%; animation: skShimmer 1.4s ease infinite; border-radius: 2px; }
+@keyframes skShimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+.sk-bar { height: 10px; }
+.sk-logo { width: 120px; height: 16px; margin-bottom: 16px; }
+.sk-mybox { height: 56px; border-radius: 4px; margin-bottom: 14px; }
+.sk-head { width: 140px; height: 14px; margin-bottom: 18px; }
+.sk-room { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #161616; }
+.sk-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.sk-room-lines, .sk-msg-lines { flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.sk-msg { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; }
+.sk-avatar { width: 26px; height: 26px; border-radius: 4px; flex-shrink: 0; }
+.sk-widget { height: 74px; border-radius: 4px; margin-bottom: 12px; }
+.sk-bar.w25 { width: 25%; } .sk-bar.w30 { width: 30%; } .sk-bar.w35 { width: 35%; }
+.sk-bar.w40 { width: 40%; } .sk-bar.w65 { width: 65%; } .sk-bar.w80 { width: 80%; } .sk-bar.w85 { width: 85%; }
+/* Mobile: single column (boxes list), hide chat/terminal skeleton columns */
+@media (max-width: 900px) {
+  .skeleton-screen { grid-template-columns: 1fr; inset: 8px; }
+  .skeleton-screen .sk-center, .skeleton-screen .sk-right { display: none; }
+}
 .app::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px); }
 .app::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%); animation: flicker 3s steps(4) infinite; }
 @keyframes flicker { 0%,100% { opacity: 1; } 10% { opacity: 0.95; } 30% { opacity: 1; } 45% { opacity: 0.97; } 60% { opacity: 1; } 80% { opacity: 0.94; } 90% { opacity: 1; } }
@@ -2349,6 +2373,8 @@ body.is-anon .stats-divider { display: none; }
 <div class="crt-beam"></div>
 <div class="crt-noise"></div>
 <div class="app" id="root" style="--ac:#8CE45A">
+<!-- Loading skeleton shown right after sign-in until content is ready -->
+<div class="skeleton-screen hidden" id="skeletonScreen" aria-hidden="true"></div>
 
 <!-- LEFT -->
 <div class="left">
@@ -4882,6 +4908,26 @@ function setCrtEffects(on){
 function crtEffectsOn(){ return !document.documentElement.classList.contains('crt-off'); }
 (function(){ let on = true; try { on = localStorage.getItem('tb_crt') !== '0'; } catch (e) {} setCrtEffects(on); })();
 
+// ── Loading skeleton ──────────────────────────────────────────────────────────
+function buildSkeleton(){
+  const room = `<div class="sk-room"><div class="sk-dot"></div><div class="sk-room-lines"><div class="sk-bar w65"></div><div class="sk-bar w35"></div></div></div>`;
+  const msg  = `<div class="sk-msg"><div class="sk-avatar"></div><div class="sk-msg-lines"><div class="sk-bar w25"></div><div class="sk-bar w80"></div></div></div>`;
+  const widget = `<div class="sk-widget"></div>`;
+  return `<div class="sk-col sk-left"><div class="sk-bar sk-logo"></div><div class="sk-mybox"></div>${room.repeat(8)}</div>`
+       + `<div class="sk-col sk-center"><div class="sk-bar sk-head"></div><div class="sk-msgs">${msg.repeat(8)}</div></div>`
+       + `<div class="sk-col sk-right"><div class="sk-bar sk-head"></div>${widget.repeat(4)}</div>`;
+}
+let _skTimer = null;
+function showSkeleton(){
+  const s = document.getElementById('skeletonScreen'); if (!s) return;
+  s.innerHTML = buildSkeleton();
+  s.classList.remove('hidden', 'fade');
+}
+function hideSkeleton(){
+  const s = document.getElementById('skeletonScreen'); if (!s || s.classList.contains('hidden')) return;
+  s.classList.add('fade');
+  setTimeout(() => { s.classList.add('hidden'); s.innerHTML = ''; }, 350);
+}
 function setAuthState(state, opts) {
   const prev = authState;
   authState = state;
@@ -4925,8 +4971,20 @@ function setAuthState(state, opts) {
   // never on a refresh-restore or a plain tab switch. Mobile only.
   const isRestore = !!(opts && opts.restore);
   if (!isRestore && prev === 'welcome' && (state === 'anon' || state === 'auth')) {
-    crtScanArmed = true;
-    if (typeof isMobile === 'function' && isMobile()) setMobileView('boxes'); // land on Boxes → scan fires
+    // Loading skeleton right after sign-in, until content is ready.
+    // Demo uses a timer; backend can call hideSkeleton() once data has actually loaded.
+    showSkeleton();
+    if (typeof isMobile === 'function' && isMobile()) {
+      setMobileView('boxes'); // land on Boxes (no scan yet — it plays after the skeleton)
+      clearTimeout(_skTimer);
+      _skTimer = setTimeout(() => {
+        hideSkeleton();
+        // After the skeleton: only the message-preview typewriter (no boxes boot-in scan).
+        setTimeout(() => { if (typeof animateRoomPreviews === 'function') animateRoomPreviews(); }, 400);
+      }, 900);
+    } else {
+      clearTimeout(_skTimer); _skTimer = setTimeout(hideSkeleton, 900);
+    }
   }
 
   // First time entering the app (anon or auth) → kick off the onboarding tour
@@ -6005,8 +6063,7 @@ function setMobileView(view) {
 
   if (view === 'boxes') {
     leftPanel.classList.add('mobile-active');
-    if (crtScanArmed){ crtScanArmed = false; crtBootBoxes(); } // once, right after login
-    else { _bootStop(); animateRoomPreviews(); }               // otherwise just the preview typewriter (clear any leftover scan)
+    _bootStop(); animateRoomPreviews(); // message-preview typewriter only (boxes boot-in scan removed in favour of the skeleton)
   } else if (view === 'chat') {
     unmountBoxTerminal();
     centerPanel.classList.add('mobile-active');
