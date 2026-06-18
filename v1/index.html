@@ -110,19 +110,19 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .mybox-btn-label { position: relative; top: -1px; font-size: 15px; } /* pixel-font glyphs sit low in the line box — lift to optical-center with the icon */
 .mybox-btn-meta { margin-left: auto; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .mybox-btn-count { font-family: 'Roboto', sans-serif; font-size: 10px; line-height: 1; letter-spacing: 0; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #2e2e2e; color: #aaa; display: inline-flex; align-items: center; justify-content: center; }
-.mybox-btn:hover .mybox-btn-count, .mybox-btn.active .mybox-btn-count { background: rgba(140,228,90,0.18); color: #8CE45A; }
+.mybox-btn:hover .mybox-btn-count, .mybox-btn.active .mybox-btn-count { background: color-mix(in srgb, var(--ac, #8CE45A) 18%, transparent); color: var(--ac, #8CE45A); }
 .mybox-btn-replies { font-size: 10px; line-height: 1; padding: 2px 5px; border-radius: 8px; background: #E8A33D; color: #1a1a1a; font-weight: 700; letter-spacing: 0; }
 .mybox-btn-preview { font-family: 'Roboto', sans-serif; font-size: 11px; text-transform: none; letter-spacing: 0; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .mybox-btn-preview .mbp-nick { font-family: 'CHNOPixelCodePro', monospace; font-weight: 700; color: #b0b0b0; } /* pixel font for the source nick */
 .mybox-btn-empty { color: #6a6a6a; font-style: normal; font-weight: 500; }
 /* Green fade on the right of the EMPTY My Box button (sits behind the text) */
 .mybox-grad { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, rgba(29,29,29,0) 42%, rgba(70,121,47,0.85) 88%, #62B83C 100%); }
-.mybox-btn:hover, .mybox-btn.active { border-color: #8CE45A; background: rgba(140,228,90,0.12); color: #8CE45A; }
-.mybox-btn:hover .mybox-btn-icon, .mybox-btn.active .mybox-btn-icon { fill: #8CE45A; }
+.mybox-btn:hover, .mybox-btn.active { border-color: var(--ac, #8CE45A); background: color-mix(in srgb, var(--ac, #8CE45A) 12%, transparent); color: var(--ac, #8CE45A); }
+.mybox-btn:hover .mybox-btn-icon, .mybox-btn.active .mybox-btn-icon { fill: var(--ac, #8CE45A); }
 /* On hover/active the preview text (nick, message, empty hint) goes green too */
 .mybox-btn:hover .mybox-btn-preview, .mybox-btn.active .mybox-btn-preview,
 .mybox-btn:hover .mbp-nick, .mybox-btn.active .mbp-nick,
-.mybox-btn:hover .mybox-btn-empty, .mybox-btn.active .mybox-btn-empty { color: #8CE45A; }
+.mybox-btn:hover .mybox-btn-empty, .mybox-btn.active .mybox-btn-empty { color: var(--ac, #8CE45A); }
 /* Separate the channel list from the My Box button — top border on the first channel (GENERAL) */
 .rooms-pinned + .room-item { border-top: 1px solid #2a2a2a; }
 
@@ -139,7 +139,9 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .left-logo-wrap { display: inline-flex; align-items: center; }
 /* Beta mark next to the TROLL.BOX wordmark (superscript-style) */
 .beta-mark { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; line-height: 1; color: var(--ac, #8CE45A); margin-left: 9px; align-self: flex-start; margin-top: -1px; text-transform: lowercase; letter-spacing: 0.04em; }
-.app.left-collapsed .left-logo-wrap { width: 20px; overflow: hidden; flex-shrink: 0; }
+/* Collapsed: clip the wordmark on the IMAGE itself (troll mark only) so the beta tag stays visible. */
+.app.left-collapsed .left-logo-wrap { flex-shrink: 0; }
+.app.left-collapsed .left-logo { width: 20px; object-fit: cover; object-position: left center; flex-shrink: 0; }
 .app.left-collapsed .app-version { display: none; }
 /* rows: keep only the coloured # + name */
 .app.left-collapsed .room-preview, .app.left-collapsed .room-count, .app.left-collapsed .room-tag { display: none; }
@@ -672,11 +674,12 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-modal-close { background: none; border: none; color: #555; font-size: 28px; cursor: pointer; font-family: 'Roboto', sans-serif; padding: 0; line-height: 1; }
 .profile-modal-close:hover { color: #fff; }
 .profile-modal-avatar { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; gap: 12px; }
+.profile-modal-desc { font-family: 'Roboto', sans-serif; font-size: 12.5px; color: #888; text-align: center; line-height: 1.4; margin-top: -4px; }
 .profile-modal-avatar img { width: 80px; height: 80px; image-rendering: pixelated; }
 .profile-modal-nick { font-family: 'CHNOPixelCodePro', monospace; font-size: 16px; color: #4ab8e8; letter-spacing: 0.04em; }
 .profile-modal-status { font-size: 12px; color: #888; font-family: 'Roboto', sans-serif; }
-.profile-modal-body { padding: 0 16px 16px; }
-.profile-modal-divider { height: 1px; background: #333; margin: 12px 0; }
+.profile-modal-body { padding: 14px 16px 28px; }
+.profile-modal-divider { height: 1px; background: #333; margin: 16px 0; }
 .profile-modal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
 .profile-modal-row-label { font-size: 12px; color: #888; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; }
 .profile-modal-row-value { font-size: 12px; color: #e0e0e0; font-family: 'Roboto', sans-serif; }
@@ -688,8 +691,15 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
 .profile-stat { text-align: center; padding: 10px 0; border: 1px solid #333; }
 .profile-stat-num { font-size: 16px; color: #fff; font-family: 'CHNOPixelCodePro', monospace; font-weight: 700; }
 .profile-stat-label { font-size: 10px; color: #666; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.04em; }
-.profile-modal-badges { display: flex; gap: 6px; padding: 8px 0; flex-wrap: wrap; }
-.profile-badge { position: relative; padding: 4px 10px; border: 1px solid #333; font-size: 10px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; cursor: default; }
+.profile-modal-badges { display: flex; gap: 8px; padding: 8px 0; flex-wrap: wrap; }
+.profile-badge { position: relative; display: inline-flex; align-items: center; gap: 11px; padding: 7px 13px; border: 1px solid #333; font-size: 11.5px; color: #aaa; font-family: 'CHNOPixelCodePro', monospace; text-transform: uppercase; letter-spacing: 0.04em; cursor: default; }
+/* placeholder-иконка бейджа — заменить на нарисованную (квадрат в цвете бейджа) */
+.profile-badge::before { content: ''; width: 28px; height: 28px; flex-shrink: 0; background: currentColor; border-radius: 2px; opacity: 0.9; }
+/* готовые иконки бейджей (2 из 4) — заменяют квадрат-плейсхолдер */
+.profile-badge.badge-early::before { background: url('trolls/icon_set/prod/early_floppy_beta 1.svg') center / contain no-repeat; border-radius: 0; opacity: 1; }
+.profile-badge.badge-chatter::before { background: url('trolls/icon_set/prod/top_chatter_megaphone_v2 1.svg') center / contain no-repeat; border-radius: 0; opacity: 1; }
+.profile-badge.badge-opinion::before { background: url('trolls/icon_set/prod/opinion_wizard 1.svg') center / contain no-repeat; border-radius: 0; opacity: 1; }
+.profile-badge.badge-cool::before { background: url('trolls/icon_set/prod/cool_troll_shades 1.svg') center / contain no-repeat; border-radius: 0; opacity: 1; }
 /* Floating tooltip (fixed-positioned → escapes the modal's scroll/overflow clipping) */
 .data-tip-pop { position: fixed; z-index: 12000; display: none; pointer-events: none; background: #0a0a0a; border: 1px solid #444; color: #cfcfcf; font-family: 'Roboto', sans-serif; font-size: 11px; padding: 6px 9px; max-width: 220px; white-space: normal; line-height: 1.35; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
 /* Mobile: larger "Add to My Box" tip on the widget "+" */
@@ -861,17 +871,17 @@ html.crt-off body { text-shadow: none !important; }
 .mix-empty-chip img { width: 18px; height: 18px; image-rendering: pixelated; }
 .mix-empty-chip .ch-hash { font-weight: 700; }
 /* My Box "Following … Edit" summary bar */
-.mybox-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; background: #0c0c0c; flex-shrink: 0; min-height: 40px; box-sizing: border-box; }
+.mybox-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; background: transparent; flex-shrink: 0; min-height: 40px; box-sizing: border-box; }
 .mybox-bar .mbb-label { font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
 .mybox-bar .mbb-list { display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
 .mybox-bar .mbb-src { font-family: 'Roboto', sans-serif; font-size: 12px; white-space: nowrap; }
-.mybox-bar .mbb-src.bot { color: #8CE45A; }
+.mybox-bar .mbb-src.bot, .mybox-bar .mbb-src.chan { color: var(--ac, #8CE45A); }
 .mybox-bar .mbb-more { font-family: 'Roboto', sans-serif; font-size: 11px; color: #666; flex-shrink: 0; }
 .mybox-bar .mbb-edit { margin-left: auto; flex-shrink: 0; background: transparent; border: 1px solid #3a3a3a; color: #cfcfcf; font-family: 'CHNOPixelCodePro', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 5px 12px; cursor: pointer; }
 .mybox-bar .mbb-edit:hover { border-color: var(--ac, #8CE45A); color: var(--ac, #8CE45A); }
 /* My Box addressee chips (above input) */
 .mybox-targets { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-top: 1px solid #222; flex-shrink: 0; overflow-x: auto; }
-.mybox-targets .mbt-label { font-family: 'Roboto', sans-serif; font-size: 11px; color: #666; flex-shrink: 0; }
+.mybox-targets .mbt-label { font-family: 'Roboto', sans-serif; font-size: 13px; color: #999; flex-shrink: 0; }
 .mybox-targets .mbt-chip { background: transparent; border: 1px solid #333; color: #aaa; font-family: 'Roboto', sans-serif; font-size: 12px; padding: 4px 10px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 .mybox-targets .mbt-chip.active { border-color: var(--c, #8CE45A); color: var(--c, #8CE45A); background: color-mix(in srgb, var(--c, #8CE45A) 12%, transparent); }
 /* Reg-wall modal (anon gated action) */
@@ -968,6 +978,7 @@ body.is-anon .stats-divider { display: none; }
 .mix-pick-act { font-family: 'CHNOPixelCodePro', monospace; font-size: 10px; color: #666; letter-spacing: 0.04em; }
 .mix-pick-row.added .mix-pick-act { color: var(--ac, #8CE45A); }
 .mix-pick-row.added .mix-pick-title { color: #888; }
+.mix-pick-row.added, .mix-pick-bot.added { background: transparent; box-shadow: inset 3px 0 0 var(--ac, #8CE45A), inset 0 0 16px -6px var(--ac, #8CE45A); }
 
 /* SETTINGS MODAL */
 .settings-modal { background: #111; border: 1px solid #444; width: 420px; max-height: 80vh; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; }
@@ -1156,6 +1167,16 @@ body.is-anon .stats-divider { display: none; }
   .bvt-seg { flex: 1; background: transparent; border: none; border-right: 1px solid #222; color: #777; font-family: 'CHNOPixelCodePro', monospace; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; padding: 11px 0; cursor: pointer; }
   .bvt-seg:last-child { border-right: none; }
   .bvt-seg.active { color: var(--ac, #8CE45A); box-shadow: inset 0 -2px 0 var(--ac, #8CE45A); }
+  /* Профиль другого юзера/бота на мобилке — вертикальная модалка (1 колонка) с крестиком */
+  .profile-modal:not(.pe-modal) { width: calc(100vw - 24px); max-width: none; max-height: calc(100vh - 24px); }
+  #profileModal .profile-modal { height: fit-content; max-height: calc(100vh - 52px); overflow-y: auto; }
+  #profileModal .pm-cols { flex-direction: column; flex: none; }
+  #profileModal .pm-right { flex: none; }
+  #profileModal .pm-right .profile-modal-body { overflow: visible; flex: none; }
+  #profileModal .profile-modal-avatar { width: auto; align-self: stretch; margin: 0 16px; padding: 14px 0 12px; gap: 7px; border-right: none; border-bottom: 1px solid #333; }
+  #profileModal .profile-modal-avatar img { width: 92px; height: 92px; }
+  #profileModal .profile-modal-row { padding: 7px 0; }
+  #profileModal .profile-modal-badges { padding-bottom: 4px; }
   /* My Box: drop the redundant title headers so the switcher stays pinned to the top (no jump) */
   .center-head.mybox-head { display: none; }
   #right-panel.mybox-term .section-head { display: none; }
@@ -1164,8 +1185,15 @@ body.is-anon .stats-divider { display: none; }
   .center.show-terminal #chat-feed,
   .center.show-terminal #replyChip,
   .center.show-terminal #chatInputAuth,
+  .center.show-terminal #myboxTargets,
   .center.show-terminal #chatInputAnon { display: none !important; }
   .center.show-terminal #mobileTermMount { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
+  /* скроллбар терминала — скрыт статично, появляется при скролле/наведении */
+  #mobileTermMount { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  #mobileTermMount::-webkit-scrollbar { width: 6px; background: transparent; }
+  #mobileTermMount::-webkit-scrollbar-track { background: transparent; }
+  #mobileTermMount::-webkit-scrollbar-thumb { background: transparent; border-radius: 0; }
+  #mobileTermMount:hover::-webkit-scrollbar-thumb { background: #2a2a2a; }
   .msg { padding-bottom: 6px; }
   .msg-author { font-size: 15px; }
   .msg-text { font-size: 16px; line-height: 1.4; }
@@ -1201,7 +1229,8 @@ body.is-anon .stats-divider { display: none; }
   /* Mobile: profile modal styles */
   .profile-stat-label { font-size: 12px; }
   .profile-stat-num { font-size: 18px; }
-  .profile-badge { font-size: 12px; padding: 6px 12px; }
+  .profile-badge { font-size: 13px; padding: 9px 15px; gap: 8px; }
+  .profile-badge::before { width: 32px; height: 32px; }
   .profile-modal-row-label { font-size: 13px; }
   .profile-modal-row-value { font-size: 13px; }
   .profile-modal-nick { font-size: 18px; }
@@ -1313,6 +1342,7 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="amber"] .search-box { background: #131008; border-color: #302818; }
 [data-crt-theme="amber"] .search-box input { color: #d4a54a; caret-color: transparent; }
 [data-crt-theme="amber"] .search-box input::placeholder { color: #6b5530; }
+[data-crt-theme="amber"] .search-box .search-glyph { color: #d4a54a; }
 [data-crt-theme="amber"] .chat-input-row { border-top-color: #302818; box-shadow: 0 -1px 6px -3px rgba(255,165,50,0.06); }
 [data-crt-theme="amber"] .chat-input { background: #131008; border-color: #302818; color: #e8c060; caret-color: transparent; }
 [data-crt-theme="amber"] .chat-input::placeholder { color: #6b5530; }
@@ -1663,6 +1693,7 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="hacker"] .search-box { background: #030803; border-color: #0a280a; }
 [data-crt-theme="hacker"] .search-box input { color: #40c840; caret-color: transparent; }
 [data-crt-theme="hacker"] .search-box input::placeholder { color: #1a5a1a; }
+[data-crt-theme="hacker"] .search-box .search-glyph { color: #50e850; }
 [data-crt-theme="hacker"] .chat-input-row { border-top-color: #0a280a; box-shadow: 0 -1px 6px -3px rgba(0,255,65,0.06); }
 [data-crt-theme="hacker"] .chat-input { background: #030803; border-color: #0a280a; color: #50e850; caret-color: transparent; }
 [data-crt-theme="hacker"] .chat-input::placeholder { color: #1a5a1a; }
@@ -2016,13 +2047,13 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="snow"] .toggle-row { color: #999; }
 
 /* Messages */
-[data-crt-theme="snow"] .msg-text { color: #2a2a2a; }
-[data-crt-theme="snow"] .msg-tag { color: #bbb; }
+[data-crt-theme="snow"] .msg-text { color: #161616; font-weight: 500; }
+[data-crt-theme="snow"] .msg-tag { color: #333; }
 [data-crt-theme="snow"] .msg-time { color: #bbb; }
 [data-crt-theme="snow"] .msg:hover { background: #f5f5f5; }
 [data-crt-theme="snow"] .msg-author { text-shadow: none; }
-[data-crt-theme="snow"] .msg-translate .tr-text { color: #2a2a2a; }
-[data-crt-theme="snow"] .msg.has-tr .msg-text { color: #bbb; }
+[data-crt-theme="snow"] .msg-translate .tr-text { color: #161616; font-weight: 500; }
+[data-crt-theme="snow"] .msg.has-tr .msg-text { color: #666; }
 [data-crt-theme="snow"] .announce { background: #f5f5f5; border-bottom-color: #e0e0e0; color: #777; }
 [data-crt-theme="snow"] .announce span { color: #ccc !important; }
 [data-crt-theme="snow"] .date-sep { color: #bbb; text-shadow: none; }
@@ -2196,13 +2227,110 @@ body.is-anon .stats-divider { display: none; }
 
 /* Mobile */
 [data-crt-theme="snow"] .mobile-nav { background: #fafafa; border-top-color: #e0e0e0; }
-[data-crt-theme="snow"] .mobile-nav-item { color: #bbb; }
+[data-crt-theme="snow"] .mobile-nav-item { color: #777; }
 [data-crt-theme="snow"] .mobile-nav-item.active { color: #222; }
 [data-crt-theme="snow"] .mobile-settings-view { background: #fafafa; border-color: #d8d8d8; }
+[data-crt-theme="snow"] .mobile-profile-view,
+[data-crt-theme="snow"] #mobileProfileView { background: #fafafa; }
 
 /* CRT effects — almost invisible on light theme */
 [data-crt-theme="snow"] .crt-beam { opacity: 0.3; }
 [data-crt-theme="snow"] .crt-noise { opacity: 0.005; }
+/* snow (по фидбэку): ВСЕ обводки/рамки/инлайны — ОДНИМ цветом (--snow-bd) */
+[data-crt-theme="snow"] { --snow-bd: #a8a8a8; }
+[data-crt-theme="snow"] *,
+[data-crt-theme="snow"] *::before,
+[data-crt-theme="snow"] *::after { border-color: var(--snow-bd) !important; }
+/* divider-линии (рисуются фоном, не border) — тем же цветом */
+[data-crt-theme="snow"] .date-sep::before,
+[data-crt-theme="snow"] .date-sep::after,
+[data-crt-theme="snow"] .profile-modal-divider,
+[data-crt-theme="snow"] .stats-divider { background: var(--snow-bd) !important; }
+/* сохранить функциональные акценты: активный бокс + фокус полей */
+[data-crt-theme="snow"] .room-item.active { border-left-color: var(--ac) !important; }
+[data-crt-theme="snow"] .chat-input:focus,
+[data-crt-theme="snow"] .search-box.focused,
+[data-crt-theme="snow"] .modal input:focus,
+[data-crt-theme="snow"] .modal select:focus,
+[data-crt-theme="snow"] .auth-input:focus,
+[data-crt-theme="snow"] .pe-name-input:focus,
+[data-crt-theme="snow"] .mix-picker-search:focus { border-color: var(--ac) !important; }
+/* CRT scanlines на модалках в snow — почти убрать */
+[data-crt-theme="snow"] .modal::after,
+[data-crt-theme="snow"] .profile-modal::after,
+[data-crt-theme="snow"] .settings-modal::after { background: repeating-linear-gradient(0deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px, transparent 1px, transparent 3px); }
+/* snow audit: убрать всё тёмное/чёрное (ховеры, скроллбары, тёмные FIFA/MY TEAM виджеты) */
+/* скроллбары — светлые */
+[data-crt-theme="snow"] ::-webkit-scrollbar-thumb { background: #cfcfcf !important; }
+[data-crt-theme="snow"] ::-webkit-scrollbar-thumb:hover { background: #b0b0b0 !important; }
+[data-crt-theme="snow"] ::-webkit-scrollbar-track { background: transparent !important; }
+[data-crt-theme="snow"] .left-rooms:hover::-webkit-scrollbar-track,
+[data-crt-theme="snow"] .chat-feed:hover::-webkit-scrollbar-track,
+[data-crt-theme="snow"] .right:hover::-webkit-scrollbar-track { background: #efefef !important; }
+/* тёмные ховеры → светлые */
+[data-crt-theme="snow"] .online-row:hover,
+[data-crt-theme="snow"] .fmt-pick:hover,
+[data-crt-theme="snow"] .fpg-btn:hover:not(:disabled),
+[data-crt-theme="snow"] .ms-opt:hover,
+[data-crt-theme="snow"] .mix-pick-bot:hover,
+[data-crt-theme="snow"] .mix-pick-row:hover,
+[data-crt-theme="snow"] .mix-empty-bot:hover,
+[data-crt-theme="snow"] .mix-empty-chip:hover,
+[data-crt-theme="snow"] .fifa-vote-btn:hover,
+[data-crt-theme="snow"] .fifa-sched-row:hover { background: #f0f0f0 !important; }
+/* тёмные FIFA / MY TEAM виджеты → светлый фон + читаемый тёмный текст */
+[data-crt-theme="snow"] .fifa-vote-btn,
+[data-crt-theme="snow"] .fmt-search,
+[data-crt-theme="snow"] .fmt-list,
+[data-crt-theme="snow"] .fmt-pick,
+[data-crt-theme="snow"] .fpg-btn { background: #f4f4f4 !important; }
+[data-crt-theme="snow"] .fmt-search,
+[data-crt-theme="snow"] .fmt-pick-name,
+[data-crt-theme="snow"] .fmt-chip-name,
+[data-crt-theme="snow"] .fmt-next-when,
+[data-crt-theme="snow"] .fmt-score,
+[data-crt-theme="snow"] .fmt-score b,
+[data-crt-theme="snow"] .fifa-vote-btn,
+[data-crt-theme="snow"] .fpg-btn,
+[data-crt-theme="snow"] .fifa-cd-match { color: #2a2a2a !important; }
+[data-crt-theme="snow"] .fmt-search::placeholder { color: #aaa !important; }
+/* мелкие тёмные плашки */
+[data-crt-theme="snow"] .toggle { background: #d0d0d0 !important; }
+[data-crt-theme="snow"] .mybox-btn-count { background: #e4e4e4 !important; color: #555 !important; }
+/* snow: FIFA карточки матчей + MY TEAM-карточка — светло-серый фон, акцент бокса слева, читаемый текст */
+[data-crt-theme="snow"] .fifa-sched-row,
+[data-crt-theme="snow"] .fmt-card { background: #f4f4f4 !important; border-left-color: var(--ac) !important; }
+[data-crt-theme="snow"] .fmt-chip { background: #ececec !important; }
+[data-crt-theme="snow"] .r-block .fsr-team b,
+[data-crt-theme="snow"] .r-block .fsr-t,
+[data-crt-theme="snow"] .r-block .fsr-bigscore,
+[data-crt-theme="snow"] .r-block .fmt-chip-name,
+[data-crt-theme="snow"] .r-block .fmt-next-when,
+[data-crt-theme="snow"] .r-block .fmt-score,
+[data-crt-theme="snow"] .r-block .fmt-score.upnext,
+[data-crt-theme="snow"] .r-block .fmt-score.upnext b { color: #2a2a2a !important; }
+/* snow: акцент-кнопки (SAVE, ADD WIDGET, AUTH…) — светлый ховер вместо тёмной заливки */
+[data-crt-theme="snow"] .auth-btn:where(:hover, :active),
+[data-crt-theme="snow"] .welcome-auth-btn:where(:hover, :active),
+[data-crt-theme="snow"] .create-widget-btn:where(:hover, :active),
+[data-crt-theme="snow"] .modal-btn.confirm:where(:hover, :active),
+[data-crt-theme="snow"] .pe-save-mobile:where(:hover, :active),
+[data-crt-theme="snow"] .tour-next:where(:hover, :active),
+[data-crt-theme="snow"] .tour-m-next:where(:hover, :active) {
+  background: color-mix(in srgb, var(--ac, #8CE45A) 18%, #ffffff) !important;
+  color: #1a1a1a !important;
+  box-shadow: inset 0 0 0 1px var(--ac, #8CE45A) !important;
+}
+/* snow: мобильное поле поиска — не чёрное */
+[data-crt-theme="snow"] .search-box { background: #f0f0f0 !important; }
+/* snow: терминал — заголовки на 2 тона темнее, текст на тон темнее, вкладки темнее */
+[data-crt-theme="snow"] .r-block .r-title { color: #1a1a1a !important; }
+[data-crt-theme="snow"] .r-block div { color: #555 !important; }
+[data-crt-theme="snow"] .r-block span { color: #666 !important; }
+[data-crt-theme="snow"] .online-row span { color: #2a2a2a !important; }
+[data-crt-theme="snow"] .news-text { color: #333 !important; }
+[data-crt-theme="snow"] .bvt-seg { color: #444 !important; }
+[data-crt-theme="snow"] .bvt-seg.active { color: #1a1a1a !important; }
 
 /* ═══════════════════════════════════════════════
    AURORA THEME — Dark Luxe / Luminous Glass
@@ -2559,6 +2687,10 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="amber"] .edit-box-btn,
 [data-crt-theme="amber"] .pf-box-chip,
 [data-crt-theme="amber"] .pf-msg-box { border-color: #504020; }
+[data-crt-theme="amber"] .msg-popup { background: #15100a; }
+[data-crt-theme="amber"] .msg-popup-emoji { background: #201810; }
+[data-crt-theme="amber"] .msg-popup-emoji:hover { background: #2a2012; }
+[data-crt-theme="amber"] .msg-popup-action:hover { background: #201810; }
 [data-crt-theme="hacker"] .profile-modal-head,
 [data-crt-theme="hacker"] .profile-modal-actions,
 [data-crt-theme="hacker"] .profile-modal-divider,
@@ -2588,6 +2720,10 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="hacker"] .edit-box-btn,
 [data-crt-theme="hacker"] .pf-box-chip,
 [data-crt-theme="hacker"] .pf-msg-box { border-color: #0f3f0f; }
+[data-crt-theme="hacker"] .msg-popup { background: #05130a; }
+[data-crt-theme="hacker"] .msg-popup-emoji { background: #0a1f0a; }
+[data-crt-theme="hacker"] .msg-popup-emoji:hover { background: #0f2f0f; }
+[data-crt-theme="hacker"] .msg-popup-action:hover { background: #0a1f0a; }
 /* amber: scrollbar, back icons, widget controls, My Box buttons, widget-add list, profile bg */
 [data-crt-theme="amber"] .profile-modal-body::-webkit-scrollbar-thumb,
 [data-crt-theme="amber"] .pe-body::-webkit-scrollbar-thumb,
@@ -2607,6 +2743,30 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="amber"] .mybox-btn-count { background: #2a2012; color: #b08840; }
 [data-crt-theme="amber"] .mbb-edit { border-color: #504020; color: #8a6e3c; }
 [data-crt-theme="amber"] .mbt-chip { border-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] .mybox-bar .mbb-label { color: #8a6e3c; }
+[data-crt-theme="amber"] .mybox-btn:hover, [data-crt-theme="amber"] .mybox-btn.active { background: color-mix(in srgb, #ffb347 12%, transparent); }
+[data-crt-theme="amber"] .mybox-btn:hover .mybox-btn-icon, [data-crt-theme="amber"] .mybox-btn.active .mybox-btn-icon { fill: #d4a54a; }
+[data-crt-theme="amber"] .mybox-btn:hover .mybox-btn-count, [data-crt-theme="amber"] .mybox-btn.active .mybox-btn-count { background: color-mix(in srgb, #ffb347 18%, transparent); color: #e8c87a; }
+[data-crt-theme="amber"] .mybox-btn:hover .mybox-btn-preview, [data-crt-theme="amber"] .mybox-btn.active .mybox-btn-preview, [data-crt-theme="amber"] .mybox-btn:hover .mbp-nick, [data-crt-theme="amber"] .mybox-btn.active .mbp-nick, [data-crt-theme="amber"] .mybox-btn:hover .mybox-btn-empty, [data-crt-theme="amber"] .mybox-btn.active .mybox-btn-empty { color: #d4a54a; }
+[data-crt-theme="amber"] .mybox-bar .mbb-src.bot, [data-crt-theme="amber"] .mybox-bar .mbb-src.chan { color: #d4a54a; }
+[data-crt-theme="amber"] .mix-pick-row.added, [data-crt-theme="amber"] .mix-pick-bot.added { background: transparent; box-shadow: inset 3px 0 0 #ffb347, inset 0 0 16px -6px #ffb347; }
+[data-crt-theme="amber"] .mix-pick-row.added .mix-pick-act, [data-crt-theme="amber"] .mix-pick-bot.added .mix-pick-act { color: #d4a54a; }
+[data-crt-theme="amber"] .mybox-bar { border-bottom-color: #302818; }
+/* add-to-my-box picker (#sourcesModal): themed borders + names instead of grey/white */
+[data-crt-theme="amber"] #sourcesModal .modal { border-color: #504020; }
+[data-crt-theme="amber"] #sourcesModal .modal-title { color: #ffb347; }
+[data-crt-theme="amber"] #sourcesModal .modal-rules { color: #8a6e3c; }
+[data-crt-theme="amber"] #sourcesModal .mix-tabs { border-color: #504020; }
+[data-crt-theme="amber"] #sourcesModal .mix-tab { border-right-color: #504020; color: #8a6e3c; }
+[data-crt-theme="amber"] #sourcesModal .mix-tab.active { color: #d4a54a; background: color-mix(in srgb, #ffb347 12%, transparent); }
+[data-crt-theme="amber"] #sourcesModal .mix-picker-search { border-color: #504020; color: #d4a54a; }
+[data-crt-theme="amber"] #sourcesModal .mix-picker-search:focus { border-color: #ffb347; }
+[data-crt-theme="amber"] #sourcesModal .mix-picker-body { border-color: #504020; }
+[data-crt-theme="amber"] #sourcesModal .mix-pick-bot { border-bottom-color: #2a2012; }
+[data-crt-theme="amber"] #sourcesModal .mix-pick-title, [data-crt-theme="amber"] #sourcesModal .mix-pick-title span, [data-crt-theme="amber"] #sourcesModal .mix-pick-bot-name { color: #d4a54a !important; }
+[data-crt-theme="amber"] #sourcesModal .mix-pick-bot-desc, [data-crt-theme="amber"] #sourcesModal .mix-pick-act { color: #8a6e3c; }
+[data-crt-theme="amber"] #sourcesModal .mix-pick-row:hover, [data-crt-theme="amber"] #sourcesModal .mix-pick-bot:hover { background: color-mix(in srgb, #ffb347 8%, transparent); }
+[data-crt-theme="amber"] #sourcesModal .modal-btn.confirm { background: #ffb347; border-color: #ffb347; }
 [data-crt-theme="amber"] .ms-list { background: #131008; border-color: #504020; }
 [data-crt-theme="amber"] #widgetModal select,
 [data-crt-theme="amber"] #widgetModal input { border-color: #504020; color: #d4a54a; }
@@ -2632,6 +2792,30 @@ body.is-anon .stats-divider { display: none; }
 [data-crt-theme="hacker"] .mybox-btn-count { background: #0a1f0a; color: #40c840; }
 [data-crt-theme="hacker"] .mbb-edit { border-color: #0f3f0f; color: #309030; }
 [data-crt-theme="hacker"] .mbt-chip { border-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] .mybox-bar .mbb-label { color: #309030; }
+[data-crt-theme="hacker"] .mybox-btn:hover, [data-crt-theme="hacker"] .mybox-btn.active { background: color-mix(in srgb, #00ff41 12%, transparent); }
+[data-crt-theme="hacker"] .mybox-btn:hover .mybox-btn-icon, [data-crt-theme="hacker"] .mybox-btn.active .mybox-btn-icon { fill: #50e850; }
+[data-crt-theme="hacker"] .mybox-btn:hover .mybox-btn-count, [data-crt-theme="hacker"] .mybox-btn.active .mybox-btn-count { background: color-mix(in srgb, #00ff41 18%, transparent); color: #50e850; }
+[data-crt-theme="hacker"] .mybox-btn:hover .mybox-btn-preview, [data-crt-theme="hacker"] .mybox-btn.active .mybox-btn-preview, [data-crt-theme="hacker"] .mybox-btn:hover .mbp-nick, [data-crt-theme="hacker"] .mybox-btn.active .mbp-nick, [data-crt-theme="hacker"] .mybox-btn:hover .mybox-btn-empty, [data-crt-theme="hacker"] .mybox-btn.active .mybox-btn-empty { color: #50e850; }
+[data-crt-theme="hacker"] .mybox-bar .mbb-src.bot, [data-crt-theme="hacker"] .mybox-bar .mbb-src.chan { color: #50e850; }
+[data-crt-theme="hacker"] .mix-pick-row.added, [data-crt-theme="hacker"] .mix-pick-bot.added { background: transparent; box-shadow: inset 3px 0 0 #00ff41, inset 0 0 16px -6px #00ff41; }
+[data-crt-theme="hacker"] .mix-pick-row.added .mix-pick-act, [data-crt-theme="hacker"] .mix-pick-bot.added .mix-pick-act { color: #50e850; }
+[data-crt-theme="hacker"] .mybox-bar { border-bottom-color: #122d12; }
+/* add-to-my-box picker (#sourcesModal): themed borders + names instead of grey/white */
+[data-crt-theme="hacker"] #sourcesModal .modal { border-color: #0f3f0f; }
+[data-crt-theme="hacker"] #sourcesModal .modal-title { color: #00ff41; }
+[data-crt-theme="hacker"] #sourcesModal .modal-rules { color: #309030; }
+[data-crt-theme="hacker"] #sourcesModal .mix-tabs { border-color: #0f3f0f; }
+[data-crt-theme="hacker"] #sourcesModal .mix-tab { border-right-color: #0f3f0f; color: #309030; }
+[data-crt-theme="hacker"] #sourcesModal .mix-tab.active { color: #50e850; background: color-mix(in srgb, #00ff41 12%, transparent); }
+[data-crt-theme="hacker"] #sourcesModal .mix-picker-search { border-color: #0f3f0f; color: #50e850; }
+[data-crt-theme="hacker"] #sourcesModal .mix-picker-search:focus { border-color: #00ff41; }
+[data-crt-theme="hacker"] #sourcesModal .mix-picker-body { border-color: #0f3f0f; }
+[data-crt-theme="hacker"] #sourcesModal .mix-pick-bot { border-bottom-color: #0a1f0a; }
+[data-crt-theme="hacker"] #sourcesModal .mix-pick-title, [data-crt-theme="hacker"] #sourcesModal .mix-pick-title span, [data-crt-theme="hacker"] #sourcesModal .mix-pick-bot-name { color: #50e850 !important; }
+[data-crt-theme="hacker"] #sourcesModal .mix-pick-bot-desc, [data-crt-theme="hacker"] #sourcesModal .mix-pick-act { color: #309030; }
+[data-crt-theme="hacker"] #sourcesModal .mix-pick-row:hover, [data-crt-theme="hacker"] #sourcesModal .mix-pick-bot:hover { background: color-mix(in srgb, #00ff41 8%, transparent); }
+[data-crt-theme="hacker"] #sourcesModal .modal-btn.confirm { background: #00ff41; border-color: #00ff41; }
 [data-crt-theme="hacker"] .ms-list { background: #030803; border-color: #0f3f0f; }
 [data-crt-theme="hacker"] #widgetModal select,
 [data-crt-theme="hacker"] #widgetModal input { border-color: #0f3f0f; color: #50e850; }
@@ -3205,14 +3389,10 @@ body.is-anon .stats-divider { display: none; }
       <div class="profile-modal-avatar">
         <img src="trolls/5.svg" id="profileModalTroll" class="my-troll-modal" />
         <div class="profile-modal-nick" id="profileModalNick">@BOSS_NIKITOS</div>
+        <div class="profile-modal-desc" id="profileModalDesc">one of chief troll officers</div>
       </div>
       <div class="pm-right">
         <div class="profile-modal-body">
-          <div class="profile-modal-stats">
-            <div class="profile-stat"><div class="profile-stat-num">142</div><div class="profile-stat-label">Messages</div></div>
-            <div class="profile-stat"><div class="profile-stat-num">23d</div><div class="profile-stat-label">Active</div></div>
-          </div>
-          <div class="profile-modal-divider stats-divider"></div>
           <div class="profile-modal-row">
             <span class="profile-modal-row-label">Bio</span>
             <span class="profile-modal-row-value profile-bio-value" id="profileModalBio">—</span>
@@ -3222,17 +3402,21 @@ body.is-anon .stats-divider { display: none; }
             <span class="profile-modal-row-value">26 / 07 / 2024</span>
           </div>
           <div class="profile-modal-row">
-            <span class="profile-modal-row-label">Link</span>
-            <span class="profile-modal-row-value"><a href="#">troll.box/boss_nikitos</a><button class="copy-btn" title="Copy">&#x2398;</button></span>
+            <span class="profile-modal-row-label">Status</span>
+            <span class="profile-modal-row-value" id="profileModalStatus">online</span>
+          </div>
+          <div class="profile-modal-row" id="profileModalOnlineRow">
+            <span class="profile-modal-row-label">Online</span>
+            <span class="profile-modal-row-value" id="profileModalOnline">00:00:00</span>
           </div>
           <div class="profile-badges-wrap" id="profileBadgesWrap">
             <div class="profile-modal-divider"></div>
             <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
             <div class="profile-modal-badges">
-              <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
-              <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
-              <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
-              <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
+              <span class="profile-badge badge-early active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+              <span class="profile-badge badge-chatter" data-tip="Send 1000 messages to unlock">TOP CHATTER</span>
+              <span class="profile-badge badge-opinion" data-tip="Get 500 reactions to unlock">OPINION LEADER</span>
+              <span class="profile-badge badge-cool" data-tip="Vibes recognised by the community">COOL GUY</span>
             </div>
           </div>
         </div>
@@ -4898,7 +5082,7 @@ function renderMyBoxBar(){
   if (!bar) return;
   if (active !== 'mymix' || myBoxEmpty()){ bar.classList.add('hidden'); bar.innerHTML = ''; return; }
   const items = [];
-  myMixChats.forEach(id => { const r = ROOMS.find(x => x.id === id); if (r) items.push(`<span class="mbb-src chan" style="color:${r.ac}">${r.label}</span>`); });
+  myMixChats.forEach(id => { const r = ROOMS.find(x => x.id === id); if (r) items.push(`<span class="mbb-src chan">${r.label}</span>`); });
   myMixBots.forEach(n => items.push(`<span class="mbb-src bot">@${n.toUpperCase()}</span>`));
   const shown = items.slice(0, 4).join('');
   const more = items.length > 4 ? `<span class="mbb-more">+${items.length - 4}</span>` : '';
@@ -4959,7 +5143,9 @@ function renderSourcesChats(){
   const body = document.getElementById('sourcesBody');
   if (!body) return;
   const q = (document.getElementById('sourcesSearch')?.value || '').trim().toLowerCase();
-  const html = ROOMS.filter(r => r.id !== 'mymix').filter(r => !q || r.label.toLowerCase().includes(q)).map(r => {
+  const html = ROOMS.filter(r => r.id !== 'mymix').filter(r => !q || r.label.toLowerCase().includes(q))
+    .sort((a, b) => (myMixChats.has(b.id) ? 1 : 0) - (myMixChats.has(a.id) ? 1 : 0)) // added → вверх (стабильно)
+    .map(r => {
     const on = myMixChats.has(r.id);
     return `<div class="mix-pick-row ${on ? 'added' : ''}" onclick="toggleMyBoxChat('${r.id}')"><span class="mix-pick-title"><span style="color:${r.ac}">#</span>${r.label.replace(/^#/,'')}</span><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
   }).join('');
@@ -4969,7 +5155,9 @@ function renderSourcesBots(){
   const body = document.getElementById('sourcesBody');
   if (!body) return;
   const q = (document.getElementById('sourcesSearch')?.value || '').trim().toLowerCase();
-  const html = allBots().filter(n => !q || n.toLowerCase().includes(q) || (botInfoFor(n).desc || '').toLowerCase().includes(q)).map(n => {
+  const html = allBots().filter(n => !q || n.toLowerCase().includes(q) || (botInfoFor(n).desc || '').toLowerCase().includes(q))
+    .sort((a, b) => (myMixBots.has(b) ? 1 : 0) - (myMixBots.has(a) ? 1 : 0)) // added → вверх (стабильно)
+    .map(n => {
     const on = myMixBots.has(n); const info = botInfoFor(n); const ac = botHomeAccent(n);
     return `<div class="mix-pick-bot ${on ? 'added' : ''}" onclick="toggleMyBoxBot('${n}')"><img src="${botAvatar(ac)}" /><div class="mix-pick-bot-main"><div class="mix-pick-bot-name" style="color:${ac}">@${n.toUpperCase()}</div><div class="mix-pick-bot-desc">${info.desc}</div></div><span class="mix-pick-act">${on ? '✓ ADDED' : '+ ADD'}</span></div>`;
   }).join('');
@@ -5896,7 +6084,32 @@ function openUserProfile(name, isBot) {
   const pmAv = document.querySelector('#profileModal .profile-modal-avatar'); if (pmAv) pmAv.style.setProperty('--troll-glow', isOwn ? peColor(myProfile.color) : troll.color);
   const bw = document.getElementById('profileBadgesWrap');
   if (bw) bw.style.display = (isOwn && !myProfile.showBadges) ? 'none' : '';
+  // Description under nick / bio / status (other users: demo data; own: reflects myProfile)
+  const _uname = name.replace(/^@/, '').toLowerCase();
+  const _online = isOwn || ONLINE_USERS.some(u => u.name.toLowerCase() === _uname);
+  const _ownBio = (myProfile.bio && myProfile.bio.trim()) ? myProfile.bio : '';
+  const descEl = document.getElementById('profileModalDesc');
+  const bioEl = document.getElementById('profileModalBio');
+  const stEl = document.getElementById('profileModalStatus');
+  if (descEl) descEl.textContent = isOwn ? _ownBio : 'one of chief troll officers';
+  if (bioEl) bioEl.textContent = isOwn ? (_ownBio || '—') : 'one of chief troll officers';
+  if (stEl) stEl.textContent = _online ? 'online' : 'offline';
+  const onlineRow = document.getElementById('profileModalOnlineRow');
+  if (onlineRow) onlineRow.style.display = _online ? '' : 'none';
   profileModal.classList.remove('hidden');
+  if (_online) { _profOnlineStart = Date.now() - 469000; if (!_profOnlineTimer) _profOnlineTimer = setInterval(tickProfileOnline, 1000); tickProfileOnline(); }
+}
+
+// Live "online" session timer in the profile modal (ticks while modal is open)
+let _profOnlineStart = 0, _profOnlineTimer = null;
+function tickProfileOnline(){
+  const el = document.getElementById('profileModalOnline');
+  const pm = document.getElementById('profileModal');
+  if (!el) return;
+  if (pm && pm.classList.contains('hidden')) { if (_profOnlineTimer){ clearInterval(_profOnlineTimer); _profOnlineTimer = null; } return; }
+  const s = Math.max(0, Math.floor((Date.now() - _profOnlineStart)/1000));
+  const p = n => String(n).padStart(2,'0');
+  el.textContent = p(Math.floor(s/3600))+':'+p(Math.floor((s%3600)/60))+':'+p(s%60);
 }
 
 // === PROFILE EDIT (color / nick / badges) ===
@@ -6742,11 +6955,6 @@ function setMobileView(view) {
           <img class="my-troll" src="trolls/5.svg" style="width:80px;height:80px;image-rendering:pixelated;" />
           <div class="profile-modal-nick" id="mobileProfileNick">${nick}</div>
         </div>
-        <div class="profile-modal-stats">
-          <div class="profile-stat"><div class="profile-stat-num">142</div><div class="profile-stat-label">Messages</div></div>
-          <div class="profile-stat"><div class="profile-stat-num">23d</div><div class="profile-stat-label">Active</div></div>
-        </div>
-        <div class="profile-modal-divider stats-divider"></div>
         <div class="profile-modal-row">
           <span class="profile-modal-row-label">Bio</span>
           <span class="profile-modal-row-value profile-bio-value">${(myProfile.bio && myProfile.bio.trim()) ? siEsc(myProfile.bio) : '—'}</span>
@@ -6763,9 +6971,9 @@ function setMobileView(view) {
           <div class="profile-modal-divider"></div>
           <div class="profile-modal-row-label" style="margin-bottom:8px">Badges</div>
           <div class="profile-modal-badges">
-            <span class="profile-badge active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
+            <span class="profile-badge badge-early active" data-tip="Earned 26 / 07 / 2024 — joined in the first wave">EARLY ADOPTER</span>
             <span class="profile-badge active" data-tip="Earned 02 / 08 / 2024 — created your first box">BOX CREATOR</span>
-            <span class="profile-badge" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
+            <span class="profile-badge badge-chatter" data-tip="Send 1000 messages to unlock · 142 / 1000">TOP CHATTER</span>
             <span class="profile-badge" data-tip="Get appointed moderator by a box owner to unlock">MODERATOR</span>
           </div>
         </div>
