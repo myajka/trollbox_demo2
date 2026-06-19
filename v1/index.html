@@ -5422,6 +5422,7 @@ function setMixAddState(el, added){
 // "+/−" on a widget inside a regular box → pull that widget into / out of the My Box terminal.
 // Uses the block's raw getPanel index (data-rawIdx) so it matches getBoxWidgets/buildMixWidget.
 function addWidgetToMyBox(el){
+  if (isAnon()){ showRegwall('widget'); return; } // anon: collecting widgets → reg-wall
   const block = el.closest('.r-block');
   if (!block) return;
   const idx = parseInt(block.dataset.rawIdx, 10);
@@ -5733,6 +5734,7 @@ function isAnon(){ return authState === 'anon'; }
 // Reg-wall = compact modal over the chat (chat stays visible behind), with contextual copy.
 const REGWALL_TEXT = {
   react:  'Sign up to react to messages.',
+  widget: 'Sign up to collect widgets in your My Box.',
   create: 'Sign up to create your own box.',
   limit:  "You've used your 3 free messages — sign up to keep chatting.",
   profile:'Sign up to customise your troll and unlock more.',
