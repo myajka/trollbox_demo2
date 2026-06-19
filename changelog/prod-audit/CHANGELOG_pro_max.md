@@ -281,6 +281,7 @@ _Не баг (контент/состояние/аккаунт):_ состав �
    - строки списка в ADD TO MY BOX (`.mix-pick-row`, `.mix-pick-bot`), кнопка EDIT (`.mbb-edit`): `border-radius: 10px`
    - чипы адресатов `to:` (`.mbt-chip`): `border-radius: 8px`
    - _общий принцип aurora: острых углов быть не должно — проверить и остальные мелкие элементы (напр. `.announce` pinned-бар сейчас `0px`)._
+5. **ADD TO MY BOX (экран редактирования My Box) — острые углы в aurora.** В проде модалка и её элементы прямоугольные. Должно (эталон aurora): сама модалка (`.modal`) `border-radius: 20px`, табы (`.mix-tabs`) `10px`, поиск (`.mix-picker-search`) `10px`, тело списка (`.mix-picker-body`) `12px`, строки (`.mix-pick-row`/`.mix-pick-bot`) `10px`, кнопка DONE (`.modal-btn`) `10px`. _(плюс уже зафиксированное: модалка по центру + backdrop, см. раздел «ADD TO MY BOX»)._
 
 ## Итоговая группировка по компонентам
 
