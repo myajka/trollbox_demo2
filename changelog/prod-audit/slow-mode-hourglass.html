@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slow mode — пиксельные песочные часы (хэндофф)</title>
+<style>
+  body { margin: 0; background: #0c0c0c; color: #e0e0e0; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; line-height: 1.5; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 64px; }
+  h1 { font-size: 19px; margin: 0 0 4px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: #8CE45A; margin: 30px 0 10px; }
+  p, li { font-size: 13.5px; color: #cfcfcf; }
+  code { background: #1c1c1c; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 12.5px; color: #ffd27a; }
+  pre { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; overflow: auto; font-family: 'Consolas', monospace; font-size: 12.5px; color: #d6d6d6; }
+  .stage { display: flex; gap: 34px; align-items: center; flex-wrap: wrap; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 24px; margin: 8px 0 4px; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .swatch small { color: #888; font-size: 11px; }
+  .note { color: #9a9a9a; font-size: 12.5px; }
+
+  /* ===== controls for the demo only (not part of the component) ===== */
+  .accent-row { display: flex; gap: 8px; align-items: center; margin: 14px 0 0; flex-wrap: wrap; }
+  .accent-row button { background: #1c1c1c; border: 1px solid #333; color: #ddd; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+  .accent-row button:hover { border-color: #555; }
+
+  /* =======================================================================
+     COMPONENT — copy this block as-is (uses --ac = theme accent colour)
+     ======================================================================= */
+  .cd-anim { width: 13px; height: 14px; color: var(--ac, #8CE45A); pointer-events: none; }
+  .cd-anim svg { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; animation: cd-flip 3.2s ease-in-out infinite; }
+  .cd-anim rect { fill: currentColor; }
+  .cd-anim .cd-top { transform-box: fill-box; transform-origin: 50% 100%; animation: cd-drain 3.2s steps(3) infinite; }
+  .cd-anim .cd-bot { transform-box: fill-box; transform-origin: 50% 100%; animation: cd-fill 3.2s steps(3) infinite; }
+  /* stay upright while the sand falls, then a quick 180° flip; two flips = 360° so the loop has no snap */
+  @keyframes cd-flip  { 0%,44% { transform: rotate(0deg); } 50%,94% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+  @keyframes cd-drain { 0% { transform: scaleY(1); } 44%,50% { transform: scaleY(0); } 94%,100% { transform: scaleY(1); } }
+  @keyframes cd-fill  { 0% { transform: scaleY(0); } 44%,50% { transform: scaleY(1); } 94%,100% { transform: scaleY(0); } }
+  @media (prefers-reduced-motion: reduce){ .cd-anim svg, .cd-anim .cd-top, .cd-anim .cd-bot { animation: none; } }
+  /* ======================================================================= */
+
+  /* sizes used only on this page to show the art bigger (inline-block so width/height apply) */
+  .cd-anim.s-md { display: inline-block; width: 39px; height: 42px; }
+  .cd-anim.s-lg { display: inline-block; width: 78px; height: 84px; }
+
+  /* ---- mock of the real chat input row in its "cooling" state ---- */
+  .mock-row { position: relative; display: flex; gap: 6px; align-items: stretch; width: 360px; max-width: 100%; padding: 8px 12px; border: 1px solid #333; background: #141414; border-radius: 0; }
+  .mock-input { flex: 1; background: #141414; border: 1px solid #333; padding: 7px 10px; color: #e0e0e0; font-family: Roboto, sans-serif; font-size: 14px; outline: none; caret-color: transparent; text-indent: 24px; }
+  .mock-input::placeholder { color: var(--ac, #8CE45A); opacity: .9; }
+  .mock-row .cd-anim { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); }
+  .mock-send { width: 34px; flex-shrink: 0; border: 1px solid #444; background: #141414; color: #999; display: flex; align-items: center; justify-content: center; opacity: .4; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Slow-mode countdown — пиксельные песочные часы</h1>
+  <p class="note">Анимация для индикатора кулдауна отправки сообщений. Чистый HTML+CSS (SVG), без картинок и JS. Цвет берётся из акцента темы (<code>--ac</code>).</p>
+
+  <h2>Превью</h2>
+  <div class="stage">
+    <div class="swatch">
+      <span class="cd-anim s-lg" aria-hidden="true"></span>
+      <small>крупно</small>
+    </div>
+    <div class="swatch">
+      <span class="cd-anim s-md" aria-hidden="true"></span>
+      <small>средне</small>
+    </div>
+    <div class="swatch">
+      <div class="mock-row">
+        <span class="cd-anim" aria-hidden="true"></span>
+        <input class="mock-input" id="mockInput" placeholder="Slow mode 0:30" readonly>
+        <span class="mock-send">›</span>
+      </div>
+      <small>как в строке ввода (таймер тикает)</small>
+    </div>
+  </div>
+  <div class="accent-row">
+    <span class="note">Цвет акцента:</span>
+    <button data-ac="#8CE45A">default</button>
+    <button data-ac="#50e850">hacker</button>
+    <button data-ac="#d4a54a">amber</button>
+    <button data-ac="#FCD34D">aurora</button>
+    <button data-ac="#2a2a2a">snow</button>
+  </div>
+
+  <h2>Как это работает</h2>
+  <ul>
+    <li>Часы стоят, пока сыпется песок (верхняя колба <code>cd-top</code> пустеет, нижняя <code>cd-bot</code> наполняется), затем быстрый <b>переворот на 180°</b>. Два переворота = 360°, поэтому петля бесшовная.</li>
+    <li>Силуэт цельный: треугольники сходятся в горлышко 1px и снова расходятся.</li>
+    <li>Анимация <b>декоративная и зациклена</b> (~3.2с), <b>не</b> привязана к реальному остатку времени. Сам отсчёт <code>0:30→0:00</code> — это текст в <code>placeholder</code> поля ввода (см. ниже).</li>
+    <li>Учтён <code>prefers-reduced-motion</code> — для пользователей с отключёнными анимациями часы замирают.</li>
+  </ul>
+
+  <h2>1. Разметка (вставить в строку ввода)</h2>
+  <p class="note">Положить <code>&lt;span class="cd-anim"&gt;</code> рядом с <code>&lt;input&gt;</code> внутри <code>.chat-input-row</code>:</p>
+  <pre id="codeHtml"></pre>
+
+  <h2>2. CSS компонента</h2>
+  <p class="note">Скопировать как есть. <code>--ac</code> — акцент текущей темы (уже есть в проекте).</p>
+  <pre id="codeCss"></pre>
+
+  <h2>3. Подключение к кулдауну (как в проде)</h2>
+  <p class="note">Часы видны только когда на <code>.chat-input-row</code> висит класс <code>.cooling</code>. Этот же класс прячет каретку, а таймер пишется в <code>placeholder</code>. Логика отсчёта:</p>
+  <pre id="codeJs"></pre>
+  <p class="note">Сопутствующий CSS строки ввода (каретка/подсказка/место под часы):</p>
+  <pre id="codeRowCss"></pre>
+</div>
+
+<script>
+  // ---- inject the hourglass SVG into every .cd-anim (single source of truth) ----
+  const HG_SVG = `<svg viewBox="0 0 11 12" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="0" width="9" height="1"/><rect x="1" y="11" width="9" height="1"/>
+    <rect x="1" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/>
+    <rect x="2" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/>
+    <rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/>
+    <rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/>
+    <rect x="5" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/>
+    <rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/>
+    <rect x="3" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/>
+    <rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/>
+    <rect x="1" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/>
+    <g class="cd-top"><rect x="2" y="1" width="7" height="1"/><rect x="3" y="2" width="5" height="1"/><rect x="4" y="3" width="3" height="1"/><rect x="5" y="4" width="1" height="1"/></g>
+    <g class="cd-bot"><rect x="5" y="7" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="3" y="9" width="5" height="1"/><rect x="2" y="10" width="7" height="1"/></g>
+  </svg>`;
+  document.querySelectorAll('.cd-anim').forEach(el => { if (!el.querySelector('svg')) el.innerHTML = HG_SVG; });
+
+  // ---- demo: theme accent switcher ----
+  document.querySelectorAll('.accent-row button').forEach(b=>{
+    b.addEventListener('click', ()=> document.documentElement.style.setProperty('--ac', b.dataset.ac));
+  });
+
+  // ---- demo: live 0:30 -> 0:00 countdown in the mock input placeholder ----
+  (function(){
+    const inp = document.getElementById('mockInput');
+    const TOTAL = 30000; let ends = Date.now() + TOTAL;
+    function fmt(ms){ const s = Math.max(0, Math.ceil(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+    function tick(){
+      let left = ends - Date.now();
+      if (left <= 0){ ends = Date.now() + TOTAL; left = TOTAL; }   // demo loops
+      inp.placeholder = 'Slow mode ' + fmt(left);
+      setTimeout(tick, 250);
+    }
+    tick();
+  })();
+
+  // ---- fill the copy-paste code blocks (escaped) ----
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('codeHtml').textContent =
+`<div class="chat-input-row" id="chatInputAuth">
+  <span class="crt-cursor"></span>
+  <span class="cd-anim" aria-hidden="true"><svg viewBox="0 0 11 12" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="0" width="9" height="1"/><rect x="1" y="11" width="9" height="1"/>
+    <rect x="1" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/>
+    <rect x="2" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/>
+    <rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/>
+    <rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/>
+    <rect x="5" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/>
+    <rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/>
+    <rect x="3" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/>
+    <rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/>
+    <rect x="1" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/>
+    <g class="cd-top"><rect x="2" y="1" width="7" height="1"/><rect x="3" y="2" width="5" height="1"/><rect x="4" y="3" width="3" height="1"/><rect x="5" y="4" width="1" height="1"/></g>
+    <g class="cd-bot"><rect x="5" y="7" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="3" y="9" width="5" height="1"/><rect x="2" y="10" width="7" height="1"/></g>
+  </svg></span>
+  <input class="chat-input" id="chat-input" placeholder="Type to #btc...">
+  <button class="send-btn">...</button>
+</div>`;
+
+  document.getElementById('codeCss').textContent =
+`.cd-anim { width: 13px; height: 14px; color: var(--ac, #8CE45A); pointer-events: none; }
+.cd-anim svg { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; animation: cd-flip 3.2s ease-in-out infinite; }
+.cd-anim rect { fill: currentColor; }
+.cd-anim .cd-top { transform-box: fill-box; transform-origin: 50% 100%; animation: cd-drain 3.2s steps(3) infinite; }
+.cd-anim .cd-bot { transform-box: fill-box; transform-origin: 50% 100%; animation: cd-fill 3.2s steps(3) infinite; }
+/* upright while sand falls, then a quick 180° flip; two flips = 360° -> seamless loop */
+@keyframes cd-flip  { 0%,44% { transform: rotate(0deg); } 50%,94% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+@keyframes cd-drain { 0% { transform: scaleY(1); } 44%,50% { transform: scaleY(0); } 94%,100% { transform: scaleY(1); } }
+@keyframes cd-fill  { 0% { transform: scaleY(0); } 44%,50% { transform: scaleY(1); } 94%,100% { transform: scaleY(0); } }
+@media (prefers-reduced-motion: reduce){ .cd-anim svg, .cd-anim .cd-top, .cd-anim .cd-bot { animation: none; } }`;
+
+  document.getElementById('codeRowCss').textContent =
+`/* the cooling state shows the hourglass, hides the caret, tints + indents the placeholder */
+.chat-input-row { position: relative; }                 /* needed: hourglass is absolutely positioned */
+.cd-anim { display: none; position: absolute; left: 22px; top: 50%; transform: translateY(-50%); z-index: 2; }
+.chat-input-row.cooling .cd-anim { display: block; }
+.chat-input-row.cooling .chat-input { text-indent: 24px; }              /* room for the hourglass + 6px gap before the text */
+.chat-input-row.cooling .chat-input::placeholder { color: var(--ac, #8CE45A); opacity: .9; }
+.chat-input-row.cooling .crt-cursor { display: none !important; }       /* hide the blinking block caret */`;
+
+  document.getElementById('codeJs').textContent =
+`const SEND_COOLDOWN_MS = 30000;  // time before the next message is allowed (0 = off)
+let _endsAt = 0, _timer = null, _prevPh = null;
+const isOnCooldown = () => Date.now() < _endsAt;
+const fmt = ms => { const s = Math.max(0, Math.ceil(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+
+function startSendCooldown(){
+  if (SEND_COOLDOWN_MS <= 0) return;
+  _endsAt = Date.now() + SEND_COOLDOWN_MS;
+  const inp = document.getElementById('chat-input');
+  const row = document.getElementById('chatInputAuth');
+  if (inp){ _prevPh = inp.placeholder; inp.readOnly = true; inp.placeholder = 'Slow mode ' + fmt(SEND_COOLDOWN_MS); }
+  if (row) row.classList.add('cooling');
+  clearTimeout(_timer); tick();
+}
+function tick(){
+  const left = _endsAt - Date.now();
+  if (left <= 0) return stopSendCooldown();
+  const inp = document.getElementById('chat-input');
+  if (inp) inp.placeholder = 'Slow mode ' + fmt(left);
+  _timer = setTimeout(tick, 250);
+}
+function stopSendCooldown(){
+  _endsAt = 0; clearTimeout(_timer); _timer = null;
+  const inp = document.getElementById('chat-input');
+  const row = document.getElementById('chatInputAuth');
+  if (row) row.classList.remove('cooling');
+  if (inp){ inp.readOnly = false; if (_prevPh != null) inp.placeholder = _prevPh; _prevPh = null; }
+}
+
+// call startSendCooldown() right after a message is sent;
+// guard the send: if (isOnCooldown()) return;`;
+</script>
+</body>
+</html>
