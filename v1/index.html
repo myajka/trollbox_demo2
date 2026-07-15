@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>troll.box</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500&family=Geist:wght@300;400;500&family=Onest:wght@300;400;500&family=Noto+Sans:wght@300;400;500&family=Golos+Text:wght@400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Onest:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 @font-face {
   font-family: 'CHNOPixelCodePro';
@@ -15,7 +15,7 @@
 </style>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --font-body: 'Roboto', sans-serif; } /* swappable message/body font — driven by the font switcher (top-right). Display/brand font stays CHNOPixelCodePro. */
+:root { --font-body: 'Onest', sans-serif; } /* swappable message/body font — driven by the font switcher (top-right). Display/brand font stays CHNOPixelCodePro. */
 html, body { height: 100%; background: #050505; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); }
 body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%); }
 .app { display: grid; grid-template-columns: clamp(240px, 26vw, 360px) 1fr clamp(240px, 26vw, 360px); height: 100vh; width: 100vw; background: transparent; overflow: hidden; font-family: var(--font-body); font-size: 13px; color: #e0e0e0; position: relative; z-index: 1; padding: 12px; gap: 10px; }
@@ -403,6 +403,25 @@ html, body { text-shadow: 0 0 2px rgba(170,170,170,0.15); }
   animation: fifaWave 7s ease-in-out infinite alternate;
 }
 @keyframes fifaWave { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+/* MOVIES box — terminal widgets (mock data) */
+.mov-rank { font-family: 'CHNOPixelCodePro', monospace; font-weight: 400; display: inline-block; min-width: 14px; }
+.mov-foot { margin-top: 7px; font-size: 10px; color: #444; font-family: var(--font-body); }
+.mov-score-title { font-family: 'CHNOPixelCodePro', monospace; font-size: 11.5px; color: #e0e0e0; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 3px; }
+.mov-badge { font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 6px; border-radius: 2px; border: 1px solid; flex-shrink: 0; }
+.mov-badge.theaters { color: #f5c518; border-color: #4a3d10; }
+.mov-badge.streaming { color: #4ab8e8; border-color: #143648; }
+.mov-badge.digital { color: #9b59f7; border-color: #2d1a4a; }
+.mov-drop-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #1c1c1c; }
+.mov-drop-row:last-child { border-bottom: none; }
+.mov-drop-title { font-family: var(--font-body); font-size: 12px; color: #ccc; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mov-drop-date { font-family: var(--font-body); font-size: 11px; color: #555; flex-shrink: 0; }
+.mov-src-badge { font-family: 'CHNOPixelCodePro', monospace; font-size: 9px; text-transform: uppercase; color: #888; border: 1px solid #333; padding: 1px 5px; border-radius: 2px; margin-right: 6px; }
+.mov-trailer { display: flex; align-items: center; gap: 9px; padding: 6px 0; border-bottom: 1px solid #1c1c1c; text-decoration: none; cursor: pointer; }
+.mov-trailer:last-of-type { border-bottom: none; }
+.mov-trailer:hover .mov-drop-title { color: #fff; }
+.mov-play { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 22px; }
+.mov-trailer:hover .mov-play { filter: brightness(1.3); }
+.mov-trailer-sub { display: block; font-family: var(--font-body); font-size: 10.5px; color: #555; margin-top: 1px; }
 /* FIFA upcoming-matches schedule cards */
 .fifa-sched { display: flex; flex-direction: column; gap: 6px; }
 .fifa-sched-row { display: flex; align-items: center; gap: 11px; padding: 8px 11px 8px 9px; background: linear-gradient(to right, #131313, #0d0d0d); border: 1px solid #242424; border-left: 2px solid var(--ac, #F5C518); border-radius: 2px; transition: background .15s, transform .15s, box-shadow .15s; }
@@ -3720,6 +3739,7 @@ body.is-anon .stats-divider { display: none; }
 const ROOMS = [
   { id:'general', label:'#GENERAL', tag:'', count:3102, ac:'#8CE45A' },
   { id:'mymix', label:'#MY_BOX', tag:'', count:null, ac:'#8CE45A' },
+  { id:'movies', label:'#MOVIES', tag:'[CINEMA]', count:1523, ac:'#e8554a' },
   { id:'btc', label:'#BTC', tag:'[BITCOIN]', count:267, ac:'#f7931a' },
   { id:'fifa', label:'#FIFA', tag:'[WORLD CUP 2026]', count:12400, ac:'#F5C518' },
   { id:'eth', label:'#ETH', tag:'[ETHEREUM]', count:295, ac:'#627eea' },
@@ -3736,6 +3756,18 @@ let active = 'btc';
 let replyState = null; // { idx, author, preview, color, box } while composing a reply
 
 const CHATS = {
+  movies: [
+    {sys:true, text:'reel_talk joined the box', time:'10:02am'},
+    {tag:'MOV', author:'reel_talk', bot:false, text:'dune 3 trailer drops tomorrow, im not ready 🏜️', time:'10:04am'},
+    {tag:'MOV', author:'news_bot', bot:true, text:'Villeneuve confirms Dune: Part Three wrapped principal photography', time:'10:12am'},
+    {tag:'MOV', author:'a24_stan', bot:false, text:'megalopolis 2 critics 78 audience 46 lmaooo the gap', time:'10:20am'},
+    {tag:'MOV', author:'popcorn_phd', bot:false, text:'critics being paid or audience being wrong, choose your fighter', time:'10:23am'},
+    {tag:'MOV', author:'kyoshee', bot:false, text:'the odyssey imax footage looked insane ngl', time:'10:31am'},
+    {tag:'MOV', author:'reel_talk', bot:false, text:'nolan doing homer is the crossover i didnt know i needed', time:'10:33am'},
+    {tag:'MOV', author:'jokes_bot', bot:true, text:'My Letterboxd top 4 is just the same movie in 4 different moods', time:'10:45am'},
+    {tag:'MOV', author:'binge_boi', bot:false, text:'stranger things vol 3 friday, who else pulling an all nighter', time:'10:52am'},
+    {tag:'MOV', author:'a24_stan', bot:false, text:'me watching the countdown widget instead of working 💀', time:'11:01am'},
+  ],
   btc: [
     {sys:true, text:'whalewatch joined the box', time:'11:00am'},
     {tag:'$BTC', author:'whalewatch', bot:false, text:'someone just moved 12k BTC off coinbase lmao whale alert 🐋', time:'11:02am'},
@@ -4551,11 +4583,18 @@ const PANELS = {
     ${fifaWhoWillWin()}
     ${fifaNewsWidget()}
     ${fifaFactWidget()}`,
+  movies: (ac,id)=>`
+    <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">CINEPHILES ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">1,523 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
+    <div class="r-block">${rHead('MOVIE NEWS')}<div class="news-item" style="display:flex;align-items:baseline"><span class="news-dot"></span><span class="news-text" style="flex:1;min-width:0"><span class="mov-src-badge" style="border:none;padding:0">Variety</span>Villeneuve wraps Dune 3 principal photography</span><span class="news-time" style="flex-shrink:0;margin-left:8px">42m</span></div><div class="news-item" style="display:flex;align-items:baseline"><span class="news-dot"></span><span class="news-text" style="flex:1;min-width:0"><span class="mov-src-badge" style="border:none;padding:0">IndieWire</span>A24 sets fall slate — 6 premieres at Venice</span><span class="news-time" style="flex-shrink:0;margin-left:8px">2h</span></div><div class="news-item" style="display:flex;align-items:baseline"><span class="news-dot"></span><span class="news-text" style="flex:1;min-width:0"><span class="mov-src-badge" style="border:none;padding:0">r/movies</span>Roger Deakins teases return for Blade Runner sequel</span><span class="news-time" style="flex-shrink:0;margin-left:8px">4h</span></div></div>
+    <div class="r-block">${rHead('TRAILER DROPS')}<a class="mov-trailer" href="https://www.youtube.com/results?search_query=avengers+doomsday+official+teaser" target="_blank" rel="noopener"><span class="mov-play" style="color:${ac}"><svg width="22" height="22" viewBox="0 0 11 11" shape-rendering="crispEdges" fill="currentColor"><rect x="3" y="0" width="5" height="1"/><rect x="3" y="10" width="5" height="1"/><rect x="0" y="3" width="1" height="5"/><rect x="10" y="3" width="1" height="5"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="4" y="3" width="1" height="5"/><rect x="5" y="3" width="1" height="5"/><rect x="6" y="4" width="1" height="3"/><rect x="7" y="4" width="1" height="3"/><rect x="8" y="5" width="1" height="1"/></svg></span><span style="flex:1;min-width:0"><span class="mov-drop-title">AVENGERS: DOOMSDAY — Teaser</span><span class="mov-trailer-sub">14.2M views · 21h ago</span></span></a><a class="mov-trailer" href="https://www.youtube.com/results?search_query=the+batman+2+official+trailer" target="_blank" rel="noopener"><span class="mov-play" style="color:${ac}"><svg width="22" height="22" viewBox="0 0 11 11" shape-rendering="crispEdges" fill="currentColor"><rect x="3" y="0" width="5" height="1"/><rect x="3" y="10" width="5" height="1"/><rect x="0" y="3" width="1" height="5"/><rect x="10" y="3" width="1" height="5"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="4" y="3" width="1" height="5"/><rect x="5" y="3" width="1" height="5"/><rect x="6" y="4" width="1" height="3"/><rect x="7" y="4" width="1" height="3"/><rect x="8" y="5" width="1" height="1"/></svg></span><span style="flex:1;min-width:0"><span class="mov-drop-title">THE BATMAN II — Trailer #1</span><span class="mov-trailer-sub">8.7M views · 1d ago</span></span></a><a class="mov-trailer" href="https://www.youtube.com/results?search_query=shrek+5+official+teaser" target="_blank" rel="noopener"><span class="mov-play" style="color:${ac}"><svg width="22" height="22" viewBox="0 0 11 11" shape-rendering="crispEdges" fill="currentColor"><rect x="3" y="0" width="5" height="1"/><rect x="3" y="10" width="5" height="1"/><rect x="0" y="3" width="1" height="5"/><rect x="10" y="3" width="1" height="5"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="4" y="3" width="1" height="5"/><rect x="5" y="3" width="1" height="5"/><rect x="6" y="4" width="1" height="3"/><rect x="7" y="4" width="1" height="3"/><rect x="8" y="5" width="1" height="1"/></svg></span><span style="flex:1;min-width:0"><span class="mov-drop-title">SHREK 5 — Teaser</span><span class="mov-trailer-sub">22.1M views · 2d ago</span></span></a><div class="mov-foot">official trailers on YouTube · last 48h</div></div>
+    <div class="r-block">${rHead('HIDDEN GEM OF THE DAY')}<div class="mov-score-title" style="font-size:15px">COHERENCE <span style="color:#666;font-family:var(--font-body);font-size:12px;text-transform:none">(2013)</span></div><div style="margin-top:5px;font-size:12px;display:flex;align-items:baseline;gap:7px"><span style="color:${ac};letter-spacing:2px">★★★★★</span><b style="color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace;font-weight:400">7.2</b><span style="color:#666;font-family:var(--font-body);font-size:11.5px;margin-left:4px"><b style="color:#aaa;font-weight:600">98%</b> users recommend</span></div><div style="margin-top:7px"><span class="tag-pill">Sci-Fi</span><span class="tag-pill">Mystery</span></div></div>
+    <div class="r-block">${rHead('WHAT DROPS THIS WEEK')}<div class="mov-drop-row"><span class="mov-badge theaters">Theaters</span><span class="mov-drop-title">28 Years Later: The Bone Temple</span><span class="mov-drop-date">Thu</span></div><div class="mov-drop-row"><span class="mov-badge streaming">Streaming</span><span class="mov-drop-title">Stranger Things 5 — Vol. 3</span><span class="mov-drop-date">Fri · Netflix</span></div><div class="mov-drop-row"><span class="mov-badge digital">Digital</span><span class="mov-drop-title">Mission: Impossible 8</span><span class="mov-drop-date">Tue · VOD</span></div><div class="mov-drop-row"><span class="mov-badge streaming">Streaming</span><span class="mov-drop-title">The Bear S5</span><span class="mov-drop-date">Wed · Hulu</span></div></div>
+    <div class="r-block">${rHead('STREAMING TOP 5')}<div class="trend-row"><span class="trend-name"><b class="mov-rank" style="color:${ac}">1</b> STRANGER THINGS 5</span><span class="trend-val"><span class="mov-src-badge">Netflix</span></span></div><div class="trend-row"><span class="trend-name"><b class="mov-rank" style="color:${ac}">2</b> THE PENGUIN S2</span><span class="trend-val"><span class="mov-src-badge">Max</span></span></div><div class="trend-row"><span class="trend-name"><b class="mov-rank" style="color:${ac}">3</b> FALLOUT S2</span><span class="trend-val"><span class="mov-src-badge">Prime</span></span></div><div class="trend-row"><span class="trend-name"><b class="mov-rank" style="color:${ac}">4</b> THE BEAR S5</span><span class="trend-val"><span class="mov-src-badge">Hulu</span></span></div><div class="trend-row"><span class="trend-name"><b class="mov-rank" style="color:${ac}">5</b> MI8: FINAL RECKONING</span><span class="trend-val"><span class="mov-src-badge">VOD</span></span></div><div class="mov-foot">most watched this week</div></div>
+    <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">My watchlist is 400 movies deep.<br>Tonight I'll rewatch The Office again.</div></div>`,
   btc: (ac,id)=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE USERS</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">267 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('TOTAL MARKET CAP')}<div class="big-num">2.93 T$</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change down"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg> 0.38%</span></div>${spark([62,61.8,62.5,63,62.8,61.5,60.9,61.2,62.4,63.1,62.7,61.9,62.2,63.5,64],ac)}</div>
     <div class="r-block">${rHead('COMMUNITY SENTIMENT')}<div class="mood-grid"><div class="mood-btn sel">BULLISH <svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg></div><div class="mood-btn">BEARISH <svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg></div><div class="mood-btn">HODL</div><div class="mood-btn">NGMI</div></div><div style="margin-top:7px"><div class="poll-row"><span class="poll-lbl">Bullish</span><div class="bar-bg"><div class="bar-fg" style="width:62%"></div></div><span class="bar-pct">62%</span></div><div class="poll-row"><span class="poll-lbl">Bearish</span><div class="bar-bg"><div class="bar-fg" style="width:24%"></div></div><span class="bar-pct">24%</span></div><div class="poll-row"><span class="poll-lbl">Neutral</span><div class="bar-bg"><div class="bar-fg" style="width:14%"></div></div><span class="bar-pct">14%</span></div></div></div>
-    ${socialIntelCard(id||'btc')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Fed holds rates — BTC pumps 1.2%</span><div class="news-time" style="padding-left:9px">3 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH staking hits ATH — 32M ETH locked</span><div class="news-time" style="padding-left:9px">18 min ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Don't burn your savings on the stock market alone; do it under the guidance of an experienced investment advisor!</div></div>
     <div class="r-block">${rHead('BUDGET')}<div class="budget-row"><span>SPENT: $1,400</span><span>LIMIT: $2,000</span></div>${budgetBar(1400,2000,28)}<div class="budget-foot"><div class="budget-msg">You're getting close to your limit. Consider slowing down spending.</div><button class="budget-details">Details</button></div></div>`,
@@ -4564,7 +4603,6 @@ const PANELS = {
     <div class="r-block">${rHead('LIVE STREAMS NOW')}<div class="trend-row"><span class="trend-name">xQc — Minecraft</span><span class="trend-val">127k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div><div class="trend-row"><span class="trend-name">shroud — Valorant</span><span class="trend-val">84k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div><div class="trend-row"><span class="trend-name">pokimane — Chat</span><span class="trend-val">51k <svg class="tri" width="6" height="8" viewBox="0 0 6 8" fill="currentColor"><path d="M0 0l6 4-6 4z"/></svg></span></div></div>
     <div class="r-block">${rHead('TRENDING TODAY')}<div class="trend-row"><span class="trend-name">#1 Elden Ring DLC</span><span class="trend-val">+340%</span></div><div class="trend-row"><span class="trend-name">#2 GTA VI leak</span><span class="trend-val">+210%</span></div><div class="trend-row"><span class="trend-name">#3 Valorant patch</span><span class="trend-val">+88%</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — GOAT?')}<div class="poll-row"><span class="poll-lbl">MrBeast</span><div class="bar-bg"><div class="bar-fg" style="width:44%"></div></div><span class="bar-pct">44%</span></div><div class="poll-row"><span class="poll-lbl">PewDiePie</span><div class="bar-bg"><div class="bar-fg" style="width:38%"></div></div><span class="bar-pct">38%</span></div><div class="poll-row"><span class="poll-lbl">Ninja</span><div class="bar-bg"><div class="bar-fg" style="width:18%"></div></div><span class="bar-pct">18%</span></div></div>
-    ${socialIntelCard('gaming')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Elden Ring DLC confirmed — 40+ hours</span><div class="news-time" style="padding-left:9px">1h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Valorant patch 8.11 — Jett nerf incoming</span><div class="news-time" style="padding-left:9px">3h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Why did the gamer fail school?<br>He thought F was a killstreak.</div></div>`,
   sports: ac=>`
@@ -4572,14 +4610,12 @@ const PANELS = {
     <div class="r-block">${rHead('LIVE SCORES')}<div class="score-row"><span>MAN CITY</span><span class="score-val">3—1 <span class="live-badge">67'</span></span><span>ARSENAL</span></div><div class="score-row"><span>LAKERS</span><span class="score-val">88—91 <span class="live-badge">Q3</span></span><span>CELTICS</span></div><div class="score-row"><span>DJOKOVIC</span><span class="score-val">6-3 4-2</span><span>ALCARAZ</span></div></div>
     <div class="r-block">${rHead('UPCOMING TODAY')}<div class="trend-row"><span class="trend-name">20:45 Bayern vs PSG</span><span style="color:#444">UCL</span></div><div class="trend-row"><span class="trend-name">22:00 Warriors vs Heat</span><span style="color:#444">NBA</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — WINNER?')}<div class="poll-row"><span class="poll-lbl">MAN CITY</span><div class="bar-bg"><div class="bar-fg" style="width:58%"></div></div><span class="bar-pct">58%</span></div><div class="poll-row"><span class="poll-lbl">ARSENAL</span><div class="bar-bg"><div class="bar-fg" style="width:29%"></div></div><span class="bar-pct">29%</span></div><div class="poll-row"><span class="poll-lbl">DRAW</span><div class="bar-bg"><div class="bar-fg" style="width:13%"></div></div><span class="bar-pct">13%</span></div></div>
-    ${socialIntelCard('sports')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Haaland hat-trick — 3 goals in 20 min</span><div class="news-time" style="padding-left:9px">live</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">LeBron 28pts in Q3 — Lakers lead by 5</span><div class="news-time" style="padding-left:9px">live</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Arsenal fans checking the offside line frame by frame at 2am.</div></div>`,
   politics: ac=>`
     <div class="r-block"><div class="online-row" onclick="showOnlineUsers(this)"><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">ONLINE</span><span style="font-size:14px;color:#e0e0e0;font-family:'CHNOPixelCodePro',monospace">932 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="vertical-align:middle;margin-left:3px"><circle cx="4" cy="3" r="2" fill="#555"/><circle cx="10" cy="3" r="2" fill="#555"/><path d="M0 9.5C0 7.5 2 6 4 6s4 1.5 4 3.5" fill="#555"/><path d="M6 9.5C6 7.5 8 6 10 6s4 1.5 4 3.5" fill="#555"/></svg></span></div><div class="user-grid">${udots}</div></div>
     <div class="r-block">${rHead('CHAOS-O-METER')}<div style="margin-top:2px;background:#161616;border-radius:1px;height:12px;overflow:hidden;border:1px solid #333"><div style="width:73%;height:100%;background:linear-gradient(to right,#3ddc84,#f7dc6f,#ff5555)"></div></div><div style="display:flex;justify-content:space-between;margin-top:3px;font-size:11px;color:#333"><span>CALM</span><span style="color:#ff5555">73/100</span><span>CHAOS</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — EU AI ACT?')}<div style="font-size:11px;color:#444;margin-bottom:6px">Do you support it?</div><div class="poll-row"><span class="poll-lbl">YES</span><div class="bar-bg"><div class="bar-fg" style="width:41%"></div></div><span class="bar-pct">41%</span></div><div class="poll-row"><span class="poll-lbl">NO</span><div class="bar-bg"><div class="bar-fg" style="width:44%"></div></div><span class="bar-pct">44%</span></div><div class="poll-row"><span class="poll-lbl">UNSURE</span><div class="bar-bg"><div class="bar-fg" style="width:15%"></div></div><span class="bar-pct">15%</span></div></div>
-    ${socialIntelCard('politics')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">EU AI Act passes — 523 votes in favor</span><div class="news-time" style="padding-left:9px">just now</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">G7 summit Tokyo — climate deal on table</span><div class="news-time" style="padding-left:9px">12 min ago</div></div></div>
     <div class="r-block">${rHead('HOT TOPICS')}<div style="margin-top:2px"><span class="tag-pill">#AIAct</span><span class="tag-pill">#G7Tokyo</span><span class="tag-pill">#USElection</span><span class="tag-pill">#Tariffs</span></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Finally something that can lie faster than politicians — AI.</div></div>`,
@@ -4588,7 +4624,6 @@ const PANELS = {
     <div class="r-block">${rHead('AI STOCK INDEX')}<div class="big-num">$842.5</div><div style="margin-top:3px"><span class="live-dot"></span><span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.4%</span></div>${stockChart(3)}<div style="margin-top:8px"><div class="trend-row"><span class="trend-name">NVDA</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 3.8%</span></div><div class="trend-row"><span class="trend-name">MSFT</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 1.6%</span></div><div class="trend-row"><span class="trend-name">GOOGL</span><span class="trend-val small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.1%</span></div><div class="trend-row"><span class="trend-name">META</span><span class="trend-val small-change down"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 7L0.5 1H7.5z"/></svg> 0.4%</span></div></div></div>
     <div class="r-block">${rHead('GITHUB TRENDING')}<div class="trend-row"><span class="trend-name">#1 llama4-ultra</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>18k</span></div><div class="trend-row"><span class="trend-name">#2 openai/sora-api</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>11k</span></div><div class="trend-row"><span class="trend-name">#3 browser-use</span><span class="trend-val"><svg class="tri star" width="9" height="9" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 0l1.55 3.4 3.7.38-2.77 2.5.78 3.64L5.5 8.6 2.24 9.92l.78-3.64L.25 3.78l3.7-.38z"/></svg>9k</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST MODEL?')}<div class="poll-row"><span class="poll-lbl">Claude</span><div class="bar-bg"><div class="bar-fg" style="width:47%"></div></div><span class="bar-pct">47%</span></div><div class="poll-row"><span class="poll-lbl">GPT-4o</span><div class="bar-bg"><div class="bar-fg" style="width:31%"></div></div><span class="bar-pct">31%</span></div><div class="poll-row"><span class="poll-lbl">Gemini</span><div class="bar-bg"><div class="bar-fg" style="width:22%"></div></div><span class="bar-pct">22%</span></div></div>
-    ${socialIntelCard('ai')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Mamba-2 beats transformers on long context</span><div class="news-time" style="padding-left:9px">arxiv · 2h</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">Scaling laws for reasoning — new paper</span><div class="news-time" style="padding-left:9px">arxiv · 5h</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">ChatGPT, Gemini and Claude walk into a bar.<br>They hallucinate the bartender.</div></div>
     <div class="r-block">${rHead('TOP MODELS 24H')}${bracketStat('API calls','4.2M')}${bracketStat('Models','130')}${bracketStat('Active users','15k')}${bracketStat('Avg latency','7ms')}<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-family:'CHNOPixelCodePro',monospace;font-size:11px;color:#999;letter-spacing:0.04em"><span style="color:#e0e0e0">USAGE BY HOUR</span><span style="color:#888">1 day · all models</span></div>${resourceChart(2)}</div>`,
@@ -4597,7 +4632,6 @@ const PANELS = {
     <div class="r-block">${rHead('STABLECOIN MARKET CAP')}<div class="big-num">$180.4B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 2.1%</span></div>${spark([140,142,145,148,150,153,155,158,160,162,165,168,170,175,180],ac)}</div>
     <div class="r-block">${rHead('PEG TRACKER')}<div class="trend-row"><span class="trend-name">USDT</span><span class="trend-val" style="color:${ac}">$1.0001</span></div><div class="trend-row"><span class="trend-name">USDC</span><span class="trend-val" style="color:${ac}">$0.9999</span></div><div class="trend-row"><span class="trend-name">DAI</span><span class="trend-val" style="color:${ac}">$1.0002</span></div><div class="trend-row"><span class="trend-name">PYUSD</span><span class="trend-val" style="color:${ac}">$0.9998</span></div></div>
     <div class="r-block">${rHead('DOMINANCE')}<div class="poll-row"><span class="poll-lbl">USDT</span><div class="bar-bg"><div class="bar-fg" style="width:68%"></div></div><span class="bar-pct">68%</span></div><div class="poll-row"><span class="poll-lbl">USDC</span><div class="bar-bg"><div class="bar-fg" style="width:21%"></div></div><span class="bar-pct">21%</span></div><div class="poll-row"><span class="poll-lbl">DAI</span><div class="bar-bg"><div class="bar-fg" style="width:6%"></div></div><span class="bar-pct">6%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:5%"></div></div><span class="bar-pct">5%</span></div></div>
-    ${socialIntelCard('stables')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">MiCA regulation live — USDC first compliant</span><div class="news-time" style="padding-left:9px">2h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">500M USDT minted on Tron — whale activity</span><div class="news-time" style="padding-left:9px">4h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">My portfolio is 100% stablecoins.<br>I sleep great while yall get rekt.</div></div>`,
   etf: ac=>`
@@ -4605,7 +4639,6 @@ const PANELS = {
     <div class="r-block">${rHead('BTC ETF TOTAL AUM')}<div class="big-num">$62.8B</div><div style="margin-top:4px"><span class="live-dot"></span><span style="font-size:11px;color:#444">live</span>&nbsp;<span class="small-change up"><svg class="tri" width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><path d="M4 1L7.5 7H0.5z"/></svg> 1.8%</span></div>${spark([20,22,25,28,30,33,35,38,40,42,45,50,55,58,62],ac)}</div>
     <div class="r-block">${rHead('DAILY FLOWS')}<div class="trend-row"><span class="trend-name">IBIT (BlackRock)</span><span class="trend-val" style="color:#3ddc84">+$401M</span></div><div class="trend-row"><span class="trend-name">FBTC (Fidelity)</span><span class="trend-val" style="color:#3ddc84">+$120M</span></div><div class="trend-row"><span class="trend-name">GBTC (Grayscale)</span><span class="trend-val" style="color:#ff5555">-$52M</span></div><div class="trend-row"><span class="trend-name">ARKB (Ark/21)</span><span class="trend-val" style="color:#3ddc84">+$38M</span></div></div>
     <div class="r-block">${rHead('CHAT VOTE — BEST ETF?')}<div class="poll-row"><span class="poll-lbl">IBIT</span><div class="bar-bg"><div class="bar-fg" style="width:52%"></div></div><span class="bar-pct">52%</span></div><div class="poll-row"><span class="poll-lbl">FBTC</span><div class="bar-bg"><div class="bar-fg" style="width:28%"></div></div><span class="bar-pct">28%</span></div><div class="poll-row"><span class="poll-lbl">GBTC</span><div class="bar-bg"><div class="bar-fg" style="width:12%"></div></div><span class="bar-pct">12%</span></div><div class="poll-row"><span class="poll-lbl">Other</span><div class="bar-bg"><div class="bar-fg" style="width:8%"></div></div><span class="bar-pct">8%</span></div></div>
-    ${socialIntelCard('etf')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">SEC approves options on spot BTC ETFs</span><div class="news-time" style="padding-left:9px">1h ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">ETH spot ETF — 75% approval chance Q3</span><div class="news-time" style="padding-left:9px">3h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">Boomers discovering BTC through ETFs:<br>"Honey, I invested in digital gold!"</div></div>`,
   general: ac=>`
@@ -4613,11 +4646,50 @@ const PANELS = {
     <div class="r-block">${rHead('ACTIVITY PULSE')}${spark([12,12,18,18,18,25,25,25,25,40,40,40,55,55,55,55,42,42,42,30,30,65,65,65,65,80,80,80,72,72],ac,56,true)}<div style="display:flex;justify-content:space-between;font-size:10px;color:#444;font-family:var(--font-body);margin-top:3px"><span>12h ago</span><span>9h</span><span>6h</span><span>3h</span><span>now</span></div></div>
     <div class="r-block">${rHead('FACT OF THE HOUR')}<div style="font-size:12px;color:#777;line-height:1.6;border-left:2px solid #1e1e1e;padding-left:8px">Honey never spoils. Archaeologists found 3,000-year-old honey still edible.</div><div style="font-size:11px;color:#333;margin-top:4px">refreshes every 60 min</div></div>
     <div class="r-block">${rHead('VIBES CHECK')}<div class="mood-grid"><div class="mood-btn" data-vibe="good">GOOD VIBES</div><div class="mood-btn" data-vibe="meh">MEH</div><div class="mood-btn" data-vibe="chaotic">CHAOTIC</div><div class="mood-btn" data-vibe="ngmi">NGMI</div></div></div>
-    ${socialIntelCard('general')}
     <div class="r-block">${rHead('NEWS BOT')}<div class="news-item"><span class="news-dot"></span><span class="news-text">Today's summary — a lot of things happened</span><div class="news-time" style="padding-left:9px">5 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">BTC breaks 65k — altcoins follow the pump</span><div class="news-time" style="padding-left:9px">23 min ago</div></div><div class="news-item"><span class="news-dot"></span><span class="news-text">New troll.box update — custom widgets are live</span><div class="news-time" style="padding-left:9px">1h ago</div></div></div>
     <div class="r-block">${rHead('JOKES BOT')}<div style="font-size:12px;color:#666;line-height:1.6">I told my wallet I'd stop spending.<br>We're not on speaking terms anymore.</div></div>`,
 };
 function getPanel(id){ return PANELS[id] || PANELS.btc; }
+
+// ===== MOVIES box widgets (mock data — backend replaces with cached DB reads) =====
+const MOVIE_PREMIERES = [ // upcoming releases for the countdown (dot switcher, FIFA pattern)
+  { title:'AVENGERS: DOOMSDAY', when:'In theaters worldwide', date:'2026-12-18T00:00:00', sub:'Dec 18, 2026 · THEATERS' },
+  { title:'THE BATMAN II',      when:'In theaters worldwide', date:'2027-10-01T00:00:00', sub:'Oct 1, 2027 · THEATERS' },
+  { title:'STRANGER THINGS 5 — FINALE', when:'Streaming premiere', date:'2026-12-31T20:00:00', sub:'Dec 31, 2026 · NETFLIX' },
+];
+let _movPremIdx = 0;
+function movCdHtml(){
+  const p = MOVIE_PREMIERES[_movPremIdx];
+  const dots = MOVIE_PREMIERES.map((_,i)=>`<span class="fifa-cd-dot ${i===_movPremIdx?'on':''}" onclick="movCdSet(${i})"></span>`).join('');
+  return `<div class="fifa-cd-match">${p.title}</div><div class="fifa-cd-when">${p.when}</div>`
+    + `<div class="fifa-cd-time" id="movCd" data-target="${p.date}"><b>—</b><i>D</i><b>—</b><i>H</i><b>—</b><i>M</i><b>—</b><i>S</i></div>`
+    + `<div class="fifa-cd-tz" style="text-align:center;margin-top:8px">${p.sub}</div>`
+    + `<div class="fifa-cd-dots">${dots}</div>`;
+}
+function movCdSet(i){
+  _movPremIdx = i;
+  const wrap = document.getElementById('movCdWrap');
+  if (wrap){ wrap.innerHTML = movCdHtml(); initMovieWidgets(); }
+}
+let _movCdTimer = null;
+function initMovieWidgets(){
+  clearInterval(_movCdTimer); _movCdTimer = null;
+  const cd = document.getElementById('movCd');
+  if (!cd) return;
+  const target = new Date(cd.dataset.target).getTime();
+  const tick = () => {
+    const el = document.getElementById('movCd');
+    if (!el){ clearInterval(_movCdTimer); _movCdTimer = null; return; }
+    let s = Math.max(0, Math.floor((target - Date.now())/1000));
+    const d = Math.floor(s/86400); s -= d*86400;
+    const h = Math.floor(s/3600);  s -= h*3600;
+    const m = Math.floor(s/60);    const sec = s - m*60;
+    const bs = el.querySelectorAll('b');
+    if (bs.length === 4){ bs[0].textContent=d; bs[1].textContent=String(h).padStart(2,'0'); bs[2].textContent=String(m).padStart(2,'0'); bs[3].textContent=String(sec).padStart(2,'0'); }
+  };
+  tick();
+  _movCdTimer = setInterval(tick, 1000);
+}
 
 function setRoom(id){
   if (typeof cancelReply === 'function') cancelReply(); // dropping an in-progress reply on room change
@@ -5327,10 +5399,12 @@ function renderRight(){
     const add = b.querySelector('.r-add');
     if (add && inMix.some(w => w.box === active && w.idx === idx)) setMixAddState(add, true);
   });
-  rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="document.getElementById('widgetModal').classList.remove('hidden')">CREATE WIDGET +</button></div>`);
+  // CREATE WIDGET — admin mode only (Discord login); regular users can't create widgets or boxes
+  if (isMod()) rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="document.getElementById('widgetModal').classList.remove('hidden')">CREATE WIDGET +</button></div>`);
   updateArrowStates();
   initVibes();
   initSparkHovers();
+  initMovieWidgets();
 }
 
 // ===== MY MIX TERMINAL (custom board of widgets pulled from any box) =====
@@ -5393,6 +5467,7 @@ function renderMyMixTerminal(){
   rightEl.insertAdjacentHTML('beforeend', `<div class="create-widget-wrap"><button class="create-widget-btn" onclick="openMixPicker()">ADD WIDGET +</button></div>`);
   initVibes();
   initSparkHovers();
+  initMovieWidgets();
 }
 function moveMyMixWidget(pos, dir){
   const cur = getMyMixWidgets();
@@ -7167,73 +7242,5 @@ function setLeftCollapsed(collapsed, persist){
   }, { passive: true });
 })();
 </script>
-<!-- ===== FONT SWITCHER (demo tool — body/message font only; remove before prod) ===== -->
-<style>
-  #fontSwitch { position: fixed; top: 14px; right: 14px; z-index: 99999; background: #14181c; border: 1px solid #2c343c; border-radius: 10px; padding: 10px 12px; font-family: system-ui, sans-serif; color: #dfe6ee; box-shadow: 0 8px 24px rgba(0,0,0,.5); width: 222px; }
-  #fontSwitch.min .fs-body { display: none; }
-  /* свёрнутое состояние — крошечный бледный чип, на скрине почти не видно (но кликабелен) */
-  #fontSwitch.min { width: auto; padding: 2px; background: transparent; border: none; box-shadow: none; top: 8px; right: 8px; }
-  #fontSwitch.min .fs-title { display: none; }
-  #fontSwitch.min .fs-toggle { width: 14px; height: 14px; font-size: 11px; line-height: 1; border-color: rgba(120,130,140,.28); color: rgba(120,130,140,.4); background: rgba(20,24,28,.28); border-radius: 4px; }
-  #fontSwitch.min .fs-toggle:hover { color: #dfe6ee; border-color: #46535f; background: #14181c; }
-  #fontSwitch .fs-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  #fontSwitch .fs-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #7f8c99; }
-  #fontSwitch .fs-toggle { background: none; border: 1px solid #2c343c; color: #9fb0bf; border-radius: 6px; width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 1; }
-  #fontSwitch .fs-toggle:hover { border-color: #46535f; color: #dfe6ee; }
-  #fontSwitch .fs-body { margin-top: 9px; }
-  #fontSwitch select { width: 100%; background: #0f1316; border: 1px solid #2c343c; color: #eaf1f7; border-radius: 7px; padding: 7px 8px; font-size: 13px; font-family: system-ui, sans-serif; outline: none; cursor: pointer; }
-  #fontSwitch .fs-name { margin-top: 9px; font-size: 16px; color: #fff; }
-  #fontSwitch .fs-sub { margin-top: 5px; font-size: 11px; color: #6f7d89; line-height: 1.45; }
-  #fontSwitch .fs-sub b { color: #9fb0bf; font-weight: 600; }
-  #fontSwitch .fs-hint { margin-top: 6px; font-size: 10px; color: #4f5a64; }
-</style>
-<div id="fontSwitch" aria-label="Font switcher (demo)">
-  <div class="fs-head">
-    <span class="fs-title">Шрифт текста</span>
-    <button class="fs-toggle" id="fsToggle" title="Свернуть">–</button>
-  </div>
-  <div class="fs-body">
-    <select id="fsSelect">
-      <option value="'Roboto', sans-serif" data-name="Roboto">Roboto (текущий)</option>
-      <option value="'Inter', sans-serif" data-name="Inter">Inter</option>
-      <option value="'IBM Plex Sans', sans-serif" data-name="IBM Plex Sans">IBM Plex Sans</option>
-      <option value="'Geist', 'Onest', sans-serif" data-name="Geist">Geist (кир. → Onest)</option>
-      <option value="'Onest', sans-serif" data-name="Onest">Onest</option>
-      <option value="'Noto Sans', sans-serif" data-name="Noto Sans">Noto Sans</option>
-      <option value="'Golos Text', sans-serif" data-name="Golos Text">Golos Text</option>
-      <option value="'Space Grotesk', 'Onest', sans-serif" data-name="Space Grotesk">Space Grotesk (кир. → Onest)</option>
-    </select>
-    <div class="fs-name" id="fsName">Roboto</div>
-    <div class="fs-sub">Бренд/ники: <b>CHNOPixelCodePro</b> (не меняется)</div>
-    <div class="fs-hint">Примеры. Твои шрифты подставлю сюда же. Клавиша H — спрятать панель для чистого скрина.</div>
-  </div>
-</div>
-<script>
-(function(){
-  const sel = document.getElementById('fsSelect');
-  const name = document.getElementById('fsName');
-  const panel = document.getElementById('fontSwitch');
-  const toggle = document.getElementById('fsToggle');
-  function apply(){
-    const opt = sel.options[sel.selectedIndex];
-    document.documentElement.style.setProperty('--font-body', sel.value);
-    name.textContent = opt.dataset.name;
-    name.style.fontFamily = sel.value;
-  }
-  sel.addEventListener('change', apply);
-  toggle.addEventListener('click', () => {
-    panel.classList.toggle('min');
-    toggle.textContent = panel.classList.contains('min') ? '+' : '–';
-  });
-  document.addEventListener('keydown', (e) => {
-    const t = document.activeElement && document.activeElement.tagName;
-    if ((e.key === 'h' || e.key === 'H' || e.key === 'р' || e.key === 'Р') && t !== 'INPUT' && t !== 'TEXTAREA') {
-      panel.style.display = (panel.style.display === 'none') ? '' : 'none';
-    }
-  });
-  apply();
-})();
-</script>
-<!-- ===== /FONT SWITCHER ===== -->
 </body>
 </html>
